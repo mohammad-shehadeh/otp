@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رمز التحقق</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
 
+        .code {
+            font-size: 3rem;
+            font-weight: bold;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <script>
+        function generateCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                code += characters[randomIndex];
+            }
+            return code;
+        }
+
+        function updateCode() {
+            const codeElement = document.getElementById('verification-code');
+            codeElement.textContent = generateCode();
+        }
+
+        // Update the code every 5 seconds
+        setInterval(updateCode, 120000);
+
+        // Initialize the code on page load
+        window.onload = updateCode;
+    </script>
+</head>
+<body>
+    <div id="verification-code" class="code"></div>
+</body>
+</html>
