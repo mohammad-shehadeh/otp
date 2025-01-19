@@ -26,26 +26,32 @@
         }
     </style>
     <script>
+        // دالة لتوليد الكود بناءً على الوقت الحالي
         function generateCode() {
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let code = '';
-            for (let i = 0; i < 6; i++) {
-                const randomIndex = Math.floor(Math.random() * characters.length);
-                code += characters[randomIndex];
-            }
-            return code;
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1; // شهر 0-11 لذا نضيف 1
+            const date = now.getDate();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+
+            // جمع الأجزاء لإنشاء رمز مميز يعتمد على التاريخ والوقت (اليوم، الساعة، والدقائق)
+            const code = `${year}${month < 10 ? '0' + month : month}${date < 10 ? '0' + date : date}${hours < 10 ? '0' + hours : hours}${minutes < 10 ? '0' + minutes : minutes}`;
+
+            return code.slice(-6); // أخذ آخر 6 أرقام من التاريخ والوقت
         }
 
+        // دالة لتحديث الكود
         function updateCode() {
             const codeElement = document.getElementById('verification-code');
             codeElement.textContent = generateCode();
         }
 
-        // Update the code every 5 seconds
-        setInterval(updateCode, 120000);
-
-        // Initialize the code on page load
-        window.onload = updateCode;
+        // تهيئة الكود عند تحميل الصفحة
+        window.onload = function() {
+            updateCode(); // عرض الكود فور تحميل الصفحة
+            setInterval(updateCode, 120000); // تحديث الكود كل 120 ثانية
+        }
     </script>
 </head>
 <body>
