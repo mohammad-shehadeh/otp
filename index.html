@@ -7,6 +7,7 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -23,6 +24,24 @@
             border-radius: 10px;
             background-color: #fff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
     <script>
@@ -47,6 +66,18 @@
             codeElement.textContent = generateCode();
         }
 
+        // دالة لنسخ الرمز والنص المصاحب
+        function copyCode() {
+            const code = document.getElementById('verification-code').textContent;
+            const message = `الرمز الخاص بك هو ${code}\nالرمز صالح لـ 70 ثانية من الآن.\nتسجيل الدخول صالح لـ 6 أشهر من الآن.`;
+
+            navigator.clipboard.writeText(message).then(() => {
+                alert('تم نسخ النص بنجاح!');
+            }).catch(err => {
+                alert('حدث خطأ أثناء النسخ: ' + err);
+            });
+        }
+
         // تهيئة الكود عند تحميل الصفحة
         window.onload = function() {
             updateCode(); // عرض الكود فور تحميل الصفحة
@@ -56,5 +87,6 @@
 </head>
 <body>
     <div id="verification-code" class="code"></div>
+    <button onclick="copyCode()">نسخ الرمز</button>
 </body>
 </html>
