@@ -69,7 +69,7 @@
         // دالة لنسخ الرمز والنص المصاحب
         function copyCode() {
             const code = document.getElementById('verification-code').textContent;
-            const message = `الرمز الخاص بك هو ${code}\nالرمز صالح لـ 70 ثانية من الآن.\nتسجيل الدخول صالح لـ 6 أشهر من الآن.`;
+            const message = `الرمز الخاص بك هو ${code}\nالرمز صالح لـ 60 ثانية من الآن.\nتسجيل الدخول صالح لـ 6 أشهر من الآن.`;
 
             navigator.clipboard.writeText(message).then(() => {
                 alert('تم نسخ النص بنجاح!');
