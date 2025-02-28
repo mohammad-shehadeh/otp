@@ -3,90 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رمز التحقق</title>
+    <title>صفحة محمية بكلمة مرور</title>
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-        }
-
-        .code {
-            font-size: 3rem;
-            font-weight: bold;
-            padding: 20px;
-            border: 2px solid #333;
-            border-radius: 10px;
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        #content { display: none; }
+        input { padding: 10px; margin: 10px; font-size: 16px; }
+        button { padding: 10px; font-size: 16px; }
     </style>
-    <script>
-        // دالة لتوليد الكود بناءً على الوقت الحالي
-        function generateCode() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth() + 1; // شهر 0-11 لذا نضيف 1
-            const date = now.getDate();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-
-            // جمع الأجزاء لإنشاء رمز مميز يعتمد على التاريخ والوقت (اليوم، الساعة، والدقائق)
-            const code = `${year}${month < 10 ? '0' + month : month}${date < 10 ? '0' + date : date}${hours < 10 ? '0' + hours : hours}${minutes < 10 ? '0' + minutes : minutes}`;
-
-            return code.slice(-6); // أخذ آخر 6 أرقام من التاريخ والوقت
-        }
-
-        // دالة لتحديث الكود
-        function updateCode() {
-            const codeElement = document.getElementById('verification-code');
-            codeElement.textContent = generateCode();
-        }
-
-        // دالة لنسخ الرمز والنص المصاحب
-        function copyCode() {
-            const code = document.getElementById('verification-code').textContent;
-            const message = `الرمز الخاص بك هو ${code}\nالرمز صالح لـ 60 ثانية من الآن.\nتسجيل الدخول صالح لـ 6 أشهر من الآن.`;
-
-            navigator.clipboard.writeText(message).then(() => {
-                alert('تم نسخ النص بنجاح!');
-            }).catch(err => {
-                alert('حدث خطأ أثناء النسخ: ' + err);
-            });
-        }
-
-        // تهيئة الكود عند تحميل الصفحة
-        window.onload = function() {
-            updateCode(); // عرض الكود فور تحميل الصفحة
-            setInterval(updateCode, 120000); // تحديث الكود كل 120 ثانية
-        }
-    </script>
 </head>
 <body>
-    <div id="verification-code" class="code"></div>
-    <button onclick="copyCode()">نسخ الرمز</button>
+
+    <div id="password-container">
+        <h2>أدخل كلمة السر</h2>
+        <input type="password" id="passwordInput" placeholder="كلمة السر">
+        <button onclick="checkPassword()">دخول</button>
+        <p id="error-message" style="color: red;"></p>
+    </div>
+
+    <div id="content">
+        <h1>مرحبًا بك!</h1>
+        <p>تم التحقق من كلمة المرور بنجاح.</p>
+    </div>
+
+    <script>
+        function checkPassword() {
+            var password = document.getElementById("passwordInput").value;
+            if (password === "54") {
+                document.getElementById("password-container").style.display = "none";
+                document.getElementById("content").style.display = "block";
+            } else {
+                document.getElementById("error-message").textContent = "كلمة السر غير صحيحة!";
+            }
+        }
+    </script>
+
 </body>
 </html>
