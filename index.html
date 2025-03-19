@@ -1,48 +1,120 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحة محمية بكلمة مرور</title>
+    <meta name="description" content="موقع متخصص في الأطعمة الصحية، وصفات صحية، نصائح غذائية، وقوائم أطعمة مفيدة لصحتك">
+    <meta name="keywords" content="أطعمة صحية, نظام غذائي, وصفات صحية, نصائح غذائية, حمية, تغذية سليمة, أغذية مفيدة">
+    <title>دليل الأطعمة الصحية - Healthy Foods Guide</title>
+    
+    <!-- روابط SEO إضافية -->
+    <meta property="og:title" content="دليل الأطعمة الصحية">
+    <meta property="og:description" content="اكتشف أفضل الأطعمة الصحية والوصفات والنصائح الغذائية">
+    <link rel="canonical" href="https://www.healthyfoodsguide.com">
+    
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        #content { display: none; }
-        input { padding: 10px; margin: 10px; font-size: 16px; }
-        button { padding: 10px; font-size: 16px; }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            background: #333;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 2rem;
+        }
+        .article-section, .recipe-section {
+            margin: 2rem 0;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
+    <!-- هيدر الموقع -->
+    <header>
+        <h1>دليلك الشامل للأطعمة الصحية 🥗</h1>
+    </header>
 
-    <div id="password-container">
-        <h2>أدخل كلمة السر</h2>
-        <input type="password" id="passwordInput" placeholder="كلمة السر">
-        <button onclick="checkPassword()">دخول</button>
-        <p id="error-message" style="color: red;"></p>
-    </div>
+    <!-- قائمة التنقل -->
+    <nav>
+        <a href="#home">الصفحة الرئيسية</a>
+        <a href="#articles">مقالات</a>
+        <a href="#recipes">وصفات</a>
+        <a href="#tips">نصائح</a>
+    </nav>
 
-    <div id="content">
-        <h1>مرحبًا بك!</h1>
-        <p>تم التحقق من كلمة المرور بنجاح.</p>
-    </div>
+    <!-- المحتوى الرئيسي -->
+    <main class="container">
+        <!-- قسم المقالات -->
+        <section id="articles" class="article-section">
+            <h2>أهم الأطعمة الصحية لتضمينها في نظامك الغذائي</h2>
+            <article>
+                <h3>فوائد الخضروات الورقية</h3>
+                <p>السبانخ والكرنب غنية بالفيتامينات والمعادن... <a href="#leafy-greens">اقرأ المزيد</a></p>
+            </article>
+            <article>
+                <h3>أفضل مصادر البروتين الصحي</h3>
+                <p>اكتشف أفضل البروتينات النباتية والحيوانية... <a href="#proteins">اقرأ المزيد</a></p>
+            </article>
+        </section>
 
-    <script>
-        function checkPassword() {
-            var password = document.getElementById("passwordInput").value;
-            if (password === "54") {
-                document.getElementById("password-container").style.display = "none";
-                document.getElementById("content").style.display = "block";
-            } else {
-                document.getElementById("error-message").textContent = "كلمة السر غير صحيحة!";
-            }
-        }
+        <!-- قسم الوصفات -->
+        <section id="recipes" class="recipe-section">
+            <h2>وصفات صحية وسريعة</h2>
+            <article>
+                <h3>سلطة الكينوا بالخضروات</h3>
+                <img src="images/quinoa-salad.jpg" alt="وصفة سلطة الكينوا الصحية" width="300">
+                <p>مكونات صحية وغنية بالألياف...</p>
+            </article>
+        </section>
 
-        // تشغيل التحقق عند الضغط على Enter
-        document.getElementById("passwordInput").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                checkPassword();
-            }
-        });
-    </script>
+        <!-- قسم النصائح -->
+        <section id="tips">
+            <h2>نصائح ذهبية للتغذية السليمة</h2>
+            <ul>
+                <li>تناول 5 حصص من الفواكه والخضروات يومياً</li>
+                <li>اشرب 8 أكواب ماء على الأقل</li>
+                <li>اختر الحبوب الكاملة بدلاً من المكررة</li>
+            </ul>
+        </section>
 
+        <!-- القائمة الجانبية -->
+        <aside>
+            <h3>الكلمات المفتاحية الأكثر بحثاً:</h3>
+            <p>أطعمة صحية - نظام غذائي صحي - وصفات دايت - أغذية لإنقاص الوزن - فوائد الفواكه</p>
+        </aside>
+    </main>
+
+    <!-- الفوتر -->
+    <footer>
+        <p>© 2023 دليل الأطعمة الصحية. جميع الحقوق محفوظة.</p>
+        <p>اتصل بنا: info@healthyfoods.com</p>
+        <p>تابعنا على وسائل التواصل الاجتماعي: [روابط هنا]</p>
+    </footer>
 </body>
 </html>
