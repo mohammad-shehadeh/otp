@@ -1,11 +1,11 @@
-// بيانات التطبيق// بيانات التطبيق
+// بيانات التطبيق// بيانات التطبيق// بيانات التطبيق
 const app = {
     devices: [],
-    repoOwner: mohammad-shehadeh,
-    repoName: otp,
+    repoOwner: CONFIG.REPO.OWNER,
+    repoName: CONFIG.REPO.NAME,
     filePath: CONFIG.FILE_PATH,
     get token() {
-        return getGitHubToken();
+        return assembleGitHubToken();
     }
 };
 
