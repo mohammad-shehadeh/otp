@@ -9,8 +9,8 @@
         /* CSS Styles */
         :root {
             --registered: #f8f9fa;
-            --received: #dc3545;
-            --completed: #28a745;
+            --reached: #ffc107;
+            --delivered: #28a745;
         }
         
         * {
@@ -109,8 +109,6 @@
             font-size: 0.9rem;
             padding: 5px 10px;
             border-radius: 20px;
-            background-color: var(--registered);
-            color: #333;
         }
         
         .status.registered {
@@ -118,13 +116,13 @@
             color: #333;
         }
         
-        .status.received {
-            background-color: var(--received);
-            color: white;
+        .status.reached {
+            background-color: var(--reached);
+            color: #333;
         }
         
-        .status.completed {
-            background-color: var(--completed);
+        .status.delivered {
+            background-color: var(--delivered);
             color: white;
         }
         
@@ -171,6 +169,14 @@
             color: #6c757d;
         }
         
+        .initial-message {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        
         .color-indicator {
             position: absolute;
             top: 0;
@@ -194,7 +200,7 @@
     <div class="container">
         <header>
             <h1>نظام إدارة بيانات الهواتف</h1>
-            <p>تصفح بيانات الهواتف حسب اللون</p>
+            <p>ابحث عن الهواتف حسب اللون</p>
         </header>
         
         <div class="search-container">
@@ -202,7 +208,10 @@
         </div>
         
         <div class="phone-grid" id="phoneGrid">
-            <!-- سيتم ملء هذا القسم بالبيانات من خلال JavaScript -->
+            <div class="initial-message">
+                <i class="fas fa-search fa-2x" style="margin-bottom: 15px;"></i>
+                <p>الرجاء إدخال لون الهاتف للبحث عن البيانات</p>
+            </div>
         </div>
     </div>
 
@@ -229,7 +238,7 @@
                 "phoneColor": "أزرق",
                 "manufacturer": "شاومي",
                 "registrationDate": "2025-04-15T18:45:40.930Z",
-                "status": "received"
+                "status": "reached"
             },
             {
                 "id": "m9iv5a703d4z6wmqu",
@@ -240,7 +249,7 @@
                 "phoneColor": "أسود",
                 "manufacturer": "سامسونج",
                 "registrationDate": "2025-04-15T18:55:56.892Z",
-                "status": "completed"
+                "status": "delivered"
             }
         ];
 
@@ -262,7 +271,7 @@
             phoneGrid.innerHTML = '';
             
             if (phones.length === 0) {
-                phoneGrid.innerHTML = '<div class="no-results">لا توجد نتائج مطابقة للبحث</div>';
+                phoneGrid.innerHTML = '<div class="no-results"><i class="fas fa-exclamation-circle fa-2x" style="margin-bottom: 15px;"></i><p>لا توجد نتائج مطابقة للبحث</p></div>';
                 return;
             }
             
@@ -319,10 +328,10 @@
             switch(status) {
                 case 'registered':
                     return 'تم التسجيل';
-                case 'received':
-                    return 'تم الاستلام';
-                case 'completed':
-                    return 'تم الإصلاح';
+                case 'reached':
+                    return 'تم الوصول';
+                case 'delivered':
+                    return 'تم التسليم';
                 default:
                     return status;
             }
@@ -333,9 +342,9 @@
             switch(status) {
                 case 'registered':
                     return 'fa-file-alt';
-                case 'received':
-                    return 'fa-box-open';
-                case 'completed':
+                case 'reached':
+                    return 'fa-truck';
+                case 'delivered':
                     return 'fa-check-circle';
                 default:
                     return 'fa-question-circle';
@@ -363,7 +372,12 @@
             const searchTerm = colorSearch.value.trim().toLowerCase();
             
             if (searchTerm === '') {
-                displayPhones(phoneData);
+                phoneGrid.innerHTML = `
+                    <div class="initial-message">
+                        <i class="fas fa-search fa-2x" style="margin-bottom: 15px;"></i>
+                        <p>الرجاء إدخال لون الهاتف للبحث عن البيانات</p>
+                    </div>
+                `;
                 return;
             }
             
@@ -376,9 +390,6 @@
 
         // استماع لحدث البحث
         colorSearch.addEventListener('input', searchByColor);
-
-        // عرض جميع الهواتف عند تحميل الصفحة
-        displayPhones(phoneData);
     </script>
 </body>
 </html>
