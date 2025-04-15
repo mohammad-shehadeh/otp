@@ -242,7 +242,7 @@
     <div class="container">
         <header>
             <h1>نظام بيانات الهواتف</h1>
-            <p>ابحث بأي كلمة (لون، اسم، نوع، رقم)</p>
+            <p>ابحث بأي كلمة (رقم الهاتف، اسم، نوع، IMEI)</p>
         </header>
         
         <div class="search-container">
@@ -252,7 +252,7 @@
                 بحث
             </button>
             <div class="search-hint">
-                يمكنك البحث بأي كلمة (لون الهاتف، اسم العميل، نوع الهاتف، رقم IMEI)
+                يمكنك البحث بأي كلمة (رقم الهاتف، اسم العميل، نوع الهاتف، رقم IMEI)
             </div>
         </div>
         
@@ -266,7 +266,6 @@
     </div>
 
     <script>
-        // البيانات المأخوذة من Server.md
         const phoneData = [
             {
                 "id": "m9iusvykzgn20isch",
@@ -274,7 +273,7 @@
                 "phoneType": "A72",
                 "issueDescription": "كونكتر",
                 "imeiNumber": "929282",
-                "phoneColor": "أزرق",
+                "phoneNumber": "0591234567",
                 "manufacturer": "سامسونج",
                 "registrationDate": "2025-04-15T18:46:18.572Z",
                 "status": "registered"
@@ -283,9 +282,9 @@
                 "id": "m9ius2wxwy8ohwx1i",
                 "clientName": "محمد شحادة",
                 "phoneType": "A12",
-                "issueDescription": "طافي لا تشش",
+                "issueDescription": "طافي لا يشحن",
                 "imeiNumber": "358383838284",
-                "phoneColor": "أزرق",
+                "phoneNumber": "0599876543",
                 "manufacturer": "شاومي",
                 "registrationDate": "2025-04-15T18:45:40.930Z",
                 "status": "reached"
@@ -296,50 +295,24 @@
                 "phoneType": "A1",
                 "issueDescription": "شاشة مكسورة",
                 "imeiNumber": "8484",
-                "phoneColor": "أسود",
+                "phoneNumber": "0597654321",
                 "manufacturer": "سامسونج",
                 "registrationDate": "2025-04-15T18:55:56.892Z",
                 "status": "delivered"
-            },
-            {
-                "id": "m9iv6b814e5a7xnrv",
-                "clientName": "نورا",
-                "phoneType": "iPhone 13",
-                "issueDescription": "بطارية",
-                "imeiNumber": "356789123456",
-                "phoneColor": "سفرجلي",
-                "manufacturer": "آبل",
-                "registrationDate": "2025-04-16T10:30:00.000Z",
-                "status": "registered"
-            },
-            {
-                "id": "m9iv7c925f6b8yows",
-                "clientName": "خالد",
-                "phoneType": "Note 20",
-                "issueDescription": "شحن",
-                "imeiNumber": "123456789012",
-                "phoneColor": "ذهبي",
-                "manufacturer": "سامسونج",
-                "registrationDate": "2025-04-14T09:15:00.000Z",
-                "status": "reached"
             }
         ];
 
-        // عناصر DOM
         const phoneGrid = document.getElementById('phoneGrid');
         const searchInput = document.getElementById('searchInput');
         const searchButton = document.getElementById('searchButton');
 
-        // دالة لحساب الأيام المنقضية منذ التسجيل
         function getDaysSinceRegistration(dateString) {
             const registrationDate = new Date(dateString);
             const currentDate = new Date();
             const diffTime = currentDate - registrationDate;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays;
+            return Math.floor(diffTime / (1000 * 60 * 60 * 24));
         }
 
-        // دالة لعرض بطاقات الهواتف
         function displayPhones(phones) {
             phoneGrid.innerHTML = '';
             
@@ -361,7 +334,6 @@
                 phoneCard.className = 'phone-card';
                 
                 phoneCard.innerHTML = `
-                    <div class="color-indicator" style="background-color: ${getColorCode(phone.phoneColor)};"></div>
                     <div class="phone-header">
                         <div class="phone-title">${phone.clientName}</div>
                         <div class="status ${phone.status}">
@@ -375,12 +347,12 @@
                             <div class="detail-value">${phone.phoneType}</div>
                         </div>
                         <div class="detail-row">
-                            <div class="detail-label">الشركة المصنعة:</div>
-                            <div class="detail-value">${phone.manufacturer}</div>
+                            <div class="detail-label">رقم الهاتف:</div>
+                            <div class="detail-value">${phone.phoneNumber}</div>
                         </div>
                         <div class="detail-row">
-                            <div class="detail-label">لون الهاتف:</div>
-                            <div class="detail-value">${phone.phoneColor}</div>
+                            <div class="detail-label">الشركة المصنعة:</div>
+                            <div class="detail-value">${phone.manufacturer}</div>
                         </div>
                         <div class="detail-row">
                             <div class="detail-label">رقم IMEI:</div>
@@ -401,52 +373,24 @@
             });
         }
 
-        // دالة للحصول على نص الحالة
         function getStatusText(status) {
             switch(status) {
-                case 'registered':
-                    return 'تم التسجيل';
-                case 'reached':
-                    return 'تم الوصول';
-                case 'delivered':
-                    return 'تم التسليم';
-                default:
-                    return status;
+                case 'registered': return 'تم التسجيل';
+                case 'reached': return 'تم الوصول';
+                case 'delivered': return 'تم التسليم';
+                default: return status;
             }
         }
 
-        // دالة للحصول على أيقونة الحالة
         function getStatusIcon(status) {
             switch(status) {
-                case 'registered':
-                    return 'fa-file-alt';
-                case 'reached':
-                    return 'fa-truck';
-                case 'delivered':
-                    return 'fa-check-circle';
-                default:
-                    return 'fa-question-circle';
+                case 'registered': return 'fa-file-alt';
+                case 'reached': return 'fa-truck';
+                case 'delivered': return 'fa-check-circle';
+                default: return 'fa-question-circle';
             }
         }
 
-        // دالة للحصول على كود اللون
-        function getColorCode(colorName) {
-            const colors = {
-                'أزرق': '#007bff',
-                'أسود': '#343a40',
-                'أحمر': '#dc3545',
-                'أبيض': '#f8f9fa',
-                'ذهبي': '#ffd700',
-                'فضي': '#c0c0c0',
-                'أخضر': '#28a745',
-                'وردي': '#ff69b4',
-                'سفرجلي': '#ff7f50'
-            };
-            
-            return colors[colorName] || '#6c757d';
-        }
-
-        // دالة للبحث الشامل
         function performSearch() {
             const searchTerm = searchInput.value.trim().toLowerCase();
             
@@ -465,7 +409,7 @@
                 phone.clientName.toLowerCase().includes(searchTerm) ||
                 phone.phoneType.toLowerCase().includes(searchTerm) ||
                 phone.imeiNumber.toLowerCase().includes(searchTerm) ||
-                phone.phoneColor.toLowerCase().includes(searchTerm) ||
+                phone.phoneNumber.toLowerCase().includes(searchTerm) ||
                 phone.manufacturer.toLowerCase().includes(searchTerm) ||
                 phone.issueDescription.toLowerCase().includes(searchTerm)
             );
@@ -473,14 +417,9 @@
             displayPhones(filteredPhones);
         }
 
-        // استماع لحدث الضغط على زر البحث
         searchButton.addEventListener('click', performSearch);
-        
-        // استماع لحدث الضغط على Enter في حقل البحث
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
+        searchInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') performSearch();
         });
     </script>
 </body>
