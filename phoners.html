@@ -266,161 +266,179 @@
     </div>
 
     <script>
-        const phoneData = [
-            {
-                "id": "m9iusvykzgn20isch",
-                "clientName": "رامي",
-                "phoneType": "A72",
-                "issueDescription": "كونكتر",
-                "imeiNumber": "929282",
-                "phoneNumber": "0591234567",
-                "manufacturer": "سامسونج",
-                "registrationDate": "2025-04-15T18:46:18.572Z",
-                "status": "registered"
-            },
-            {
-                "id": "m9ius2wxwy8ohwx1i",
-                "clientName": "محمد شحادة",
-                "phoneType": "A12",
-                "issueDescription": "طافي لا يشحن",
-                "imeiNumber": "358383838284",
-                "phoneNumber": "0599876543",
-                "manufacturer": "شاومي",
-                "registrationDate": "2025-04-15T18:45:40.930Z",
-                "status": "reached"
-            },
-            {
-                "id": "m9iv5a703d4z6wmqu",
-                "clientName": "أحمد",
-                "phoneType": "A1",
-                "issueDescription": "شاشة مكسورة",
-                "imeiNumber": "8484",
-                "phoneNumber": "0597654321",
-                "manufacturer": "سامسونج",
-                "registrationDate": "2025-04-15T18:55:56.892Z",
-                "status": "delivered"
-            }
-        ];
+    const phoneData = [
+      {
+        "id": "m9ix8b5fjubtnd0zi",
+        "clientName": "مؤيد",
+        "phoneType": "A8",
+        "issueDescription": "Bolk",
+        "imeiNumber": "838373",
+        "phoneNumber": "490600",
+        "manufacturer": "آيفون",
+        "registrationDate": "2025-04-15T19:54:17.331Z",
+        "status": "registered"
+      },
+      {
+        "id": "m9ix7e553cp21p5ut",
+        "clientName": "محميذس",
+        "phoneType": "8382",
+        "issueDescription": "نينني",
+        "imeiNumber": "837372",
+        "phoneNumber": "0569813333",
+        "manufacturer": "سامسونج",
+        "registrationDate": "2025-04-15T19:53:34.553Z",
+        "status": "reached"
+      },
+      {
+        "id": "m9ix6us59v5veqq3k",
+        "clientName": "رامي",
+        "phoneType": "A72",
+        "issueDescription": "طايت",
+        "imeiNumber": "827363",
+        "phoneNumber": "0569812222",
+        "manufacturer": "سامسونج",
+        "registrationDate": "2025-04-15T19:53:09.461Z",
+        "status": "delivered"
+      },
+      {
+        "id": "m9ix6dnbhctzvkoaw",
+        "clientName": "محمد انا",
+        "phoneType": "A9",
+        "issueDescription": "جديد",
+        "imeiNumber": "837262",
+        "phoneNumber": "0569813333",
+        "manufacturer": "أوبو",
+        "registrationDate": "2025-04-15T19:52:47.255Z",
+        "status": "registered"
+      },
+      {
+        "id": "m9ix5vahn9ot8kns5",
+        "clientName": "محمد شحادة",
+        "phoneType": "A12",
+        "issueDescription": "طافي",
+        "imeiNumber": "938374",
+        "phoneNumber": "0569813333",
+        "manufacturer": "سامسونج",
+        "registrationDate": "2025-04-15T19:52:23.467Z",
+        "status": "delivered"
+      }
+    ];
 
-        const phoneGrid = document.getElementById('phoneGrid');
-        const searchInput = document.getElementById('searchInput');
-        const searchButton = document.getElementById('searchButton');
+    const phoneGrid = document.getElementById('phoneGrid');
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
 
-        function getDaysSinceRegistration(dateString) {
-            const registrationDate = new Date(dateString);
-            const currentDate = new Date();
-            const diffTime = currentDate - registrationDate;
-            return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    function getDaysSinceRegistration(dateString) {
+        const registrationDate = new Date(dateString);
+        const currentDate = new Date();
+        const diffTime = currentDate - registrationDate;
+        return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    function displayPhones(phones) {
+        phoneGrid.innerHTML = '';
+        
+        if (phones.length === 0) {
+            phoneGrid.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-exclamation-circle fa-2x" style="margin-bottom: 15px;"></i>
+                    <h3>لا توجد نتائج مطابقة</h3>
+                    <p>لم يتم العثور على أي بيانات تطابق كلمة البحث</p>
+                </div>
+            `;
+            return;
         }
-
-        function displayPhones(phones) {
-            phoneGrid.innerHTML = '';
-            
-            if (phones.length === 0) {
-                phoneGrid.innerHTML = `
-                    <div class="no-results">
-                        <i class="fas fa-exclamation-circle fa-2x" style="margin-bottom: 15px;"></i>
-                        <h3>لا توجد نتائج مطابقة</h3>
-                        <p>لم يتم العثور على أي بيانات تطابق كلمة البحث</p>
+        
+        phones.forEach(phone => {
+            const daysPassed = getDaysSinceRegistration(phone.registrationDate);
+            const phoneCard = document.createElement('div');
+            phoneCard.className = 'phone-card';
+            phoneCard.innerHTML = `
+                <div class="phone-header">
+                    <div class="phone-title">${phone.clientName}</div>
+                    <div class="status ${phone.status}">
+                        <i class="fas ${getStatusIcon(phone.status)}"></i>
+                        ${getStatusText(phone.status)}
                     </div>
-                `;
-                return;
-            }
-            
-            phones.forEach(phone => {
-                const daysPassed = getDaysSinceRegistration(phone.registrationDate);
-                
-                const phoneCard = document.createElement('div');
-                phoneCard.className = 'phone-card';
-                
-                phoneCard.innerHTML = `
-                    <div class="phone-header">
-                        <div class="phone-title">${phone.clientName}</div>
-                        <div class="status ${phone.status}">
-                            <i class="fas ${getStatusIcon(phone.status)}"></i>
-                            ${getStatusText(phone.status)}
-                        </div>
+                </div>
+                <div class="phone-details">
+                    <div class="detail-row">
+                        <div class="detail-label">نوع الهاتف:</div>
+                        <div class="detail-value">${phone.phoneType}</div>
                     </div>
-                    <div class="phone-details">
-                        <div class="detail-row">
-                            <div class="detail-label">نوع الهاتف:</div>
-                            <div class="detail-value">${phone.phoneType}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">رقم الهاتف:</div>
-                            <div class="detail-value">${phone.phoneNumber}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">الشركة المصنعة:</div>
-                            <div class="detail-value">${phone.manufacturer}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">رقم IMEI:</div>
-                            <div class="detail-value">${phone.imeiNumber}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">وصف المشكلة:</div>
-                            <div class="detail-value">${phone.issueDescription}</div>
-                        </div>
+                    <div class="detail-row">
+                        <div class="detail-label">رقم الهاتف:</div>
+                        <div class="detail-value">${phone.phoneNumber}</div>
                     </div>
-                    <div class="days-counter">
-                        <i class="far fa-calendar-alt"></i>
-                        <span>${daysPassed} يوم منذ التسجيل</span>
+                    <div class="detail-row">
+                        <div class="detail-label">الشركة المصنعة:</div>
+                        <div class="detail-value">${phone.manufacturer}</div>
                     </div>
-                `;
-                
-                phoneGrid.appendChild(phoneCard);
-            });
-        }
-
-        function getStatusText(status) {
-            switch(status) {
-                case 'registered': return 'تم التسجيل';
-                case 'reached': return 'تم الوصول';
-                case 'delivered': return 'تم التسليم';
-                default: return status;
-            }
-        }
-
-        function getStatusIcon(status) {
-            switch(status) {
-                case 'registered': return 'fa-file-alt';
-                case 'reached': return 'fa-truck';
-                case 'delivered': return 'fa-check-circle';
-                default: return 'fa-question-circle';
-            }
-        }
-
-        function performSearch() {
-            const searchTerm = searchInput.value.trim().toLowerCase();
-            
-            if (searchTerm === '') {
-                phoneGrid.innerHTML = `
-                    <div class="initial-message">
-                        <i class="fas fa-mobile-alt fa-2x" style="margin-bottom: 15px;"></i>
-                        <h3>مرحباً في نظام بيانات الهواتف</h3>
-                        <p>استخدم مربع البحث أعلاه للعثور على البيانات المطلوبة</p>
+                    <div class="detail-row">
+                        <div class="detail-label">رقم IMEI:</div>
+                        <div class="detail-value">${phone.imeiNumber}</div>
                     </div>
-                `;
-                return;
-            }
-            
-            const filteredPhones = phoneData.filter(phone => 
-                phone.clientName.toLowerCase().includes(searchTerm) ||
-                phone.phoneType.toLowerCase().includes(searchTerm) ||
-                phone.imeiNumber.toLowerCase().includes(searchTerm) ||
-                phone.phoneNumber.toLowerCase().includes(searchTerm) ||
-                phone.manufacturer.toLowerCase().includes(searchTerm) ||
-                phone.issueDescription.toLowerCase().includes(searchTerm)
-            );
-            
-            displayPhones(filteredPhones);
-        }
-
-        searchButton.addEventListener('click', performSearch);
-        searchInput.addEventListener('keypress', e => {
-            if (e.key === 'Enter') performSearch();
+                    <div class="detail-row">
+                        <div class="detail-label">وصف المشكلة:</div>
+                        <div class="detail-value">${phone.issueDescription}</div>
+                    </div>
+                </div>
+                <div class="days-counter">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>${daysPassed} يوم منذ التسجيل</span>
+                </div>
+            `;
+            phoneGrid.appendChild(phoneCard);
         });
-    </script>
+    }
+
+    function getStatusText(status) {
+        switch(status) {
+            case 'registered': return 'تم التسجيل';
+            case 'reached': return 'تم الوصول';
+            case 'delivered': return 'تم التسليم';
+            default: return status;
+        }
+    }
+
+    function getStatusIcon(status) {
+        switch(status) {
+            case 'registered': return 'fa-file-alt';
+            case 'reached': return 'fa-truck';
+            case 'delivered': return 'fa-check-circle';
+            default: return 'fa-question-circle';
+        }
+    }
+
+    function performSearch() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        if (searchTerm === '') {
+            phoneGrid.innerHTML = `
+                <div class="initial-message">
+                    <i class="fas fa-mobile-alt fa-2x" style="margin-bottom: 15px;"></i>
+                    <h3>مرحباً في نظام بيانات الهواتف</h3>
+                    <p>استخدم مربع البحث أعلاه للعثور على البيانات المطلوبة</p>
+                </div>
+            `;
+            return;
+        }
+
+        const filteredPhones = phoneData.filter(phone => 
+            phone.clientName.toLowerCase().includes(searchTerm) ||
+            phone.phoneType.toLowerCase().includes(searchTerm) ||
+            phone.imeiNumber.toLowerCase().includes(searchTerm) ||
+            phone.phoneNumber.toLowerCase().includes(searchTerm) ||
+            phone.manufacturer.toLowerCase().includes(searchTerm) ||
+            phone.issueDescription.toLowerCase().includes(searchTerm)
+        );
+
+        displayPhones(filteredPhones);
+    }
+
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') performSearch();
+    });
+</script>
 </body>
 </html>
