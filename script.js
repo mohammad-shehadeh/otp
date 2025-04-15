@@ -72,7 +72,8 @@ async function loadData() {
         if (!response.ok) throw new Error('فشل في جلب البيانات');
         
         const data = await response.json();
-        const content = atob(data.content);
+        const decodedData = atob(data.content);
+const content = decodeURIComponent(escape(decodedData));
         
         try {
             app.devices = content.trim() ? JSON.parse(content) : [];
