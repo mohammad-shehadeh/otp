@@ -19,7 +19,7 @@
     "phoneNumber": "0569812222",
     "manufacturer": "سامسونج",
     "registrationDate": "2025-04-15T19:53:09.461Z",
-    "status": "registered"
+    "status": "delivered"
   },
   {
     "id": "m9ix6dnbhctzvkoaw",
