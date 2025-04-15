@@ -3,118 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="موقع متخصص في الأطعمة الصحية، وصفات صحية، نصائح غذائية، وقوائم أطعمة مفيدة لصحتك">
-    <meta name="keywords" content="أطعمة صحية, نظام غذائي, وصفات صحية,  انيتينسمبنذوينسنس, حمية, تغذية سليمة, أغذية مفيدة">
-    <title>دليل الأطعمة الصحية - Healthy Foods Guide</title>
-    
-    <!-- روابط SEO إضافية -->
-    <meta property="og:title" content="دليل الأطعمة الصحية">
-    <meta property="og:description" content="اكتشف أفضل الأطعمة الصحية والوصفات والنصائح الغذائية">
-    <link rel="canonical" href="https://www.healthyfoodsguide.com">
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-        }
-        nav {
-            background: #333;
-            padding: 1rem;
-            text-align: center;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 2rem;
-        }
-        .article-section, .recipe-section {
-            margin: 2rem 0;
-        }
-        footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            position: relative;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
+    <title>نظام إدارة صيانة الهواتف</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- هيدر الموقع -->
     <header>
-        <h1>دليلك الشامل للأطعمة الصحية 🥗</h1>
+        <h1><i class="fas fa-mobile-alt"></i> نظام إدارة صيانة الهواتف</h1>
+        <button id="newDeviceBtn" class="btn-primary">
+            <i class="fas fa-plus"></i> تسجيل جهاز جديد
+        </button>
     </header>
 
-    <!-- قائمة التنقل -->
-    <nav>
-        <a href="#home">الصفحة الرئيسية</a>
-        <a href="#articles">مقالات</a>
-        <a href="#recipes">وصفات</a>
-        <a href="#tips">نصائح</a>
-    </nav>
+    <div class="container">
+        <div id="statsBar">
+            <div class="stat-card">
+                <h3>إجمالي الأجهزة</h3>
+                <p id="totalDevices">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>قيد الصيانة</h3>
+                <p id="registeredDevices">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>تم الوصول</h3>
+                <p id="reachedDevices">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>تم الاستلام</h3>
+                <p id="deliveredDevices">0</p>
+            </div>
+        </div>
 
-    <!-- المحتوى الرئيسي -->
-    <main class="container">
-        <!-- قسم المقالات -->
-        <section id="articles" class="article-section">
-            <h2>أهم الأطعمة الصحية لتضمينها في نظامك الغذائي</h2>
-            <article>
-                <h3>فوائد الخضروات الورقية</h3>
-                <p>السبانخ والكرنب غنية بالفيتامينات والمعادن... <a href="#leafy-greens">اقرأ المزيد</a></p>
-            </article>
-            <article>
-                <h3>أفضل مصادر البروتين الصحي</h3>
-                <p>اكتشف أفضل البروتينات النباتية والحيوانية... <a href="#proteins">اقرأ المزيد</a></p>
-            </article>
-        </section>
+        <div id="devicesList">
+            <!-- سيتم ملؤها بالبيانات من Server.md -->
+        </div>
+    </div>
 
-        <!-- قسم الوصفات -->
-        <section id="recipes" class="recipe-section">
-            <h2>وصفات صحية وسريعة</h2>
-            <article>
-                <h3>سلطة الكينوا بالخضروات</h3>
-                <img src="images/quinoa-salad.jpg" alt="وصفة سلطة الكينوا الصحية" width="300">
-                <p>مكونات صحية وغنية بالألياف...</p>
-            </article>
-        </section>
+    <!-- نموذج إضافة جهاز جديد -->
+    <div id="deviceModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-mobile-alt"></i> تسجيل جهاز جديد</h2>
+            <form id="deviceForm">
+                <div class="form-group">
+                    <label for="clientName">اسم العميل:</label>
+                    <input type="text" id="clientName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phoneType">نوع الهاتف:</label>
+                    <input type="text" id="phoneType" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issueDescription">وصف العطل:</label>
+                    <textarea id="issueDescription" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="imeiNumber">رقم IMEI:</label>
+                    <input type="text" id="imeiNumber" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phoneColor">لون الهاتف:</label>
+                    <select id="phoneColor" required>
+                        <option value="أسود">أسود</option>
+                        <option value="أبيض">أبيض</option>
+                        <option value="ذهبي">ذهبي</option>
+                        <option value="فضي">فضي</option>
+                        <option value="أزرق">أزرق</option>
+                        <option value="أحمر">أحمر</option>
+                        <option value="أخضر">أخضر</option>
+                        <option value="آخر">آخر</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="manufacturer">الشركة المصنعة:</label>
+                    <select id="manufacturer" required>
+                        <option value="سامسونج">سامسونج</option>
+                        <option value="آيفون">آيفون</option>
+                        <option value="هواوي">هواوي</option>
+                        <option value="شاومي">شاومي</option>
+                        <option value="أوبو">أوبو</option>
+                        <option value="نوكيا">نوكيا</option>
+                        <option value="آخر">آخر</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-primary">حفظ البيانات</button>
+            </form>
+        </div>
+    </div>
 
-        <!-- قسم النصائح -->
-        <section id="tips">
-            <h2>نصائح ذهبية للتغذية السليمة</h2>
-            <ul>
-                <li>تناول 5 حصص من الفواكه والخضروات يومياً</li>
-                <li>اشرب 8 أكواب ماء على الأقل</li>
-                <li>اختر الحبوب الكاملة بدلاً من المكررة</li>
-            </ul>
-        </section>
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>جاري معالجة البيانات...</p>
+    </div>
 
-        <!-- القائمة الجانبية -->
-        <aside>
-            <h3>الكلمات المفتاحية الأكثر بحثاً:</h3>
-            <p>أطعمة صحية - نظام غذائي صحي - وصفات دايت - أغذية لإنقاص الوزن - فوائد الفواكه</p>
-        </aside>
-    </main>
-
-    <!-- الفوتر -->
-    <footer>
-        <p>© 2023 دليل الأطعمة الصحية. جميع الحقوق محفوظة.</p>
-        <p>اتصل بنا: info@healthyfoods.com</p>
-        <p>تابعنا على وسائل التواصل الاجتماعي: [روابط هنا]</p>
-    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
