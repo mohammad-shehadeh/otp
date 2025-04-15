@@ -1,11 +1,15 @@
-// بيانات التطبيق
+// بيانات التطبيق// بيانات التطبيق
 const app = {
     devices: [],
-    repoOwner: 'YOUR_GITHUB_USERNAME', // استبدل باسم مستخدم GitHub الخاص بك
-    repoName: 'YOUR_REPO_NAME', // استبدل باسم المستودع الخاص بك
-    filePath: 'Server.md',
-    token: 'YOUR_GITHUB_TOKEN' // استبدل ب token GitHub الخاص بك
+    repoOwner: CONFIG.REPO_OWNER,
+    repoName: CONFIG.REPO_NAME,
+    filePath: CONFIG.FILE_PATH,
+    get token() {
+        return getGitHubToken();
+    }
 };
+
+// ... بقية الكود يبقى كما هو بدون تغيير ...
 
 // عناصر DOM
 const elements = {
