@@ -1,4 +1,4 @@
- // بيانات التطبيق
+// بيانات التطبيق
 const app = {
     _devices: [],
     get devices() {
@@ -62,26 +62,26 @@ async function loadData() {
                 'Accept': 'application/vnd.github.v3+json'
             }
         });
-        
+
         if (response.status === 404) {
             app.devices = [];
             renderDevices();
             return;
         }
-        
+
         if (!response.ok) throw new Error('فشل في جلب البيانات');
-        
+
         const data = await response.json();
         const decodedData = atob(data.content);
-const content = decodeURIComponent(escape(decodedData));
-        
+        const content = decodeURIComponent(escape(decodedData));
+
         try {
             app.devices = content.trim() ? JSON.parse(content) : [];
         } catch (e) {
             app.devices = [];
             console.error('Error parsing data:', e);
         }
-        
+
         renderDevices();
     } catch (error) {
         console.error('Error:', error);
@@ -102,15 +102,15 @@ async function addNewDevice() {
             phoneType: document.getElementById('phoneType').value,
             issueDescription: document.getElementById('issueDescription').value,
             imeiNumber: document.getElementById('imeiNumber').value,
-            phoneColor: document.getElementById('phoneColor').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
             manufacturer: document.getElementById('manufacturer').value,
             registrationDate: new Date().toISOString(),
             status: 'registered'
         };
-        
+
         app.devices = [...app.devices, newDevice];
         await saveDataToGitHub();
-        
+
         elements.deviceForm.reset();
         elements.deviceModal.style.display = 'none';
         renderDevices();
@@ -139,7 +139,7 @@ async function saveDataToGitHub() {
         } catch (e) {
             console.log('الملف غير موجود، سيتم إنشاؤه جديداً');
         }
-        
+
         const content = JSON.stringify(app.devices, null, 2);
         const response = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
             method: 'PUT',
@@ -154,7 +154,7 @@ async function saveDataToGitHub() {
                 sha: sha || undefined
             })
         });
-        
+
         if (!response.ok) throw new Error('فشل في حفظ البيانات');
     } catch (error) {
         console.error('Error:', error);
@@ -164,16 +164,16 @@ async function saveDataToGitHub() {
 
 function renderDevices() {
     elements.devicesList.innerHTML = '';
-    
+
     if (app.devices.length === 0) {
         elements.devicesList.innerHTML = '<p class="no-devices">لا توجد أجهزة مسجلة بعد</p>';
         return;
     }
-    
+
     app.devices.sort((a, b) => new Date(b.registrationDate) - new Date(a.registrationDate))
         .forEach(device => {
             const days = Math.floor((new Date() - new Date(device.registrationDate)) / (1000 * 60 * 60 * 24));
-            
+
             const deviceCard = document.createElement('div');
             deviceCard.className = 'device-card';
             deviceCard.innerHTML = `
@@ -184,7 +184,7 @@ function renderDevices() {
                 <div class="device-details">
                     <div class="detail-item"><label>نوع الهاتف</label><span>${device.phoneType}</span></div>
                     <div class="detail-item"><label>الشركة المصنعة</label><span>${device.manufacturer}</span></div>
-                    <div class="detail-item"><label>لون الهاتف</label><span>${device.phoneColor}</span></div>
+                    <div class="detail-item"><label>رقم الهاتف</label><span>${device.phoneNumber}</span></div>
                     <div class="detail-item"><label>رقم IMEI</label><span>${device.imeiNumber}</span></div>
                     <div class="detail-item"><label>تاريخ التسجيل</label><span>${formatDate(device.registrationDate)}</span></div>
                     <div class="detail-item full-width"><label>وصف العطل</label><span>${device.issueDescription}</span></div>
@@ -197,10 +197,10 @@ function renderDevices() {
                     </select>
                 </div>
             `;
-            
+
             elements.devicesList.appendChild(deviceCard);
         });
-    
+
     document.querySelectorAll('.status-select').forEach(select => {
         select.addEventListener('change', (e) => {
             updateDeviceStatus(e.target.dataset.id, e.target.value);
@@ -211,8 +211,8 @@ function renderDevices() {
 async function updateDeviceStatus(deviceId, newStatus) {
     showLoading();
     try {
-        app.devices = app.devices.map(device => 
-            device.id === deviceId ? {...device, status: newStatus} : device
+        app.devices = app.devices.map(device =>
+            device.id === deviceId ? { ...device, status: newStatus } : device
         );
         await saveDataToGitHub();
         updateStats();
@@ -251,6 +251,6 @@ function hideLoading() {
 
 // تهيئة التطبيق
 document.addEventListener('DOMContentLoaded', () => {
-    app.devices = []; // تهيئة مؤكدة
+    app.devices = [];
     loadData();
 });
