@@ -1,4 +1,3 @@
-// config.js
 const CONFIG = {
     TOKEN_PARTS: {
         PART1: "ghp_UCTgHQsAY5MjZ9AFye5",
