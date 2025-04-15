@@ -343,7 +343,7 @@ function displayPhones(phones) {
 function getStatusText(status) {
   switch (status) {
     case 'registered': return 'لم يتم وصول الهاتف بعد';
-    case 'reached': return 'تم وصول هاتفك يمكنك استلامه في اي وقت';
+    case 'reached': return 'تم وصول هاتفك يمكنك استلامه في أي وقت';
     case 'delivered': return 'لقد تم تسليم الهاتف لصاحبه';
     default: return status;
   }
@@ -381,17 +381,14 @@ searchInput.addEventListener('keypress', e => {
 
 phoneGrid.innerHTML = '';
 
-// تحميل البيانات من ملف server.md
-fetch('server.md')
+// تحميل البيانات من ملف Server.md على GitHub
+fetch('https://mohammad-shehadeh.github.io/otp/Server.md')
   .then(response => response.text())
   .then(text => {
-    const jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
-    if (jsonMatch && jsonMatch[1]) {
-      try {
-        phoneData = JSON.parse(jsonMatch[1]);
-      } catch (e) {
-        console.error("خطأ في تحليل JSON:", e);
-      }
+    try {
+      phoneData = JSON.parse(text);
+    } catch (e) {
+      console.error("خطأ في تحليل JSON:", e);
     }
   })
   .catch(error => {
