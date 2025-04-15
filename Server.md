@@ -53,5 +53,16 @@
     "manufacturer": "سامسونج",
     "registrationDate": "2025-04-15T19:52:23.467Z",
     "status": "delivered"
+  },
+  {
+    "id": "m9iy5pikk9omhyrtz",
+    "clientName": "رامي ناصر الدين",
+    "phoneType": "A9",
+    "issueDescription": "Jk",
+    "imeiNumber": "838373",
+    "phoneNumber": "0569812222",
+    "manufacturer": "سامسونج",
+    "registrationDate": "2025-04-15T20:20:15.596Z",
+    "status": "registered"
   }
 ]
