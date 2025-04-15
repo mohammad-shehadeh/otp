@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عرض بيانات الهواتف</title>
+    <title>نظام بيانات الهواتف</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Styles */
         :root {
             --registered: #f8f9fa;
             --reached: #ffc107;
@@ -51,18 +50,34 @@
             display: flex;
             justify-content: center;
             margin: 20px 0;
+            gap: 10px;
         }
         
         #colorSearch {
             padding: 12px 20px;
-            width: 300px;
+            width: 250px;
             border: none;
             border-radius: 30px;
             font-size: 1rem;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         
-        #colorSearch:focus {
+        #searchButton {
+            padding: 12px 25px;
+            background-color: #343a40;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #searchButton:hover {
+            background-color: #495057;
+        }
+        
+        #colorSearch:focus, #searchButton:focus {
             outline: none;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
@@ -190,7 +205,12 @@
                 grid-template-columns: 1fr;
             }
             
-            #colorSearch {
+            .search-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            #colorSearch, #searchButton {
                 width: 100%;
             }
         }
@@ -199,18 +219,19 @@
 <body>
     <div class="container">
         <header>
-            <h1>نظام إدارة بيانات الهواتف</h1>
-            <p>ابحث عن الهواتف حسب اللون</p>
+            <h1>نظام بيانات الهواتف</h1>
+            <p>البحث متاح فقط حسب لون الهاتف</p>
         </header>
         
         <div class="search-container">
-            <input type="text" id="colorSearch" placeholder="ابحث حسب لون الهاتف...">
+            <input type="text" id="colorSearch" placeholder="أدخل لون الهاتف...">
+            <button id="searchButton">بحث <i class="fas fa-search"></i></button>
         </div>
         
         <div class="phone-grid" id="phoneGrid">
             <div class="initial-message">
-                <i class="fas fa-search fa-2x" style="margin-bottom: 15px;"></i>
-                <p>الرجاء إدخال لون الهاتف للبحث عن البيانات</p>
+                <i class="fas fa-lock fa-2x" style="margin-bottom: 15px;"></i>
+                <p>البيانات محمية - يرجى إدخال لون الهاتف والضغط على زر البحث</p>
             </div>
         </div>
     </div>
@@ -256,6 +277,7 @@
         // عناصر DOM
         const phoneGrid = document.getElementById('phoneGrid');
         const colorSearch = document.getElementById('colorSearch');
+        const searchButton = document.getElementById('searchButton');
 
         // دالة لحساب الأيام المنقضية منذ التسجيل
         function getDaysSinceRegistration(dateString) {
@@ -271,7 +293,13 @@
             phoneGrid.innerHTML = '';
             
             if (phones.length === 0) {
-                phoneGrid.innerHTML = '<div class="no-results"><i class="fas fa-exclamation-circle fa-2x" style="margin-bottom: 15px;"></i><p>لا توجد نتائج مطابقة للبحث</p></div>';
+                phoneGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-exclamation-circle fa-2x" style="margin-bottom: 15px;"></i>
+                        <p>لا توجد بيانات مطابقة للون الذي تم البحث عنه</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">البيانات متاحة فقط للألوان: أزرق، أسود</p>
+                    </div>
+                `;
                 return;
             }
             
@@ -281,7 +309,6 @@
                 const phoneCard = document.createElement('div');
                 phoneCard.className = 'phone-card';
                 
-                // إضافة شريط لوني حسب لون الهاتف
                 phoneCard.innerHTML = `
                     <div class="color-indicator" style="background-color: ${getColorCode(phone.phoneColor)};"></div>
                     <div class="phone-header">
@@ -351,7 +378,7 @@
             }
         }
 
-        // دالة للحصول على كود اللون (للعرض فقط)
+        // دالة للحصول على كود اللون
         function getColorCode(colorName) {
             const colors = {
                 'أزرق': '#007bff',
@@ -374,22 +401,29 @@
             if (searchTerm === '') {
                 phoneGrid.innerHTML = `
                     <div class="initial-message">
-                        <i class="fas fa-search fa-2x" style="margin-bottom: 15px;"></i>
-                        <p>الرجاء إدخال لون الهاتف للبحث عن البيانات</p>
+                        <i class="fas fa-lock fa-2x" style="margin-bottom: 15px;"></i>
+                        <p>يجب إدخال لون الهاتف للبحث عن البيانات</p>
                     </div>
                 `;
                 return;
             }
             
             const filteredPhones = phoneData.filter(phone => 
-                phone.phoneColor.toLowerCase().includes(searchTerm)
+                phone.phoneColor.toLowerCase() === searchTerm
             );
             
             displayPhones(filteredPhones);
         }
 
-        // استماع لحدث البحث
-        colorSearch.addEventListener('input', searchByColor);
+        // استماع لحدث الضغط على زر البحث
+        searchButton.addEventListener('click', searchByColor);
+        
+        // استماع لحدث الضغط على Enter في حقل البحث
+        colorSearch.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchByColor();
+            }
+        });
     </script>
 </body>
 </html>
