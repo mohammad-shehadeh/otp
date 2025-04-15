@@ -30,6 +30,6 @@
     "phoneColor": "أزرق",
     "manufacturer": "شاومي",
     "registrationDate": "2025-04-15T18:45:40.930Z",
-    "status": "registered"
+    "status": "delivered"
   }
 ]
