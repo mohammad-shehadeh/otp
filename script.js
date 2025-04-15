@@ -1,8 +1,8 @@
 // بيانات التطبيق// بيانات التطبيق
 const app = {
     devices: [],
-    repoOwner: CONFIG.REPO_OWNER,
-    repoName: CONFIG.REPO_NAME,
+    repoOwner: mohammad-shehadeh,
+    repoName: otp,
     filePath: CONFIG.FILE_PATH,
     get token() {
         return getGitHubToken();
