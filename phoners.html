@@ -10,6 +10,7 @@
             --registered: #f8f9fa;
             --reached: #ffc107;
             --delivered: #28a745;
+            --primary: #343a40;
         }
         
         * {
@@ -32,7 +33,7 @@
         }
         
         header {
-            background-color: #343a40;
+            background-color: var(--primary);
             color: white;
             padding: 20px 0;
             text-align: center;
@@ -51,11 +52,12 @@
             justify-content: center;
             margin: 20px 0;
             gap: 10px;
+            flex-wrap: wrap;
         }
         
-        #colorSearch {
+        #searchInput {
             padding: 12px 20px;
-            width: 250px;
+            width: 300px;
             border: none;
             border-radius: 30px;
             font-size: 1rem;
@@ -64,20 +66,24 @@
         
         #searchButton {
             padding: 12px 25px;
-            background-color: #343a40;
+            background-color: var(--primary);
             color: white;
             border: none;
             border-radius: 30px;
             font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         #searchButton:hover {
             background-color: #495057;
+            transform: translateY(-2px);
         }
         
-        #colorSearch:focus, #searchButton:focus {
+        #searchInput:focus, #searchButton:focus {
             outline: none;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
@@ -93,7 +99,7 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -115,7 +121,7 @@
         .phone-title {
             font-size: 1.3rem;
             font-weight: bold;
-            color: #343a40;
+            color: var(--primary);
         }
         
         .status {
@@ -124,6 +130,7 @@
             font-size: 0.9rem;
             padding: 5px 10px;
             border-radius: 20px;
+            gap: 5px;
         }
         
         .status.registered {
@@ -158,6 +165,7 @@
         
         .detail-value {
             flex: 1;
+            word-break: break-word;
         }
         
         .days-counter {
@@ -169,11 +177,7 @@
             border-radius: 5px;
             margin-top: 10px;
             font-size: 0.9rem;
-        }
-        
-        .days-counter i {
-            margin-left: 5px;
-            color: #6c757d;
+            gap: 5px;
         }
         
         .no-results {
@@ -182,6 +186,9 @@
             padding: 40px;
             font-size: 1.2rem;
             color: #6c757d;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         .initial-message {
@@ -190,6 +197,9 @@
             padding: 40px;
             font-size: 1.2rem;
             color: #6c757d;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         .color-indicator {
@@ -198,6 +208,14 @@
             right: 0;
             width: 8px;
             height: 100%;
+        }
+        
+        .search-hint {
+            text-align: center;
+            width: 100%;
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 10px;
         }
         
         @media (max-width: 768px) {
@@ -210,8 +228,12 @@
                 align-items: center;
             }
             
-            #colorSearch, #searchButton {
+            #searchInput, #searchButton {
                 width: 100%;
+            }
+            
+            #searchButton {
+                justify-content: center;
             }
         }
     </style>
@@ -220,18 +242,25 @@
     <div class="container">
         <header>
             <h1>نظام بيانات الهواتف</h1>
-            <p>البحث متاح فقط حسب لون الهاتف</p>
+            <p>ابحث بأي كلمة (لون، اسم، نوع، رقم)</p>
         </header>
         
         <div class="search-container">
-            <input type="text" id="colorSearch" placeholder="أدخل لون الهاتف...">
-            <button id="searchButton">بحث <i class="fas fa-search"></i></button>
+            <input type="text" id="searchInput" placeholder="ابحث بأي كلمة...">
+            <button id="searchButton">
+                <i class="fas fa-search"></i>
+                بحث
+            </button>
+            <div class="search-hint">
+                يمكنك البحث بأي كلمة (لون الهاتف، اسم العميل، نوع الهاتف، رقم IMEI)
+            </div>
         </div>
         
         <div class="phone-grid" id="phoneGrid">
             <div class="initial-message">
-                <i class="fas fa-lock fa-2x" style="margin-bottom: 15px;"></i>
-                <p>البيانات محمية - يرجى إدخال لون الهاتف والضغط على زر البحث</p>
+                <i class="fas fa-mobile-alt fa-2x" style="margin-bottom: 15px;"></i>
+                <h3>مرحباً في نظام بيانات الهواتف</h3>
+                <p>استخدم مربع البحث أعلاه للعثور على البيانات المطلوبة</p>
             </div>
         </div>
     </div>
@@ -263,20 +292,42 @@
             },
             {
                 "id": "m9iv5a703d4z6wmqu",
-                "clientName": "اخر",
+                "clientName": "أحمد",
                 "phoneType": "A1",
-                "issueDescription": "وبني",
+                "issueDescription": "شاشة مكسورة",
                 "imeiNumber": "8484",
                 "phoneColor": "أسود",
                 "manufacturer": "سامسونج",
                 "registrationDate": "2025-04-15T18:55:56.892Z",
                 "status": "delivered"
+            },
+            {
+                "id": "m9iv6b814e5a7xnrv",
+                "clientName": "نورا",
+                "phoneType": "iPhone 13",
+                "issueDescription": "بطارية",
+                "imeiNumber": "356789123456",
+                "phoneColor": "سفرجلي",
+                "manufacturer": "آبل",
+                "registrationDate": "2025-04-16T10:30:00.000Z",
+                "status": "registered"
+            },
+            {
+                "id": "m9iv7c925f6b8yows",
+                "clientName": "خالد",
+                "phoneType": "Note 20",
+                "issueDescription": "شحن",
+                "imeiNumber": "123456789012",
+                "phoneColor": "ذهبي",
+                "manufacturer": "سامسونج",
+                "registrationDate": "2025-04-14T09:15:00.000Z",
+                "status": "reached"
             }
         ];
 
         // عناصر DOM
         const phoneGrid = document.getElementById('phoneGrid');
-        const colorSearch = document.getElementById('colorSearch');
+        const searchInput = document.getElementById('searchInput');
         const searchButton = document.getElementById('searchButton');
 
         // دالة لحساب الأيام المنقضية منذ التسجيل
@@ -296,8 +347,8 @@
                 phoneGrid.innerHTML = `
                     <div class="no-results">
                         <i class="fas fa-exclamation-circle fa-2x" style="margin-bottom: 15px;"></i>
-                        <p>لا توجد بيانات مطابقة للون الذي تم البحث عنه</p>
-                        <p style="font-size: 0.9rem; margin-top: 10px;">البيانات متاحة فقط للألوان: أزرق، أسود</p>
+                        <h3>لا توجد نتائج مطابقة</h3>
+                        <p>لم يتم العثور على أي بيانات تطابق كلمة البحث</p>
                     </div>
                 `;
                 return;
@@ -342,7 +393,7 @@
                     </div>
                     <div class="days-counter">
                         <i class="far fa-calendar-alt"></i>
-                        ${daysPassed} يوم منذ التسجيل
+                        <span>${daysPassed} يوم منذ التسجيل</span>
                     </div>
                 `;
                 
@@ -388,40 +439,47 @@
                 'ذهبي': '#ffd700',
                 'فضي': '#c0c0c0',
                 'أخضر': '#28a745',
-                'وردي': '#ff69b4'
+                'وردي': '#ff69b4',
+                'سفرجلي': '#ff7f50'
             };
             
             return colors[colorName] || '#6c757d';
         }
 
-        // دالة للبحث حسب اللون
-        function searchByColor() {
-            const searchTerm = colorSearch.value.trim().toLowerCase();
+        // دالة للبحث الشامل
+        function performSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
             
             if (searchTerm === '') {
                 phoneGrid.innerHTML = `
                     <div class="initial-message">
-                        <i class="fas fa-lock fa-2x" style="margin-bottom: 15px;"></i>
-                        <p>يجب إدخال لون الهاتف للبحث عن البيانات</p>
+                        <i class="fas fa-mobile-alt fa-2x" style="margin-bottom: 15px;"></i>
+                        <h3>مرحباً في نظام بيانات الهواتف</h3>
+                        <p>استخدم مربع البحث أعلاه للعثور على البيانات المطلوبة</p>
                     </div>
                 `;
                 return;
             }
             
             const filteredPhones = phoneData.filter(phone => 
-                phone.phoneColor.toLowerCase() === searchTerm
+                phone.clientName.toLowerCase().includes(searchTerm) ||
+                phone.phoneType.toLowerCase().includes(searchTerm) ||
+                phone.imeiNumber.toLowerCase().includes(searchTerm) ||
+                phone.phoneColor.toLowerCase().includes(searchTerm) ||
+                phone.manufacturer.toLowerCase().includes(searchTerm) ||
+                phone.issueDescription.toLowerCase().includes(searchTerm)
             );
             
             displayPhones(filteredPhones);
         }
 
         // استماع لحدث الضغط على زر البحث
-        searchButton.addEventListener('click', searchByColor);
+        searchButton.addEventListener('click', performSearch);
         
         // استماع لحدث الضغط على Enter في حقل البحث
-        colorSearch.addEventListener('keypress', function(e) {
+        searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                searchByColor();
+                performSearch();
             }
         });
     </script>
