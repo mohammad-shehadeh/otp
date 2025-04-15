@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض بيانات الهواتف</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Styles */
+        :root {
+            --registered: #f8f9fa;
+            --received: #dc3545;
+            --completed: #28a745;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        #colorSearch {
+            padding: 12px 20px;
+            width: 300px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        #colorSearch:focus {
+            outline: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .phone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .phone-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .phone-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .phone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .phone-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #343a40;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: var(--registered);
+            color: #333;
+        }
+        
+        .status.registered {
+            background-color: var(--registered);
+            color: #333;
+        }
+        
+        .status.received {
+            background-color: var(--received);
+            color: white;
+        }
+        
+        .status.completed {
+            background-color: var(--completed);
+            color: white;
+        }
+        
+        .phone-details {
+            margin-bottom: 15px;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            min-width: 120px;
+            color: #555;
+        }
+        
+        .detail-value {
+            flex: 1;
+        }
+        
+        .days-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .days-counter i {
+            margin-left: 5px;
+            color: #6c757d;
+        }
+        
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        
+        .color-indicator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .phone-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            #colorSearch {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>نظام إدارة بيانات الهواتف</h1>
+            <p>تصفح بيانات الهواتف حسب اللون</p>
+        </header>
+        
+        <div class="search-container">
+            <input type="text" id="colorSearch" placeholder="ابحث حسب لون الهاتف...">
+        </div>
+        
+        <div class="phone-grid" id="phoneGrid">
+            <!-- سيتم ملء هذا القسم بالبيانات من خلال JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // البيانات المأخوذة من Server.md
+        const phoneData = [
+            {
+                "id": "m9iusvykzgn20isch",
+                "clientName": "رامي",
+                "phoneType": "A72",
+                "issueDescription": "كونكتر",
+                "imeiNumber": "929282",
+                "phoneColor": "أزرق",
+                "manufacturer": "سامسونج",
+                "registrationDate": "2025-04-15T18:46:18.572Z",
+                "status": "registered"
+            },
+            {
+                "id": "m9ius2wxwy8ohwx1i",
+                "clientName": "محمد شحادة",
+                "phoneType": "A12",
+                "issueDescription": "طافي لا تشش",
+                "imeiNumber": "358383838284",
+                "phoneColor": "أزرق",
+                "manufacturer": "شاومي",
+                "registrationDate": "2025-04-15T18:45:40.930Z",
+                "status": "received"
+            },
+            {
+                "id": "m9iv5a703d4z6wmqu",
+                "clientName": "اخر",
+                "phoneType": "A1",
+                "issueDescription": "وبني",
+                "imeiNumber": "8484",
+                "phoneColor": "أسود",
+                "manufacturer": "سامسونج",
+                "registrationDate": "2025-04-15T18:55:56.892Z",
+                "status": "completed"
+            }
+        ];
+
+        // عناصر DOM
+        const phoneGrid = document.getElementById('phoneGrid');
+        const colorSearch = document.getElementById('colorSearch');
+
+        // دالة لحساب الأيام المنقضية منذ التسجيل
+        function getDaysSinceRegistration(dateString) {
+            const registrationDate = new Date(dateString);
+            const currentDate = new Date();
+            const diffTime = currentDate - registrationDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        // دالة لعرض بطاقات الهواتف
+        function displayPhones(phones) {
+            phoneGrid.innerHTML = '';
+            
+            if (phones.length === 0) {
+                phoneGrid.innerHTML = '<div class="no-results">لا توجد نتائج مطابقة للبحث</div>';
+                return;
+            }
+            
+            phones.forEach(phone => {
+                const daysPassed = getDaysSinceRegistration(phone.registrationDate);
+                
+                const phoneCard = document.createElement('div');
+                phoneCard.className = 'phone-card';
+                
+                // إضافة شريط لوني حسب لون الهاتف
+                phoneCard.innerHTML = `
+                    <div class="color-indicator" style="background-color: ${getColorCode(phone.phoneColor)};"></div>
+                    <div class="phone-header">
+                        <div class="phone-title">${phone.clientName}</div>
+                        <div class="status ${phone.status}">
+                            <i class="fas ${getStatusIcon(phone.status)}"></i>
+                            ${getStatusText(phone.status)}
+                        </div>
+                    </div>
+                    <div class="phone-details">
+                        <div class="detail-row">
+                            <div class="detail-label">نوع الهاتف:</div>
+                            <div class="detail-value">${phone.phoneType}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">الشركة المصنعة:</div>
+                            <div class="detail-value">${phone.manufacturer}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">لون الهاتف:</div>
+                            <div class="detail-value">${phone.phoneColor}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">رقم IMEI:</div>
+                            <div class="detail-value">${phone.imeiNumber}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">وصف المشكلة:</div>
+                            <div class="detail-value">${phone.issueDescription}</div>
+                        </div>
+                    </div>
+                    <div class="days-counter">
+                        <i class="far fa-calendar-alt"></i>
+                        ${daysPassed} يوم منذ التسجيل
+                    </div>
+                `;
+                
+                phoneGrid.appendChild(phoneCard);
+            });
+        }
+
+        // دالة للحصول على نص الحالة
+        function getStatusText(status) {
+            switch(status) {
+                case 'registered':
+                    return 'تم التسجيل';
+                case 'received':
+                    return 'تم الاستلام';
+                case 'completed':
+                    return 'تم الإصلاح';
+                default:
+                    return status;
+            }
+        }
+
+        // دالة للحصول على أيقونة الحالة
+        function getStatusIcon(status) {
+            switch(status) {
+                case 'registered':
+                    return 'fa-file-alt';
+                case 'received':
+                    return 'fa-box-open';
+                case 'completed':
+                    return 'fa-check-circle';
+                default:
+                    return 'fa-question-circle';
+            }
+        }
+
+        // دالة للحصول على كود اللون (للعرض فقط)
+        function getColorCode(colorName) {
+            const colors = {
+                'أزرق': '#007bff',
+                'أسود': '#343a40',
+                'أحمر': '#dc3545',
+                'أبيض': '#f8f9fa',
+                'ذهبي': '#ffd700',
+                'فضي': '#c0c0c0',
+                'أخضر': '#28a745',
+                'وردي': '#ff69b4'
+            };
+            
+            return colors[colorName] || '#6c757d';
+        }
+
+        // دالة للبحث حسب اللون
+        function searchByColor() {
+            const searchTerm = colorSearch.value.trim().toLowerCase();
+            
+            if (searchTerm === '') {
+                displayPhones(phoneData);
+                return;
+            }
+            
+            const filteredPhones = phoneData.filter(phone => 
+                phone.phoneColor.toLowerCase().includes(searchTerm)
+            );
+            
+            displayPhones(filteredPhones);
+        }
+
+        // استماع لحدث البحث
+        colorSearch.addEventListener('input', searchByColor);
+
+        // عرض جميع الهواتف عند تحميل الصفحة
+        displayPhones(phoneData);
+    </script>
+</body>
+</html>
