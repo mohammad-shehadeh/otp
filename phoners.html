@@ -394,9 +394,9 @@
 
     function getStatusText(status) {
         switch(status) {
-            case 'registered': return 'تم التسجيل';
-            case 'reached': return 'تم الوصول';
-            case 'delivered': return 'تم التسليم';
+            case 'registered': return 'لم يتم وصول الهاتف بعد';
+            case 'reached': return 'تم وصول هاتفك يمكنك استلامه في اي وقت';
+            case 'delivered': return 'لقد تم تسليم الهاتف لصاحبه';
             default: return status;
         }
     }
