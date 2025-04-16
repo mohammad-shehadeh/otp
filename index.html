@@ -442,70 +442,7 @@
         </div>
 
         <div id="devicesList">
-            <table class="device-table">
-                <thead>
-                    <tr>
-                        <th>رقم الطلب</th>
-                        <th>اسم العميل</th>
-                        <th>نوع الهاتف</th>
-                        <th>الشركة المصنعة</th>
-                        <th>وصف العطل</th>
-                        <th>الحالة</th>
-                        <th>الإجراءات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Example Data - Will be populated from server -->
-                    <tr>
-                        <td data-label="رقم الطلب">#1001</td>
-                        <td data-label="اسم العميل">أحمد محمد</td>
-                        <td data-label="نوع الهاتف">Galaxy S21</td>
-                        <td data-label="الشركة المصنعة">سامسونج</td>
-                        <td data-label="وصف العطل">شاشة مكسورة</td>
-                        <td data-label="الحالة">
-                            <span class="status registered">
-                                <i class="fas fa-tools"></i> قيد الصيانة
-                            </span>
-                        </td>
-                        <td data-label="الإجراءات">
-                            <button class="action-btn" title="تعديل"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn" title="حذف"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-label="رقم الطلب">#1002</td>
-                        <td data-label="اسم العميل">سارة عبدالله</td>
-                        <td data-label="نوع الهاتف">iPhone 12</td>
-                        <td data-label="الشركة المصنعة">آيفون</td>
-                        <td data-label="وصف العطل">مشكلة في البطارية</td>
-                        <td data-label="الحالة">
-                            <span class="status reached">
-                                <i class="fas fa-check-circle"></i> تم الوصول
-                            </span>
-                        </td>
-                        <td data-label="الإجراءات">
-                            <button class="action-btn" title="تعديل"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn" title="حذف"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-label="رقم الطلب">#1003</td>
-                        <td data-label="اسم العميل">خالد علي</td>
-                        <td data-label="نوع الهاتف">P40 Pro</td>
-                        <td data-label="الشركة المصنعة">هواوي</td>
-                        <td data-label="وصف العطل">مشكلة في الشحن</td>
-                        <td data-label="الحالة">
-                            <span class="status delivered">
-                                <i class="fas fa-box-open"></i> تم الاستلام
-                            </span>
-                        </td>
-                        <td data-label="الإجراءات">
-                            <button class="action-btn" title="تعديل"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn" title="حذف"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- سيتم ملؤها بالبيانات من السيرفر -->
         </div>
     </div>
 
@@ -563,54 +500,46 @@
         <p>جاري معالجة البيانات...</p>
     </div>
 
-  <script src="config.js"></script>
-<script src="script.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Modal functionality
-        const modal = document.getElementById('deviceModal');
-        const btn = document.getElementById('newDeviceBtn');
-        const span = document.getElementsByClassName('close')[0];
-        
-        btn.onclick = function() {
-            modal.style.display = 'flex';
-        }
-        
-        span.onclick = function() {
-            modal.style.display = 'none';
-        }
-        
-        window.onclick = function(event) {
-            if (event.target == modal) {
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal functionality
+            const modal = document.getElementById('deviceModal');
+            const btn = document.getElementById('newDeviceBtn');
+            const span = document.getElementsByClassName('close')[0];
+            
+            btn.onclick = function() {
+                modal.style.display = 'flex';
+            }
+            
+            span.onclick = function() {
                 modal.style.display = 'none';
             }
-        }
-        
-        // Simulate loading
-        function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            setTimeout(function() {
-                document.getElementById('loadingOverlay').style.display = 'none';
-            }, 1500);
-        }
-        
-        // Form submission
-        document.getElementById('deviceForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            showLoading();
-            setTimeout(function() {
-                modal.style.display = 'none';
-                // Here you would normally send data to server
-                alert('تم حفظ بيانات الجهاز بنجاح');
-            }, 1500);
+            
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+            
+            // Simulate loading
+            function showLoading() {
+                document.getElementById('loadingOverlay').style.display = 'flex';
+                setTimeout(function() {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }, 1500);
+            }
+            
+            // Form submission
+            document.getElementById('deviceForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showLoading();
+                setTimeout(function() {
+                    modal.style.display = 'none';
+                }, 1500);
+            });
         });
-        
-        // Update stats (simulated)
-        document.getElementById('totalDevices').textContent = '3';
-        document.getElementById('registeredDevices').textContent = '1';
-        document.getElementById('reachedDevices').textContent = '1';
-        document.getElementById('deliveredDevices').textContent = '1';
-    });
-</script>
+    </script>
 </body>
 </html>
