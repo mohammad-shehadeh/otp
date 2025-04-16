@@ -11,6 +11,10 @@
             --reached: #ffc107;
             --delivered: #28a745;
             --primary: #343a40;
+            --gradient-1: linear-gradient(90deg, #4361ee, #4cc9f0);
+            --gradient-2: linear-gradient(90deg, #f8961e, #f9c74f);
+            --gradient-3: linear-gradient(90deg, #4cc9f0, #90e0ef);
+            --gradient-4: linear-gradient(90deg, #f72585, #b5179e);
         }
         
         * {
@@ -86,6 +90,58 @@
         #searchInput:focus, #searchButton:focus {
             outline: none;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* قسم الإحصائيات الجديد */
+        #statsBar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+            display: none; /* مخفي بشكل افتراضي حتى يتم البحث */
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+        }
+        
+        .gradient-1::before { background: var(--gradient-1); }
+        .gradient-2::before { background: var(--gradient-2); }
+        .gradient-3::before { background: var(--gradient-3); }
+        .gradient-4::before { background: var(--gradient-4); }
+        
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .stat-card h3 {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
         }
         
         .phone-grid {
@@ -256,6 +312,30 @@
             </div>
         </div>
         
+        <!-- قسم الإحصائيات المضاف -->
+        <div id="statsBar">
+            <div class="stat-card gradient-1">
+                <div class="stat-icon"><i class="fas fa-mobile-screen"></i></div>
+                <h3>إجمالي الأجهزة</h3>
+                <p id="totalDevices">0</p>
+            </div>
+            <div class="stat-card gradient-2">
+                <div class="stat-icon"><i class="fas fa-tools"></i></div>
+                <h3>قيد الصيانة</h3>
+                <p id="registeredDevices">0</p>
+            </div>
+            <div class="stat-card gradient-3">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <h3>تم الوصول</h3>
+                <p id="reachedDevices">0</p>
+            </div>
+            <div class="stat-card gradient-4">
+                <div class="stat-icon"><i class="fas fa-truck"></i></div>
+                <h3>تم الاستلام</h3>
+                <p id="deliveredDevices">0</p>
+            </div>
+        </div>
+        
         <div class="phone-grid" id="phoneGrid">
             <div class="initial-message">
                 <i class="fas fa-mobile-alt fa-2x" style="margin-bottom: 15px;"></i>
@@ -271,6 +351,7 @@ let phoneData = [];
 const phoneGrid = document.getElementById('phoneGrid');
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
+const statsBar = document.getElementById('statsBar');
 
 function getTimeSinceRegistration(dateString) {
   const registrationDate = new Date(dateString);
@@ -285,6 +366,9 @@ function getTimeSinceRegistration(dateString) {
 
 function displayPhones(phones) {
   phoneGrid.innerHTML = '';
+  
+  // تحديث الإحصائيات
+  updateStats(phones);
 
   if (phones.length === 0) {
     phoneGrid.innerHTML = `
@@ -340,6 +424,25 @@ function displayPhones(phones) {
   });
 }
 
+function updateStats(phones) {
+  if (phones.length === 0) {
+    statsBar.style.display = 'none';
+    return;
+  }
+  
+  statsBar.style.display = 'grid';
+  
+  const total = phones.length;
+  const registered = phones.filter(p => p.status === 'registered').length;
+  const reached = phones.filter(p => p.status === 'reached').length;
+  const delivered = phones.filter(p => p.status === 'delivered').length;
+  
+  document.getElementById('totalDevices').textContent = total;
+  document.getElementById('registeredDevices').textContent = registered;
+  document.getElementById('reachedDevices').textContent = reached;
+  document.getElementById('deliveredDevices').textContent = delivered;
+}
+
 function getStatusText(status) {
   switch (status) {
     case 'registered': return 'لم يتم وصول الهاتف بعد';
@@ -361,7 +464,14 @@ function getStatusIcon(status) {
 function performSearch() {
   const searchTerm = searchInput.value.trim().toLowerCase();
   if (searchTerm === '') {
-    phoneGrid.innerHTML = '';
+    phoneGrid.innerHTML = `
+      <div class="initial-message">
+        <i class="fas fa-mobile-alt fa-2x" style="margin-bottom: 15px;"></i>
+        <h3>مرحباً في نظام بيانات الهواتف</h3>
+        <p>استخدم مربع البحث أعلاه للعثور على البيانات المطلوبة</p>
+      </div>
+    `;
+    statsBar.style.display = 'none';
     return;
   }
 
@@ -395,3 +505,5 @@ fetch('https://mohammad-shehadeh.github.io/otp/Server.md')
     console.error("فشل تحميل الملف:", error);
   });
 </script>
+</body>
+</html>
