@@ -433,3 +433,32 @@ textarea.modern-input {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* أيقونة الحالة الافتراضية (قيد الصيانة) */
+.device-title i.status-registered {
+    color: var(--gray-color); /* لون رمادي عادي */
+}
+
+/* أيقونة حالة "تم الوصول" */
+.device-title i.status-reached {
+    color: var(--success-color); /* لون أخضر */
+    animation: pulse-green 1.5s infinite alternate;
+}
+
+/* أيقونة حالة "تم الاستلام" */
+.device-title i.status-delivered {
+    color: var(--danger-color); /* لون أحمر */
+    animation: pulse-red 1.5s infinite alternate;
+}
+
+/* تأثيرات النبض للتنبيه البصري */
+@keyframes pulse-green {
+    from { text-shadow: 0 0 5px rgba(76, 201, 240, 0.5); }
+    to { text-shadow: 0 0 15px rgba(76, 201, 240, 0.8); }
+}
+
+@keyframes pulse-red {
+    from { text-shadow: 0 0 5px rgba(247, 37, 133, 0.5); }
+    to { text-shadow: 0 0 15px rgba(247, 37, 133, 0.8); }
+}
