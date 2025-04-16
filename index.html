@@ -4,33 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام إدارة صيانة الهواتف</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1><i class="fas fa-mobile-alt"></i> نظام إدارة صيانة الهواتف</h1>
-        <button id="newDeviceBtn" class="btn-primary">
-            <i class="fas fa-plus"></i> تسجيل جهاز جديد
-        </button>
+    <header class="glass-header">
+        <div class="header-content">
+            <h1><i class="fas fa-mobile-alt"></i> نظام إدارة صيانة الهواتف</h1>
+            <button id="newDeviceBtn" class="btn-primary glow-on-hover">
+                <i class="fas fa-plus"></i> تسجيل جهاز جديد
+            </button>
+        </div>
     </header>
 
     <div class="container">
         <div id="statsBar">
-            <div class="stat-card">
+            <div class="stat-card gradient-1">
+                <div class="stat-icon"><i class="fas fa-mobile-screen"></i></div>
                 <h3>إجمالي الأجهزة</h3>
                 <p id="totalDevices">0</p>
             </div>
-            <div class="stat-card">
+            <div class="stat-card gradient-2">
+                <div class="stat-icon"><i class="fas fa-tools"></i></div>
                 <h3>قيد الصيانة</h3>
                 <p id="registeredDevices">0</p>
             </div>
-            <div class="stat-card">
+            <div class="stat-card gradient-3">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
                 <h3>تم الوصول</h3>
                 <p id="reachedDevices">0</p>
             </div>
-            <div class="stat-card">
+            <div class="stat-card gradient-4">
+                <div class="stat-icon"><i class="fas fa-truck"></i></div>
                 <h3>تم الاستلام</h3>
                 <p id="deliveredDevices">0</p>
             </div>
@@ -43,38 +49,38 @@
 
     <!-- نموذج إضافة جهاز جديد -->
     <div id="deviceModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content glass-modal">
             <span class="close">&times;</span>
             <h2><i class="fas fa-mobile-alt"></i> تسجيل جهاز جديد</h2>
             <form id="deviceForm">
                 <div class="form-group">
                     <label for="clientName">اسم العميل:</label>
-                    <input type="text" id="clientName" required>
+                    <input type="text" id="clientName" required class="modern-input">
                 </div>
                 
                 <div class="form-group">
                     <label for="phoneType">نوع الهاتف:</label>
-                    <input type="text" id="phoneType" required>
+                    <input type="text" id="phoneType" required class="modern-input">
                 </div>
                 
                 <div class="form-group">
                     <label for="issueDescription">وصف العطل:</label>
-                    <textarea id="issueDescription" rows="3" required></textarea>
+                    <textarea id="issueDescription" rows="3" required class="modern-input"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="imeiNumber">رقم IMEI:</label>
-                    <input type="text" id="imeiNumber" required>
+                    <input type="text" id="imeiNumber" required class="modern-input">
                 </div>
                 
                 <div class="form-group">
-    <label for="phoneNumber">رقم الهاتف:</label>
-    <input type="text" id="phoneNumber" required>
-</div>
+                    <label for="phoneNumber">رقم الهاتف:</label>
+                    <input type="text" id="phoneNumber" required class="modern-input">
+                </div>
                 
                 <div class="form-group">
                     <label for="manufacturer">الشركة المصنعة:</label>
-                    <select id="manufacturer" required>
+                    <select id="manufacturer" required class="modern-input">
                         <option value="سامسونج">سامسونج</option>
                         <option value="آيفون">آيفون</option>
                         <option value="هواوي">هواوي</option>
@@ -85,7 +91,9 @@
                     </select>
                 </div>
                 
-                <button type="submit" class="btn-primary">حفظ البيانات</button>
+                <button type="submit" class="btn-primary glow-on-hover">
+                    <i class="fas fa-save"></i> حفظ البيانات
+                </button>
             </form>
         </div>
     </div>
@@ -95,8 +103,7 @@
         <p>جاري معالجة البيانات...</p>
     </div>
 
-<script src="config.js"></script>
-<script src="script.js"></script>
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
