@@ -197,31 +197,31 @@ function renderDevices() {
             }
 
             const deviceCard = document.createElement('div');
-            deviceCard.className = `device-card ${statusClass}`;
-            deviceCard.innerHTML = `
-                <div class="device-header">
-                    <div class="device-title">
-                        <span class="status-icon">${statusIcon}</span>
-                        ${device.clientName} - ${device.phoneType}
-                    </div>
-                    <div class="device-days" title="عدد الأيام منذ التسجيل">${days} يوم</div>
-                </div>
-                <div class="device-details">
-                    <div class="detail-item"><label>نوع الهاتف</label><span>${device.phoneType}</span></div>
-                    <div class="detail-item"><label>الشركة المصنعة</label><span>${device.manufacturer}</span></div>
-                    <div class="detail-item"><label>رقم الهاتف</label><span>${device.phoneNumber}</span></div>
-                    <div class="detail-item"><label>رقم IMEI</label><span>${device.imeiNumber}</span></div>
-                    <div class="detail-item"><label>تاريخ التسجيل</label><span>${formatDate(device.registrationDate)}</span></div>
-                    <div class="detail-item full-width"><label>وصف العطل</label><span>${device.issueDescription}</span></div>
-                </div>
-                <div class="device-status">
-                    <select class="status-select" data-id="${device.id}">
-                        <option value="registered" ${device.status === 'registered' ? 'selected' : ''}>تم التسجيل</option>
-                        <option value="reached" ${device.status === 'reached' ? 'selected' : ''}>تم الوصول</option>
-                        <option value="delivered" ${device.status === 'delivered' ? 'selected' : ''}>تم الاستلام</option>
-                    </select>
-                </div>
-            `;
+deviceCard.className = `device-card ${statusClass}`;
+deviceCard.innerHTML = `
+    <div class="device-header">
+        <div class="device-title">
+            <span class="status-icon">${statusIcon}</span>
+            ${device.clientName} - ${device.phoneType}
+        </div>
+        <div class="device-days" title="عدد الأيام منذ التسجيل">${days} يوم</div>
+    </div>
+    <div class="device-details">
+        <div class="detail-item"><label>نوع الهاتف:</label><span>${device.phoneType}</span></div>
+        <div class="detail-item"><label>رقم الهاتف:</label><span>${device.phoneNumber}</span></div>
+        <div class="detail-item"><label>الشركة المصنعة:</label><span>${device.manufacturer}</span></div>
+        <div class="detail-item"><label>رقم IMEI:</label><span>${device.imeiNumber}</span></div>
+        <div class="detail-item"><label>تاريخ التسجيل:</label><span>${formatDate(device.registrationDate)}</span></div>
+        <div class="detail-item full-width"><label>وصف العطل:</label><span>${device.issueDescription}</span></div>
+    </div>
+    <div class="device-status">
+        <select class="status-select" data-id="${device.id}">
+            <option value="registered" ${device.status === 'registered' ? 'selected' : ''}>تم التسجيل</option>
+            <option value="reached" ${device.status === 'reached' ? 'selected' : ''}>تم الوصول</option>
+            <option value="delivered" ${device.status === 'delivered' ? 'selected' : ''}>تم الاستلام</option>
+        </select>
+    </div>
+`;
 
 
             elements.devicesList.appendChild(deviceCard);
