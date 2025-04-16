@@ -25,11 +25,12 @@ body {
     color: var(--dark-color);
     line-height: 1.6;
     min-height: 100vh;
+    direction: rtl;
 }
 
 /* تصميم الزجاجي (Glassmorphism) */
 .glass-header {
-    background: var(--glass-bg);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: var(--glass-border);
@@ -63,10 +64,11 @@ header h1 {
     display: flex;
     align-items: center;
     gap: 10px;
+    color: white;
 }
 
 header h1 i {
-    color: var(--success-color);
+    color: var(--light-color);
 }
 
 .container {
@@ -118,7 +120,6 @@ header h1 i {
     margin-bottom: 2.5rem;
 }
 
-/* تصميم جديد لبطاقات الإحصائيات */
 .stat-card {
     background: white;
     border-radius: 12px;
@@ -184,7 +185,7 @@ header h1 i {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
+    right: 0;
     width: 100%;
     height: 4px;
 }
@@ -194,32 +195,14 @@ header h1 i {
 .gradient-3::after { background: linear-gradient(90deg, #4cc9f0, #90e0ef); }
 .gradient-4::after { background: linear-gradient(90deg, #f72585, #b5179e); }
 
-.stat-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: var(--dark-color);
-}
-
-.stat-card h3 {
-    color: var(--gray-color);
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-.stat-card p {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--dark-color);
-}
-
 /* قائمة الأجهزة */
 #devicesList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1.5rem;
 }
 
-/* تصميم جديد لبطاقات الأجهزة */
+/* تصميم بطاقات الأجهزة */
 .device-card {
     background: white;
     border-radius: 12px;
@@ -230,6 +213,7 @@ header h1 i {
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.03);
     margin-bottom: 1rem;
+    border-left: 5px solid var(--gray-color);
 }
 
 .device-card:hover {
@@ -253,17 +237,12 @@ header h1 i {
     gap: 8px;
 }
 
-.device-title i {
-    font-size: 1rem;
-}
-
-.device-id {
-    background: rgba(67, 97, 238, 0.1);
-    color: var(--primary-color);
-    padding: 0.2rem 0.6rem;
-    border-radius: 50px;
-    font-size: 0.7rem;
-    font-weight: 600;
+.device-days {
+    background: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    color: var(--gray-color);
 }
 
 .device-details {
@@ -284,44 +263,34 @@ header h1 i {
 .detail-item span {
     font-weight: 500;
     font-size: 0.85rem;
+    color: var(--dark-color);
 }
 
-/* أشرطة التقدم للحالة */
-.status-bar {
-    height: 6px;
-    background: #f0f0f0;
-    border-radius: 3px;
-    margin-top: 1rem;
-    overflow: hidden;
-    position: relative;
+.detail-item.full-width {
+    grid-column: span 2;
 }
 
-.status-progress {
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    transition: width 0.5s ease;
+/* أنماط الحالات */
+.device-card.status-registered {
+    border-left-color: var(--warning-color);
+    background: linear-gradient(to left, rgba(248, 150, 30, 0.1), white);
 }
 
-.status-registered .status-progress { 
-    background: linear-gradient(90deg, #f8961e, #f9c74f);
-    width: 30%;
+.device-card.status-reached {
+    border-left-color: var(--success-color);
+    background: linear-gradient(to left, rgba(76, 201, 240, 0.1), white);
 }
-.status-reached .status-progress { 
-    background: linear-gradient(90deg, #4cc9f0, #90e0ef);
-    width: 60%;
-}
-.status-delivered .status-progress { 
-    background: linear-gradient(90deg, #f72585, #b5179e);
-    width: 100%;
+
+.device-card.status-delivered {
+    border-left-color: var(--danger-color);
+    background: linear-gradient(to left, rgba(247, 37, 133, 0.1), white);
 }
 
 .status-select {
+    width: 100%;
     padding: 0.5rem;
     border-radius: 8px;
     border: 1px solid #ddd;
-    min-width: 150px;
     font-family: 'Tajawal', sans-serif;
     background: white;
     cursor: pointer;
@@ -373,7 +342,7 @@ header h1 i {
 .close {
     position: absolute;
     top: 15px;
-    left: 15px;
+    right: 15px;
     font-size: 1.8rem;
     cursor: pointer;
     color: var(--gray-color);
@@ -385,21 +354,7 @@ header h1 i {
     transform: rotate(90deg);
 }
 
-.modal-content h2 {
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: var(--dark-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.modal-content h2 i {
-    color: var(--primary-color);
-}
-
-/* حقول الإدخال المحدثة */
+/* حقول الإدخال */
 .modern-input {
     width: 100%;
     padding: 0.8rem 1rem;
@@ -409,17 +364,13 @@ header h1 i {
     font-size: 0.95rem;
     transition: var(--transition);
     background: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1rem;
 }
 
 .modern-input:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-}
-
-textarea.modern-input {
-    min-height: 100px;
-    resize: vertical;
 }
 
 /* شاشة التحميل */
@@ -453,24 +404,16 @@ textarea.modern-input {
     100% { transform: rotate(360deg); }
 }
 
-#loadingOverlay p {
-    font-size: 1.2rem;
-    letter-spacing: 1px;
-}
-
 /* تصميم متجاوب */
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
         gap: 1rem;
+        text-align: center;
     }
     
     #statsBar {
         grid-template-columns: 1fr 1fr;
-    }
-    
-    #devicesList {
-        grid-template-columns: 1fr;
     }
     
     .modal-content {
@@ -490,146 +433,13 @@ textarea.modern-input {
     }
 }
 
-
- /* أيقونة الحالة الافتراضية (قيد الصيانة) */
-.device-title i.status-registered {
-    color: var(--gray-color); /* لون رمادي عادي */
-}
-
-/* أيقونة حالة "تم الوصول" */
-.device-title i.status-reached {
-    color: var(--success-color); /* لون أخضر */
-    animation: pulse-green 1.5s infinite alternate;
-}
-
-/* أيقونة حالة "تم الاستلام" */
-.device-title i.status-delivered {
-    color: var(--danger-color); /* لون أحمر */
-    animation: pulse-red 1.5s infinite alternate;
-}
-
-/* تأثيرات النبض للتنبيه البصري */
-@keyframes pulse-green {
-    from { text-shadow: 0 0 5px rgba(76, 201, 240, 0.5); }
-    to { text-shadow: 0 0 15px rgba(76, 201, 240, 0.8); }
-}
-
-@keyframes pulse-red {
-    from { text-shadow: 0 0 5px rgba(247, 37, 133, 0.5); }
-    to { text-shadow: 0 0 15px rgba(247, 37, 133, 0.8); }
-}
-
-/* أنماط أساسية لبطاقة الجهاز */
-.device-card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    border-left: 5px solid #ccc;
-}
-
-.device-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* أنماط الحالات المختلفة */
-.device-card.status-registered {
-    border-left-color: #FFC107; /* أصفر */
-    background: linear-gradient(to right, rgba(255, 193, 7, 0.1), white);
-}
-
-.device-card.status-reached {
-    border-left-color: #4CAF50; /* أخضر */
-    background: linear-gradient(to right, rgba(76, 175, 80, 0.1), white);
-}
-
-.device-card.status-delivered {
-    border-left-color: #F44336; /* أحمر */
-    background: linear-gradient(to right, rgba(244, 67, 54, 0.1), white);
-}
-
-/* رأس البطاقة */
-.device-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.device-title {
-    font-weight: bold;
+/* رسالة عدم وجود أجهزة */
+.no-devices {
+    text-align: center;
+    padding: 2rem;
+    color: var(--gray-color);
     font-size: 1.1rem;
-    color: #333;
-}
-
-.status-icon {
-    margin-left: 8px;
-}
-
-.device-days {
-    background: #f5f5f5;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-/* تفاصيل الجهاز */
-.device-details {
-    padding: 15px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-.detail-item {
-    margin-bottom: 8px;
-}
-
-.detail-item label {
-    display: block;
-    font-size: 0.8rem;
-    color: #888;
-    margin-bottom: 3px;
-}
-
-.detail-item span {
-    font-size: 0.95rem;
-    color: #333;
-}
-
-.detail-item.full-width {
-    grid-column: span 2;
-}
-
-/* حالة الجهاز */
-.device-status {
-    padding: 10px 15px;
-    background: #f9f9f9;
-    border-top: 1px solid #eee;
-}
-
-.status-select {
-    width: 100%;
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    font-family: inherit;
-}
-
-/* ألوان الخيارات في القائمة المنسدلة */
-.status-select option[value="registered"] {
-    background-color: #FFF3E0;
-}
-
-.status-select option[value="reached"] {
-    background-color: #E8F5E9;
-}
-
-.status-select option[value="delivered"] {
-    background-color: #FFEBEE;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
