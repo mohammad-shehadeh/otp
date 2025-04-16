@@ -210,7 +210,7 @@ deviceCard.innerHTML = `
         <div class="detail-item"><label>نوع الهاتف:</label><span>${device.phoneType}</span></div>
         <div class="detail-item"><label>رقم الهاتف:</label><span>${device.phoneNumber}</span></div>
         <div class="detail-item"><label>الشركة المصنعة:</label><span>${device.manufacturer}</span></div>
-        <div class="detail-item"><label>رقم IMEI:</label><span>${device.imeiNumber}</span></div>
+        <div class="detail-item"><label> IMEI:</label><span>${device.imeiNumber}</span></div>
         <div class="detail-item"><label>تاريخ التسجيل:</label><span>${formatDate(device.registrationDate)}</span></div>
         <div class="detail-item full-width"><label>وصف العطل:</label><span>${device.issueDescription}</span></div>
     </div>
