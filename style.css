@@ -518,3 +518,118 @@ textarea.modern-input {
     from { text-shadow: 0 0 5px rgba(247, 37, 133, 0.5); }
     to { text-shadow: 0 0 15px rgba(247, 37, 133, 0.8); }
 }
+
+/* أنماط أساسية لبطاقة الجهاز */
+.device-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border-left: 5px solid #ccc;
+}
+
+.device-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* أنماط الحالات المختلفة */
+.device-card.status-registered {
+    border-left-color: #FFC107; /* أصفر */
+    background: linear-gradient(to right, rgba(255, 193, 7, 0.1), white);
+}
+
+.device-card.status-reached {
+    border-left-color: #4CAF50; /* أخضر */
+    background: linear-gradient(to right, rgba(76, 175, 80, 0.1), white);
+}
+
+.device-card.status-delivered {
+    border-left-color: #F44336; /* أحمر */
+    background: linear-gradient(to right, rgba(244, 67, 54, 0.1), white);
+}
+
+/* رأس البطاقة */
+.device-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.device-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.status-icon {
+    margin-left: 8px;
+}
+
+.device-days {
+    background: #f5f5f5;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* تفاصيل الجهاز */
+.device-details {
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.detail-item {
+    margin-bottom: 8px;
+}
+
+.detail-item label {
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 3px;
+}
+
+.detail-item span {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.detail-item.full-width {
+    grid-column: span 2;
+}
+
+/* حالة الجهاز */
+.device-status {
+    padding: 10px 15px;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+}
+
+.status-select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-family: inherit;
+}
+
+/* ألوان الخيارات في القائمة المنسدلة */
+.status-select option[value="registered"] {
+    background-color: #FFF3E0;
+}
+
+.status-select option[value="reached"] {
+    background-color: #E8F5E9;
+}
+
+.status-select option[value="delivered"] {
+    background-color: #FFEBEE;
+}
