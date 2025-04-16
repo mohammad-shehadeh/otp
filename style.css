@@ -435,30 +435,78 @@ textarea.modern-input {
 }
 
 
-/* أيقونة الحالة الافتراضية (قيد الصيانة) */
-.device-title i.status-registered {
-    color: var(--gray-color); /* لون رمادي عادي */
+/* تخصيص ألوان بطاقات الإحصائيات حسب الحالة */
+.stat-registered {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-left: 4px solid var(--warning-color);
 }
 
-/* أيقونة حالة "تم الوصول" */
-.device-title i.status-reached {
-    color: var(--success-color); /* لون أخضر */
-    animation: pulse-green 1.5s infinite alternate;
+.stat-reached {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-left: 4px solid var(--success-color);
 }
 
-/* أيقونة حالة "تم الاستلام" */
-.device-title i.status-delivered {
-    color: var(--danger-color); /* لون أحمر */
-    animation: pulse-red 1.5s infinite alternate;
+.stat-delivered {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-left: 4px solid var(--danger-color);
 }
 
-/* تأثيرات النبض للتنبيه البصري */
-@keyframes pulse-green {
-    from { text-shadow: 0 0 5px rgba(76, 201, 240, 0.5); }
-    to { text-shadow: 0 0 15px rgba(76, 201, 240, 0.8); }
+/* تخصيص ألوان الأيقونات حسب الحالة */
+.stat-registered .stat-icon {
+    color: var(--warning-color);
 }
 
-@keyframes pulse-red {
-    from { text-shadow: 0 0 5px rgba(247, 37, 133, 0.5); }
-    to { text-shadow: 0 0 15px rgba(247, 37, 133, 0.8); }
+.stat-reached .stat-icon {
+    color: var(--success-color);
+}
+
+.stat-delivered .stat-icon {
+    color: var(--danger-color);
+}
+
+/* تأثيرات hover للبطاقات */
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.stat-registered:hover {
+    box-shadow: 0 10px 20px rgba(248, 177, 30, 0.2);
+}
+
+.stat-reached:hover {
+    box-shadow: 0 10px 20px rgba(76, 201, 240, 0.2);
+}
+
+.stat-delivered:hover {
+    box-shadow: 0 10px 20px rgba(247, 37, 133, 0.2);
+}
+
+/* تأثيرات للبطاقات التي تحتوي على أجهزة */
+.stat-card.has-items {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.stat-registered.has-items {
+    background: linear-gradient(135deg, #fff8f0 0%, #fff0e0 100%);
+}
+
+.stat-reached.has-items {
+    background: linear-gradient(135deg, #f0fff8 0%, #e0fff0 100%);
+}
+
+.stat-delivered.has-items {
+    background: linear-gradient(135deg, #fff0f5 0%, #ffe0eb 100%);
+}
+
+/* تأثيرات النبض عند التحديث */
+@keyframes pulse-update {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.stat-card.updating {
+    animation: pulse-update 0.5s ease;
 }
