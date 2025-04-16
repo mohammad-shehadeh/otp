@@ -256,41 +256,50 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// دالة لتحديث لون الأيقونة حسب الحالة
-function updateStatusIcon(deviceElement, status) {
-    const icon = deviceElement.querySelector('.device-title i');
-    
-    // إزالة جميع Classes السابقة
-    icon.classList.remove('status-registered', 'status-reached', 'status-delivered');
-    
-    // إضافة Class الجديد حسب الحالة
-    switch(status) {
-        case 'registered':
-            icon.classList.add('status-registered');
-            break;
-        case 'reached':
-            icon.classList.add('status-reached');
-            break;
-        case 'delivered':
-            icon.classList.add('status-delivered');
-            break;
+
+// دالة لتحديث العدادات
+function updateCounters() {
+    // هذه القيم يجب استبدالها بالبيانات الحقيقية من السيرفر
+    const total = document.querySelectorAll('.device-card').length;
+    const registered = document.querySelectorAll('.device-card .status-registered').length;
+    const reached = document.querySelectorAll('.device-card .status-reached').length;
+    const delivered = document.querySelectorAll('.device-card .status-delivered').length;
+
+    // تحديث DOM
+    document.getElementById('totalDevices').textContent = total;
+    document.getElementById('registeredDevices').textContent = registered;
+    document.getElementById('reachedDevices').textContent = reached;
+    document.getElementById('deliveredDevices').textContent = delivered;
+
+    // تحديث ألوان البطاقات بناءً على القيم
+    updateStatCardsColors(registered, reached, delivered);
+}
+
+// دالة لتحديث ألوان بطاقات الإحصائيات
+function updateStatCardsColors(registered, reached, delivered) {
+    const registeredCard = document.querySelector('.stat-registered');
+    const reachedCard = document.querySelector('.stat-reached');
+    const deliveredCard = document.querySelector('.stat-delivered');
+
+    // إضافة تأثير عند وجود أجهزة
+    if (registered > 0) {
+        registeredCard.classList.add('has-items');
+    } else {
+        registeredCard.classList.remove('has-items');
+    }
+
+    if (reached > 0) {
+        reachedCard.classList.add('has-items');
+    } else {
+        reachedCard.classList.remove('has-items');
+    }
+
+    if (delivered > 0) {
+        deliveredCard.classList.add('has-items');
+    } else {
+        deliveredCard.classList.remove('has-items');
     }
 }
 
-// مثال على استخدامها عند تغيير الحالة
-document.querySelectorAll('.status-select').forEach(select => {
-    select.addEventListener('change', function() {
-        const deviceCard = this.closest('.device-card');
-        updateStatusIcon(deviceCard, this.value);
-    });
-});
-
-// عند تحميل البيانات من السيرفر
-function loadDevices() {
-    // ... كود جلب البيانات ...
-    
-    devices.forEach(device => {
-        // ... كود إنشاء البطاقة ...
-        updateStatusIcon(deviceElement, device.status);
-    });
-}
+// استدعاء الدالة عند تحميل الصفحة وعند أي تغيير
+document.addEventListener('DOMContentLoaded', updateCounters);
