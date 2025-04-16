@@ -170,16 +170,41 @@ function renderDevices() {
         return;
     }
 
+    // ترتيب الأجهزة حسب التاريخ من الأحدث إلى الأقدم
     app.devices.sort((a, b) => new Date(b.registrationDate) - new Date(a.registrationDate))
         .forEach(device => {
             const days = Math.floor((new Date() - new Date(device.registrationDate)) / (1000 * 60 * 60 * 24));
 
+            // تحديد كلاس الحالة حسب حالة الجهاز
+            let statusClass = '';
+            let statusIcon = '';
+            
+            switch(device.status) {
+                case 'registered':
+                    statusClass = 'status-registered';
+                    statusIcon = '📝'; // أيقونة التسجيل
+                    break;
+                case 'reached':
+                    statusClass = 'status-reached';
+                    statusIcon = '🛠️'; // أيقونة الإصلاح
+                    break;
+                case 'delivered':
+                    statusClass = 'status-delivered';
+                    statusIcon = '✅'; // أيقونة التسليم
+                    break;
+                default:
+                    statusClass = 'status-default';
+            }
+
             const deviceCard = document.createElement('div');
-            deviceCard.className = 'device-card';
+            deviceCard.className = `device-card ${statusClass}`;
             deviceCard.innerHTML = `
                 <div class="device-header">
-                    <div class="device-title">${device.clientName} - ${device.phoneType}</div>
-                    <div class="device-days">${days} يوم</div>
+                    <div class="device-title">
+                        <span class="status-icon">${statusIcon}</span>
+                        ${device.clientName} - ${device.phoneType}
+                    </div>
+                    <div class="device-days" title="عدد الأيام منذ التسجيل">${days} يوم</div>
                 </div>
                 <div class="device-details">
                     <div class="detail-item"><label>نوع الهاتف</label><span>${device.phoneType}</span></div>
@@ -197,6 +222,7 @@ function renderDevices() {
                     </select>
                 </div>
             `;
+
 
             elements.devicesList.appendChild(deviceCard);
         });
