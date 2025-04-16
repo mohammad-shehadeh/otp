@@ -75,5 +75,16 @@
     "manufacturer": "سامسونج",
     "registrationDate": "2025-04-15T19:52:23.467Z",
     "status": "delivered"
+  },
+  {
+    "id": "m9jlxvl9qsr6wnej3",
+    "clientName": "رامي",
+    "phoneType": "U7",
+    "issueDescription": "مبنب",
+    "imeiNumber": "56",
+    "phoneNumber": "0569813333",
+    "manufacturer": "هواوي",
+    "registrationDate": "2025-04-16T07:26:01.005Z",
+    "status": "registered"
   }
 ]
