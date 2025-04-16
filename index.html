@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام إدارة صيانة الهواتف</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
@@ -37,7 +37,7 @@
         </div>
 
         <div id="devicesList">
-            <!-- سيتم ملؤها بالبيانات من السيرفر -->
+            <!-- سيتم ملؤها بالبيانات من Server.md -->
         </div>
     </div>
 
@@ -68,9 +68,9 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="phoneNumber">رقم الهاتف:</label>
-                    <input type="text" id="phoneNumber" required>
-                </div>
+    <label for="phoneNumber">رقم الهاتف:</label>
+    <input type="text" id="phoneNumber" required>
+</div>
                 
                 <div class="form-group">
                     <label for="manufacturer">الشركة المصنعة:</label>
@@ -95,46 +95,8 @@
         <p>جاري معالجة البيانات...</p>
     </div>
 
-    <script src="config.js"></script>
+<script src="config.js"></script>
+<script src="script.js"></script>
     <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Modal functionality
-            const modal = document.getElementById('deviceModal');
-            const btn = document.getElementById('newDeviceBtn');
-            const span = document.getElementsByClassName('close')[0];
-            
-            btn.onclick = function() {
-                modal.style.display = 'flex';
-            }
-            
-            span.onclick = function() {
-                modal.style.display = 'none';
-            }
-            
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            }
-            
-            // Simulate loading
-            function showLoading() {
-                document.getElementById('loadingOverlay').style.display = 'flex';
-                setTimeout(function() {
-                    document.getElementById('loadingOverlay').style.display = 'none';
-                }, 1500);
-            }
-            
-            // Form submission
-            document.getElementById('deviceForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                showLoading();
-                setTimeout(function() {
-                    modal.style.display = 'none';
-                }, 1500);
-            });
-        });
-    </script>
 </body>
 </html>
