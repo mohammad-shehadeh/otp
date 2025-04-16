@@ -101,30 +101,81 @@
             display: none; /* مخفي بشكل افتراضي حتى يتم البحث */
         }
         
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 5px;
-        }
-        
-        .gradient-1::before { background: var(--gradient-1); }
-        .gradient-2::before { background: var(--gradient-2); }
-        .gradient-3::before { background: var(--gradient-3); }
-        .gradient-4::before { background: var(--gradient-4); }
+        /* تصميم جديد لبطاقات الإحصائيات */
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 0.8rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+/* أيقونات مخصصة لكل حالة */
+.stat-card.gradient-1 .stat-icon {
+    background: rgba(67, 97, 238, 0.1);
+    color: var(--primary-color);
+}
+.stat-card.gradient-2 .stat-icon {
+    background: rgba(248, 150, 30, 0.1);
+    color: var(--warning-color);
+}
+.stat-card.gradient-3 .stat-icon {
+    background: rgba(76, 201, 240, 0.1);
+    color: var(--success-color);
+}
+.stat-card.gradient-4 .stat-icon {
+    background: rgba(247, 37, 133, 0.1);
+    color: var(--danger-color);
+}
+
+.stat-card h3 {
+    font-size: 0.85rem;
+    color: var(--gray-color);
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+.stat-card p {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin: 0;
+}
+
+/* تأثيرات إضافية */
+.stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+}
+
+.gradient-1::after { background: linear-gradient(90deg, #4361ee, #4cc9f0); }
+.gradient-2::after { background: linear-gradient(90deg, #f8961e, #f9c74f); }
+.gradient-3::after { background: linear-gradient(90deg, #4cc9f0, #90e0ef); }
+.gradient-4::after { background: linear-gradient(90deg, #f72585, #b5179e); }
         
         .stat-icon {
             font-size: 2rem;
