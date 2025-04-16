@@ -255,3 +255,42 @@ document.addEventListener('DOMContentLoaded', () => {
     loadData();
 });
 
+
+// دالة لتحديث لون الأيقونة حسب الحالة
+function updateStatusIcon(deviceElement, status) {
+    const icon = deviceElement.querySelector('.device-title i');
+    
+    // إزالة جميع Classes السابقة
+    icon.classList.remove('status-registered', 'status-reached', 'status-delivered');
+    
+    // إضافة Class الجديد حسب الحالة
+    switch(status) {
+        case 'registered':
+            icon.classList.add('status-registered');
+            break;
+        case 'reached':
+            icon.classList.add('status-reached');
+            break;
+        case 'delivered':
+            icon.classList.add('status-delivered');
+            break;
+    }
+}
+
+// مثال على استخدامها عند تغيير الحالة
+document.querySelectorAll('.status-select').forEach(select => {
+    select.addEventListener('change', function() {
+        const deviceCard = this.closest('.device-card');
+        updateStatusIcon(deviceCard, this.value);
+    });
+});
+
+// عند تحميل البيانات من السيرفر
+function loadDevices() {
+    // ... كود جلب البيانات ...
+    
+    devices.forEach(device => {
+        // ... كود إنشاء البطاقة ...
+        updateStatusIcon(deviceElement, device.status);
+    });
+}
