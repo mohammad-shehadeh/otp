@@ -223,6 +223,18 @@
             flex: 1;
             word-break: break-word;
         }
+
+        /* حقل تاريخ التسجيل الجديد */
+        .registration-date {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #eee;
+        }
         
         .days-counter {
             display: flex;
@@ -353,6 +365,11 @@ const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
 const statsBar = document.getElementById('statsBar');
 
+function formatDate(dateString) {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString('ar-EG', options);
+}
+
 function getTimeSinceRegistration(dateString) {
   const registrationDate = new Date(dateString);
   const currentDate = new Date();
@@ -383,6 +400,8 @@ function displayPhones(phones) {
 
   phones.forEach(phone => {
     const { days, hours } = getTimeSinceRegistration(phone.registrationDate);
+    const formattedDate = formatDate(phone.registrationDate);
+    
     const phoneCard = document.createElement('div');
     phoneCard.className = 'phone-card';
     phoneCard.innerHTML = `
@@ -414,9 +433,13 @@ function displayPhones(phones) {
           <div class="detail-label">وصف المشكلة:</div>
           <div class="detail-value">${phone.issueDescription}</div>
         </div>
+        <div class="registration-date">
+          <i class="far fa-calendar"></i>
+          <span>تاريخ التسجيل: ${formattedDate}</span>
+        </div>
       </div>
       <div class="days-counter">
-        <i class="far fa-calendar-alt"></i>
+        <i class="far fa-clock"></i>
         <span>${days} يوم و ${hours} ساعة مضت على تسجيل الهاتف</span>
       </div>
     `;
