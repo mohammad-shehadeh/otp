@@ -101,50 +101,46 @@
             display: none; /* مخفي بشكل افتراضي حتى يتم البحث */
         }
         
-        /* تصميم جديد لبطاقات الإحصائيات *//* تصميم متطور لبطاقات الإحصائيات */
+        /* تصميم جديد لبطاقات الإحصائيات *//* تصميم متطور لبطاقات الإحصائيات */:root {
+    --primary-color: #4c84ff;
+    --secondary-color: #8fd3f4;
+    --warning-color: #f59e0b;
+    --success-color: #3b82f6;
+    --danger-color: #ec4899;
+    --gray-color: #6b7280;
+    --dark-color: #111827;
+    --card-radius: 20px;
+    --shadow-light: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* البطاقة */
 .stat-card {
     background: white;
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    border-radius: var(--card-radius);
+    padding: 2rem 1rem;
+    box-shadow: var(--shadow-light);
+    transition: 0.3s ease-in-out;
     text-align: center;
     position: relative;
     overflow: hidden;
-    border: none;
-    z-index: 1;
 }
 
-.stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(245,245,245,0.8) 100%);
-    z-index: -1;
-}
-
-.stat-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
+/* الأيقونة */
 .stat-icon-container {
-    position: relative;
-    width: 70px;
-    height: 70px;
-    margin: 0 auto 1.2rem;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: #f3f4f6;
+    border-radius: 50%;
+    position: relative;
 }
 
 .stat-icon {
     font-size: 1.8rem;
-    z-index: 2;
-    transition: all 0.3s ease;
+    z-index: 1;
 }
 
 .stat-icon-bg {
@@ -152,60 +148,16 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    opacity: 0.15;
-    z-index: 1;
-    transition: all 0.3s ease;
+    opacity: 0.1;
+    z-index: 0;
 }
 
-.stat-card:hover .stat-icon {
-    transform: scale(1.1);
-}
-
-.stat-card:hover .stat-icon-bg {
-    transform: scale(1.1);
-    opacity: 0.2;
-}
-
-/* أيقونات مخصصة لكل حالة */
-.stat-card.gradient-1 .stat-icon {
-    color: var(--primary-color);
-}
-.stat-card.gradient-1 .stat-icon-bg {
-    background: var(--primary-color);
-}
-
-.stat-card.gradient-2 .stat-icon {
-    color: var(--warning-color);
-}
-.stat-card.gradient-2 .stat-icon-bg {
-    background: var(--warning-color);
-}
-
-.stat-card.gradient-3 .stat-icon {
-    color: var(--success-color);
-}
-.stat-card.gradient-3 .stat-icon-bg {
-    background: var(--success-color);
-}
-
-.stat-card.gradient-4 .stat-icon {
-    color: var(--danger-color);
-}
-.stat-card.gradient-4 .stat-icon-bg {
-    background: var(--danger-color);
-}
-
+/* النص */
 .stat-card h3 {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--gray-color);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
     font-weight: 500;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-}
-
-.stat-card:hover h3 {
-    color: var(--dark-color);
 }
 
 .stat-card p {
@@ -213,69 +165,37 @@
     font-weight: 700;
     color: var(--dark-color);
     margin: 0;
-    position: relative;
-    display: inline-block;
 }
 
-.stat-card p::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 40px;
-    height: 3px;
-    border-radius: 3px;
-    background: currentColor;
-    opacity: 0.3;
-    transition: all 0.3s ease;
-}
+/* الألوان */
+.gradient-1 .stat-icon { color: var(--primary-color); }
+.gradient-1 .stat-icon-bg { background: var(--primary-color); }
 
-.stat-card:hover p::after {
-    width: 60px;
-    opacity: 0.5;
-}
+.gradient-2 .stat-icon { color: var(--warning-color); }
+.gradient-2 .stat-icon-bg { background: var(--warning-color); }
 
-/* تأثيرات التدرج اللوني في الأسفل */
+.gradient-3 .stat-icon { color: var(--success-color); }
+.gradient-3 .stat-icon-bg { background: var(--success-color); }
+
+.gradient-4 .stat-icon { color: var(--danger-color); }
+.gradient-4 .stat-icon-bg { background: var(--danger-color); }
+
+/* الحد السفلي الملون */
 .stat-card::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 5px;
-    transition: all 0.4s ease;
+    height: 4px;
+    border-radius: 0 0 var(--card-radius) var(--card-radius);
+    transition: 0.3s ease;
 }
 
-.gradient-1::after { 
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    box-shadow: 0 -5px 15px rgba(67, 97, 238, 0.3);
-}
-.gradient-2::after { 
-    background: linear-gradient(90deg, var(--warning-color), #f9c74f);
-    box-shadow: 0 -5px 15px rgba(248, 150, 30, 0.3);
-}
-.gradient-3::after { 
-    background: linear-gradient(90deg, var(--success-color), #90e0ef);
-    box-shadow: 0 -5px 15px rgba(76, 201, 240, 0.3);
-}
-.gradient-4::after { 
-    background: linear-gradient(90deg, var(--danger-color), #b5179e);
-    box-shadow: 0 -5px 15px rgba(247, 37, 133, 0.3);
-}
-
-.stat-card:hover::after {
-    height: 8px;
-}
-
-/* تأثير إضافي للبطاقات */
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.stat-card.highlight {
-    animation: float 3s ease-in-out infinite;
-}
+.gradient-1::after { background: var(--primary-color); }
+.gradient-2::after { background: var(--warning-color); }
+.gradient-3::after { background: var(--success-color); }
+.gradient-4::after { background: var(--danger-color); }
 
 /* تصميم متجاوب */
 @media (max-width: 768px) {
