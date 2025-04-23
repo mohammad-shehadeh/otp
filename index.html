@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechPortal - بوابتك التقنية الشاملة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         /* أساسيات التصميم */
         :root {
@@ -14,6 +15,8 @@
             --light-color: #F5F5F5;
             --dark-color: #1A1A2E;
             --gray-color: #8B8B8B;
+            --dark-bg: #0a192f;
+            --dark-text: #e6f1ff;
         }
         
         * {
@@ -27,6 +30,41 @@
             background-color: var(--light-color);
             color: var(--dark-color);
             overflow-x: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        body.dark-theme {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        /* شريط التنبيهات العلوي */
+        .alert-bar {
+            background: linear-gradient(90deg, var(--accent-color), #ff6b6b);
+            color: white;
+            text-align: center;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+            position: relative;
+            margin-top: 80px;
+        }
+        
+        .alert-bar a {
+            color: white;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-right: 0.5rem;
+        }
+        
+        .close-alert {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
         }
         
         /* شريط التنقل */
@@ -44,815 +82,249 @@
             top: 0;
             z-index: 1000;
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-        }
-        
-        .logo img {
-            height: 40px;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark-color);
-            font-weight: 500;
-            position: relative;
             transition: all 0.3s ease;
         }
         
-        .nav-links a:hover {
-            color: var(--secondary-color);
+        .dark-theme .glass-navbar {
+            background: rgba(10, 25, 47, 0.85);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
         }
         
-        .nav-links a.active {
-            color: var(--secondary-color);
+        /* باقي الأنماط السابقة... (يجب الحفاظ عليها) */
+        
+        /* قسم تحميل التطبيق الجديد */
+        .app-download {
+            padding: 5rem 5%;
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-bg));
+            color: white;
+            text-align: center;
         }
         
-        .nav-links a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--secondary-color);
-        }
-        
-        .nav-actions {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .search-btn, .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: var(--dark-color);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .search-btn:hover, .theme-toggle:hover {
-            color: var(--secondary-color);
-            transform: scale(1.1);
-        }
-        
-        /* قسم البطل */
-        .hero {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8rem 5% 5rem;
-            margin-top: 80px;
-            background: linear-gradient(135deg, rgba(15, 52, 96, 0.1) 0%, rgba(0, 168, 204, 0.1) 100%);
-        }
-        
-        .hero-content {
-            flex: 1;
-            max-width: 600px;
-        }
-        
-        .hero-content h1 {
-            font-size: 3rem;
+        .app-download h2 {
+            font-size: 2.5rem;
             margin-bottom: 1.5rem;
-            color: var(--primary-color);
-            line-height: 1.2;
         }
         
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            color: var(--gray-color);
-            line-height: 1.6;
+        .app-download p {
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
         }
         
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .primary-btn, .secondary-btn {
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-        }
-        
-        .primary-btn {
-            background-color: var(--secondary-color);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 168, 204, 0.3);
-        }
-        
-        .primary-btn:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 168, 204, 0.4);
-        }
-        
-        .secondary-btn {
-            background-color: transparent;
-            color: var(--secondary-color);
-            border: 2px solid var(--secondary-color);
-        }
-        
-        .secondary-btn:hover {
-            background-color: var(--secondary-color);
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        .hero-image {
-            position: relative;
-            flex: 1;
+        .download-buttons {
             display: flex;
             justify-content: center;
-        }
-        
-        .hero-image img {
-            max-width: 100%;
-            height: auto;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .floating-tag {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-weight: 600;
-            animation: pulse 2s infinite;
-        }
-        
-        /* بطاقات الخدمات */
-        .services {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
-            padding: 5rem 5%;
+            flex-wrap: wrap;
         }
         
-        .service-card {
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
+            color: var(--primary-color);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .download-btn i {
+            font-size: 2rem;
+        }
+        
+        .btn-text {
+            text-align: right;
+        }
+        
+        .btn-text span {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: normal;
+            color: var(--gray-color);
+        }
+        
+        .app-screenshot {
+            margin-top: 3rem;
             position: relative;
-            overflow: hidden;
-            cursor: pointer;
         }
         
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        .app-screenshot img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
         }
         
-        .service-card::before {
-            content: '';
-            position: absolute;
+        .app-screenshot img:hover {
+            transform: scale(1.03);
+        }
+        
+        /* مؤشر التحميل */
+        .loader-container {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            height: 100%;
+            background: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
         }
         
-        .icon-circle {
+        .loader {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--secondary-color);
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 1.5rem;
-            color: white;
-            font-size: 1.8rem;
-        }
-        
-        .service-card h3 {
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-        
-        .service-card p {
-            color: var(--gray-color);
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-        
-        .live-badge {
-            display: inline-block;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        /* قسم العروض */
-        .deals-section {
-            padding: 3rem 5%;
-            background-color: white;
-        }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            animation: spin 1s linear infinite;
             margin-bottom: 2rem;
         }
         
-        .section-header h2 {
-            font-size: 2rem;
-            color: var(--primary-color);
-        }
-        
-        .view-all {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            color: var(--secondary-color);
-            font-weight: 600;
-        }
-        
-        .deals-carousel {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            padding-bottom: 1rem;
-            scrollbar-width: thin;
-            scrollbar-color: var(--secondary-color) var(--light-color);
-        }
-        
-        .deals-carousel::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .deals-carousel::-webkit-scrollbar-track {
-            background: var(--light-color);
-            border-radius: 10px;
-        }
-        
-        .deals-carousel::-webkit-scrollbar-thumb {
-            background-color: var(--secondary-color);
-            border-radius: 10px;
-        }
-        
-        .deal-card {
-            min-width: 280px;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .deal-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .deal-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: var(--accent-color);
+        .loader-text {
             color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            z-index: 1;
-        }
-        
-        .deal-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: contain;
-            padding: 1rem;
-            background-color: var(--light-color);
-        }
-        
-        .deal-info {
-            padding: 1.5rem;
-        }
-        
-        .deal-info h3 {
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-        
-        .price {
-            margin-bottom: 1rem;
-        }
-        
-        .old-price {
-            text-decoration: line-through;
-            color: var(--gray-color);
-            font-size: 0.9rem;
-            margin-left: 0.5rem;
-        }
-        
-        .new-price {
-            color: var(--accent-color);
-            font-weight: 700;
             font-size: 1.2rem;
-        }
-        
-        .deal-btn {
-            width: 100%;
-            padding: 0.6rem;
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .deal-btn:hover {
-            background-color: var(--primary-color);
-        }
-        
-        /* قسم الضمان */
-        .warranty-section {
-            padding: 5rem 5%;
-            background: linear-gradient(135deg, rgba(15, 52, 96, 0.1) 0%, rgba(0, 168, 204, 0.1) 100%);
-        }
-        
-        .warranty-card {
-            background: white;
-            border-radius: 15px;
-            padding: 3rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .warranty-card h2 {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-        
-        .warranty-card p {
-            color: var(--gray-color);
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .warranty-actions {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .warranty-btn, .complaint-btn {
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .warranty-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            box-shadow: 0 4px 15px rgba(15, 52, 96, 0.3);
-        }
-        
-        .warranty-btn:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(15, 52, 96, 0.4);
-        }
-        
-        .complaint-btn {
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-        }
-        
-        .complaint-btn:hover {
-            background-color: var(--primary-color);
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 2rem;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--secondary-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--gray-color);
-        }
-        
-        /* تذييل الصفحة */
-        footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 4rem 5% 2rem;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .footer-column h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-        
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--secondary-color);
-        }
-        
-        .footer-column ul {
-            list-style: none;
-        }
-        
-        .footer-column ul li {
-            margin-bottom: 0.8rem;
-        }
-        
-        .footer-column ul li a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .footer-column ul li a:hover {
-            color: var(--secondary-color);
-            padding-right: 5px;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 1rem;
             margin-top: 1rem;
         }
         
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            transition: all 0.3s ease;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
-        .social-links a:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-3px);
+        /* تحسينات للوضع الليلي */
+        .dark-theme .service-card,
+        .dark-theme .deal-card,
+        .dark-theme .warranty-card {
+            background: rgba(30, 30, 60, 0.8);
+            color: var(--dark-text);
         }
         
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
+        .dark-theme .service-card p,
+        .dark-theme .deal-info h3,
+        .dark-theme .warranty-card p {
+            color: rgba(230, 241, 255, 0.8);
         }
         
-        /* تأثيرات الحركة */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+        /* تأثيرات حركية إضافية */
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .pulse-animation {
+            animation: pulse 2s infinite;
         }
         
-        /* التكيف مع الأجهزة المحمولة */
-        @media (max-width: 992px) {
-            .hero {
-                flex-direction: column;
-                text-align: center;
-                padding-top: 6rem;
-            }
-            
-            .hero-buttons {
-                justify-content: center;
-            }
-            
-            .hero-image {
-                margin-top: 3rem;
-            }
-            
-            .warranty-actions {
+        .shake-animation:hover {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            .download-buttons {
                 flex-direction: column;
                 align-items: center;
             }
             
-            .warranty-btn, .complaint-btn {
-                width: 100%;
+            .download-btn {
+                width: 80%;
                 justify-content: center;
             }
-        }
-        
-        @media (max-width: 768px) {
-            .glass-navbar {
-                padding: 1rem 5%;
-            }
             
-            .nav-links {
-                display: none;
-            }
-            
-            .hero-content h1 {
-                font-size: 2.2rem;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 1.5rem;
+            .app-download h2 {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
+    <!-- مؤشر التحميل -->
+    <div class="loader-container" id="loader">
+        <div class="loader"></div>
+        <div class="loader-text">جاري تحميل TechPortal...</div>
+    </div>
+    
     <!-- شريط التنقل العلوي -->
     <nav class="glass-navbar">
-        <div class="logo">
-            <img src="https://via.placeholder.com/40x40" alt="TechPortal Logo">
-            <span>TechPortal</span>
-        </div>
-        
-        <div class="nav-links">
-            <a href="#" class="active">الرئيسية</a>
-            <a href="#">عروض اليوم</a>
-            <a href="#">الشكاوى</a>
-            <a href="#">الدعم</a>
-        </div>
-        
-        <div class="nav-actions">
-            <button class="search-btn">
-                <i class="fas fa-search"></i>
-            </button>
-            <button class="theme-toggle">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
+        <!-- ... (نفس شريط التنقل السابق) ... -->
     </nav>
     
-    <!-- قسم البطل -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>بوابتك الشاملة لعالم التقنية</h1>
-            <p>أحدث الأسعار، العروض الحصرية، وخدمات الضمان والفحص الموثوقة</p>
+    <!-- شريط التنبيهات -->
+    <div class="alert-bar animate__animated animate__fadeInDown">
+        <button class="close-alert" id="closeAlert">&times;</button>
+        <a href="#app-download">حمل تطبيقنا الجديد الآن!</a> واحصل على خصم 20% على أول عملية شراء من خلال التطبيق
+    </div>
+    
+    <!-- ... (الأقسام السابقة: Hero, Services, Deals, Warranty) ... -->
+    
+    <!-- قسم تحميل التطبيق الجديد -->
+    <section class="app-download" id="app-download">
+        <h2 class="animate__animated animate__fadeInUp">حمل تطبيق TechPortal الآن</h2>
+        <p class="animate__animated animate__fadeInUp animate__delay-1s">استمتع بتجربة أسرع وأكثر سلاسة مع إشعارات فورية بأسعار الأجهزة والعروض الحصرية فقط لمستخدمي التطبيق</p>
+        
+        <div class="download-buttons animate__animated animate__fadeInUp animate__delay-2s">
+            <a href="https://play.google.com/store/apps/details?id=com.techportal" class="download-btn shake-animation">
+                <i class="fab fa-google-play"></i>
+                <div class="btn-text">
+                    متوفر على
+                    <span>Google Play</span>
+                </div>
+            </a>
             
-            <div class="hero-buttons">
-                <button class="primary-btn" onclick="location.href='prices.html'">استعراض الأسعار</button>
-                <button class="secondary-btn" onclick="location.href='imei.html'">فحص IMEI الآن</button>
-            </div>
+            <a href="https://apps.apple.com/sa/app/techportal/id123456789" class="download-btn shake-animation">
+                <i class="fab fa-apple"></i>
+                <div class="btn-text">
+                    تنزيل من
+                    <span>App Store</span>
+                </div>
+            </a>
         </div>
         
-        <div class="hero-image">
-            <img src="https://via.placeholder.com/600x400" alt="أجهزة تقنية">
-            <div class="floating-tag">عروض حصرية!</div>
+        <div class="app-screenshot animate__animated animate__fadeIn animate__delay-3s">
+            <img src="https://via.placeholder.com/800x500" alt="تطبيق TechPortal" class="float-animation">
         </div>
     </section>
     
-    <!-- بطاقات الخدمات الرئيسية -->
-    <section class="services">
-        <div class="service-card" onclick="location.href='prices.html'">
-            <div class="icon-circle">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <h3>متحرّك أسعار الأجهزة</h3>
-            <p>تتبع أحدث التغيرات في أسعار الأجهزة لحظة بلحظة</p>
-            <div class="live-badge">مباشر</div>
-        </div>
-        
-        <div class="service-card" onclick="location.href='screens.html'">
-            <div class="icon-circle">
-                <i class="fas fa-tv"></i>
-            </div>
-            <h3>أسعار الشاشات</h3>
-            <p>قارن بين أفضل الشاشات وأحدث العروض</p>
-        </div>
-        
-        <div class="service-card" onclick="location.href='accessories.html'">
-            <div class="icon-circle">
-                <i class="fas fa-headphones"></i>
-            </div>
-            <h3>أسعار الإكسسوارات</h3>
-            <p>اكتشف أفضل الإكسسوارات بأسعار تنافسية</p>
-        </div>
-        
-        <div class="service-card" onclick="location.href='imei.html'">
-            <div class="icon-circle">
-                <i class="fas fa-mobile-alt"></i>
-            </div>
-            <h3>فحص رقم IMEI</h3>
-            <p>تحقق من صلاحية جهازك ومعلومات الضمان</p>
-        </div>
-    </section>
-    
-    <!-- قسم العروض والتخفيضات -->
-    <section class="deals-section">
-        <div class="section-header">
-            <h2>عروض وتخفيضات اليوم</h2>
-            <a href="#" class="view-all">عرض الكل <i class="fas fa-chevron-left"></i></a>
-        </div>
-        
-        <div class="deals-carousel">
-            <div class="deal-card" onclick="location.href='deal1.html'">
-                <div class="deal-badge">خصم 35%</div>
-                <img src="https://via.placeholder.com/280x180" alt="جهاز">
-                <div class="deal-info">
-                    <h3>هاتف XYZ Pro</h3>
-                    <div class="price">
-                        <span class="old-price">2,499 ر.س</span>
-                        <span class="new-price">1,624 ر.س</span>
-                    </div>
-                    <button class="deal-btn">استفد الآن</button>
-                </div>
-            </div>
-            
-            <div class="deal-card" onclick="location.href='deal2.html'">
-                <div class="deal-badge">خصم 25%</div>
-                <img src="https://via.placeholder.com/280x180" alt="شاشة">
-                <div class="deal-info">
-                    <h3>شاشة Ultra HD 32 بوصة</h3>
-                    <div class="price">
-                        <span class="old-price">1,799 ر.س</span>
-                        <span class="new-price">1,349 ر.س</span>
-                    </div>
-                    <button class="deal-btn">استفد الآن</button>
-                </div>
-            </div>
-            
-            <div class="deal-card" onclick="location.href='deal3.html'">
-                <div class="deal-badge">خصم 40%</div>
-                <img src="https://via.placeholder.com/280x180" alt="سماعات">
-                <div class="deal-info">
-                    <h3>سماعات لاسلكية</h3>
-                    <div class="price">
-                        <span class="old-price">599 ر.س</span>
-                        <span class="new-price">359 ر.س</span>
-                    </div>
-                    <button class="deal-btn">استفد الآن</button>
-                </div>
-            </div>
-            
-            <div class="deal-card" onclick="location.href='deal4.html'">
-                <div class="deal-badge">عرض حصري</div>
-                <img src="https://via.placeholder.com/280x180" alt="حاسوب">
-                <div class="deal-info">
-                    <h3>لابتوب فائق السرعة</h3>
-                    <div class="price">
-                        <span class="old-price">4,299 ر.س</span>
-                        <span class="new-price">3,599 ر.س</span>
-                    </div>
-                    <button class="deal-btn">استفد الآن</button>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- قسم فحص الضمان والشكاوى -->
-    <section class="warranty-section">
-        <div class="warranty-card">
-            <h2>خدمات الضمان والشكاوى</h2>
-            <p>تحقق من حالة الضمان أو قدم شكوى بخصوص جهازك</p>
-            
-            <div class="warranty-actions">
-                <button class="warranty-btn" onclick="location.href='warranty.html'">
-                    <i class="fas fa-shield-alt"></i>
-                    تحقق من الضمان
-                </button>
-                <button class="complaint-btn" onclick="location.href='complaint.html'">
-                    <i class="fas fa-comment-alt"></i>
-                    تقديم شكوى
-                </button>
-            </div>
-            
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number">15,872</div>
-                    <div class="stat-label">فحص ضمان</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">رضا العملاء</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">2,453</div>
-                    <div class="stat-label">شكوى معالجة</div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- تذييل الصفحة -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>عن TechPortal</h3>
-                <p>بوابتك الشاملة لجميع خدمات التقنية، الأسعار، الضمان والشكاوى. نقدم أحدث المعلومات وأدق التفاصيل لمساعدتك في اتخاذ أفضل القرارات.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            
-            <div class="footer-column">
-                <h3>الخدمات</h3>
-                <ul>
-                    <li><a href="prices.html">أسعار الأجهزة</a></li>
-                    <li><a href="screens.html">أسعار الشاشات</a></li>
-                    <li><a href="accessories.html">أسعار الإكسسوارات</a></li>
-                    <li><a href="imei.html">فحص IMEI</a></li>
-                    <li><a href="warranty.html">فحص الضمان</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h3>الدعم</h3>
-                <ul>
-                    <li><a href="complaint.html">تقديم شكوى</a></li>
-                    <li><a href="#">الأسئلة الشائعة</a></li>
-                    <li><a href="#">سياسة الخصوصية</a></li>
-                    <li><a href="#">شروط الاستخدام</a></li>
-                    <li><a href="#">اتصل بنا</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>© 2023 TechPortal. جميع الحقوق محفوظة.</p>
-        </div>
-    </footer>
+    <!-- ... (تذييل الصفحة السابق) ... -->
     
     <script>
-        // تبديل الوضع الليلي
+        // مؤشر التحميل
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+        
+        // إغلاق شريط التنبيهات
+        document.getElementById('closeAlert').addEventListener('click', function() {
+            const alertBar = document.querySelector('.alert-bar');
+            alertBar.style.display = 'none';
+            document.querySelector('.hero').style.marginTop = '80px';
+        });
+        
+        // تحسين الوضع الليلي
         const themeToggle = document.querySelector('.theme-toggle');
         const body = document.body;
         
@@ -863,24 +335,56 @@
             if (body.classList.contains('dark-theme')) {
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
-                // يمكنك هنا إضافة متغيرات الألوان للوضع الليلي
+                localStorage.setItem('theme', 'dark');
             } else {
                 icon.classList.remove('fa-sun');
                 icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
             }
         });
+        
+        // التحقق من وضع الثيم المحفوظ
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-theme');
+            const icon = themeToggle.querySelector('i');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
         
         // تأثيرات عند التمرير
-        window.addEventListener('scroll', () => {
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.scrollY;
             const navbar = document.querySelector('.glass-navbar');
-            if (window.scrollY > 50) {
-                navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.2)';
+            
+            // تغيير شفافية النافبار
+            if (scrollPosition > 100) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                if (body.classList.contains('dark-theme')) {
+                    navbar.style.background = 'rgba(10, 25, 47, 0.95)';
+                }
             } else {
-                navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.1)';
+                navbar.style.background = 'rgba(255, 255, 255, 0.85)';
+                if (body.classList.contains('dark-theme')) {
+                    navbar.style.background = 'rgba(10, 25, 47, 0.85)';
+                }
             }
+            
+            // تأثيرات ظهور العناصر
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            animateElements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.classList.add('animate__animated', 'animate__fadeInUp');
+                }
+            });
         });
         
-        // يمكنك إضافة المزيد من الوظائف هنا حسب الحاجة
+        // إضافة كلاس للعناصر عند التمرير
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('animate-on-scroll');
+        });
     </script>
 </body>
 </html>
