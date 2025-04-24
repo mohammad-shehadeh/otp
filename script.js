@@ -1,285 +1,398 @@
-// بيانات التطبيق
-const app = {
-    _devices: [],
-    get devices() {
-        return this._devices;
-    },
-    set devices(value) {
-        this._devices = Array.isArray(value) ? value : [];
-    },
-    repoOwner: CONFIG.REPO.OWNER,
-    repoName: CONFIG.REPO.NAME,
-    filePath: CONFIG.FILE_PATH,
-    get token() {
-        return assembleGitHubToken();
-    }
-};
+// script.js
 
-// عناصر DOM
-const elements = {
-    newDeviceBtn: document.getElementById('newDeviceBtn'),
-    deviceModal: document.getElementById('deviceModal'),
-    closeModal: document.querySelector('.close'),
-    deviceForm: document.getElementById('deviceForm'),
-    devicesList: document.getElementById('devicesList'),
-    loadingOverlay: document.getElementById('loadingOverlay'),
-    statsElements: {
-        total: document.getElementById('totalDevices'),
-        registered: document.getElementById('registeredDevices'),
-        reached: document.getElementById('reachedDevices'),
-        delivered: document.getElementById('deliveredDevices')
-    }
-};
+document.addEventListener('DOMContentLoaded', () => {
+    let currentCategory = null;
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let slideIndex = 0;
+    let slideInterval = null;
+    let isSliding = false; // متغير لتتبع حالة الانتقال بين الشرائح
 
-// أحداث
-elements.newDeviceBtn.addEventListener('click', () => {
-    elements.deviceModal.style.display = 'block';
-});
+    // عناصر DOM
+    const elements = {
+        categoriesContainer: document.getElementById('categories-container'),
+        productsContainer: document.getElementById('products-container'),
+        cartCount: document.getElementById('cart-count'),
+        cartModal: document.getElementById('cart-modal'),
+        cartItems: document.getElementById('cart-items'),
+        cartTotal: document.getElementById('cart-total-price'),
+        sendOrderBtn: document.getElementById('send-order-btn'),
+        closeCartBtn: document.querySelector('.close'),
+        cartButton: document.getElementById('cart-button'),
+        slides: document.getElementsByClassName("mySlides"),
+        dots: document.getElementsByClassName("dot")
+    };
 
-elements.closeModal.addEventListener('click', () => {
-    elements.deviceModal.style.display = 'none';
-});
-
-window.addEventListener('click', (e) => {
-    if (e.target === elements.deviceModal) {
-        elements.deviceModal.style.display = 'none';
-    }
-});
-
-elements.deviceForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    addNewDevice();
-});
-
-// وظائف التطبيق
-
-async function loadData() {
-    showLoading();
-    try {
-        const response = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
-            headers: {
-                'Authorization': `token ${app.token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-
-        if (response.status === 404) {
-            app.devices = [];
-            renderDevices();
-            return;
-        }
-
-        if (!response.ok) throw new Error('فشل في جلب البيانات');
-
-        const data = await response.json();
-        const decodedData = atob(data.content);
-        const content = decodeURIComponent(escape(decodedData));
-
-        try {
-            app.devices = content.trim() ? JSON.parse(content) : [];
-        } catch (e) {
-            app.devices = [];
-            console.error('Error parsing data:', e);
-        }
-
-        renderDevices();
-    } catch (error) {
-        console.error('Error:', error);
-        alert('حدث خطأ أثناء جلب البيانات: ' + error.message);
-        app.devices = [];
-    } finally {
-        hideLoading();
-        updateStats();
-    }
-}
-
-async function addNewDevice() {
-    showLoading();
-    try {
-        const newDevice = {
-            id: generateId(),
-            clientName: document.getElementById('clientName').value,
-            phoneType: document.getElementById('phoneType').value,
-            issueDescription: document.getElementById('issueDescription').value,
-            imeiNumber: document.getElementById('imeiNumber').value,
-            phoneNumber: document.getElementById('phoneNumber').value,
-            manufacturer: document.getElementById('manufacturer').value,
-            registrationDate: new Date().toISOString(),
-            status: 'registered'
-        };
-
-        app.devices = [...app.devices, newDevice];
-        await saveDataToGitHub();
-
-        elements.deviceForm.reset();
-        elements.deviceModal.style.display = 'none';
-        renderDevices();
-    } catch (error) {
-        console.error('Error:', error);
-        alert('حدث خطأ أثناء إضافة الجهاز: ' + error.message);
-    } finally {
-        hideLoading();
-    }
-}
-
-async function saveDataToGitHub() {
-    try {
-        let sha = '';
-        try {
-            const getResponse = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
-                headers: {
-                    'Authorization': `token ${app.token}`,
-                    'Accept': 'application/vnd.github.v3+json'
+    // وظائف إدارة الواجهة
+    const UI = {
+        updateAddToCartButtons: () => {
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                const productName = button.dataset.id;
+                const cartItem = cart.find(item => item.name === productName);
+                button.innerHTML = cartItem ? 
+                    `<span class="quantity-controls">
+                        <button class="decrement">-</button>
+                        <span class="quantity">${cartItem.quantity}</span>
+                        <button class="increment">+</button>
+                    </span>` : 
+                    'إضافة للسلة';
+                
+                if (cartItem) {
+                    button.querySelector('.decrement').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        Cart.decreaseQuantity(cart.indexOf(cartItem));
+                    });
+                    
+                    button.querySelector('.increment').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        Cart.increaseQuantity(cart.indexOf(cartItem));
+                    });
                 }
             });
-            if (getResponse.ok) {
-                const data = await getResponse.json();
-                sha = data.sha;
-            }
-        } catch (e) {
-            console.log('الملف غير موجود، سيتم إنشاؤه جديداً');
-        }
+        },
 
-        const content = JSON.stringify(app.devices, null, 2);
-        const response = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${app.token}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: 'تحديث بيانات الأجهزة',
-                content: btoa(unescape(encodeURIComponent(content))),
-                sha: sha || undefined
-            })
-        });
+        showToast: (message) => {
+            const arabicMessages = {
+                'added': 'تمت الإضافة إلى السلة',
+                'removed': 'تم الحذف من السلة',
+                'added to cart': 'تمت الإضافة إلى السلة',
+                'removed from cart': 'تم الحذف من السلة'
+            };
 
-        if (!response.ok) throw new Error('فشل في حفظ البيانات');
-    } catch (error) {
-        console.error('Error:', error);
-        throw error;
-    }
-}
-
-function renderDevices() {
-    elements.devicesList.innerHTML = '';
-
-    if (app.devices.length === 0) {
-        elements.devicesList.innerHTML = '<p class="no-devices">لا توجد أجهزة مسجلة بعد</p>';
-        return;
-    }
-
-    // ترتيب الأجهزة حسب التاريخ من الأحدث إلى الأقدم
-    app.devices.sort((a, b) => new Date(b.registrationDate) - new Date(a.registrationDate))
-        .forEach(device => {
-            const days = Math.floor((new Date() - new Date(device.registrationDate)) / (1000 * 60 * 60 * 24));
-
-            // تحديد كلاس الحالة حسب حالة الجهاز
-            let statusClass = '';
-            let statusIcon = '';
+            const toastMessage = arabicMessages[message.toLowerCase()] || message;
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = toastMessage;
+            document.body.appendChild(toast);
             
-            switch(device.status) {
-                case 'registered':
-                    statusClass = 'status-registered';
-                    statusIcon = '📝'; // أيقونة التسجيل
-                    break;
-                case 'reached':
-                    statusClass = 'status-reached';
-                    statusIcon = '🛠️'; // أيقونة الإصلاح
-                    break;
-                case 'delivered':
-                    statusClass = 'status-delivered';
-                    statusIcon = '✅'; // أيقونة التسليم
-                    break;
-                default:
-                    statusClass = 'status-default';
+            setTimeout(() => {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }, 100);
+        },
+
+        createCartItemElement: (item, index) => {
+            const li = document.createElement('li');
+            li.className = 'cart-item';
+            li.innerHTML = `
+                <div class="item-image">
+                    <img src="${item.image}" alt="${item.name}">
+                </div>
+                <div class="item-details">
+                    <h4>${item.name}</h4>
+                    <div class="price-controls">
+                        <div class="quantity-controls">
+                            <button class="decrement">-</button>
+                            <input type="number" value="${item.quantity}" min="1" class="quantity-input">
+                            <button class="increment">+</button>
+                        </div>
+                        <p class="item-total">₪${(item.price * item.quantity).toFixed(2)}</p>
+                    </div>
+                </div>
+                <button class="remove-item">&times;</button>
+            `;
+            
+            li.querySelector('.decrement').addEventListener('click', () => {
+                Cart.decreaseQuantity(index);
+            });
+            
+            li.querySelector('.increment').addEventListener('click', () => {
+                Cart.increaseQuantity(index);
+            });
+            
+            li.querySelector('.quantity-input').addEventListener('change', (e) => {
+                Cart.updateQuantity(index, parseInt(e.target.value));
+            });
+            
+            li.querySelector('.remove-item').addEventListener('click', () => {
+                Cart.removeItem(index);
+            });
+            
+            return li;
+        }
+    };
+
+    // وظائف عربة التسوق
+    const Cart = {
+        addItem: (product) => {
+            const existingItem = cart.find(item => item.name === product.name);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
             }
+            Cart.update();
+            UI.showToast(`${product.name} added to cart`);
+        },
 
-            const deviceCard = document.createElement('div');
-deviceCard.className = `device-card ${statusClass}`;
-deviceCard.innerHTML = `
-    <div class="device-header">
-        <div class="device-title">
-            <span class="status-icon">${statusIcon}</span>
-            ${device.clientName} - ${device.phoneType}
-        </div>
-        <div class="device-days" title="عدد الأيام منذ التسجيل">${days} يوم</div>
-    </div>
-    <div class="device-details">
-        <div class="detail-item"><label>نوع الهاتف:</label><span>${device.phoneType}</span></div>
-        <div class="detail-item"><label>رقم الهاتف:</label><span>${device.phoneNumber}</span></div>
-        <div class="detail-item"><label>الشركة المصنعة:</label><span>${device.manufacturer}</span></div>
-        <div class="detail-item"><label> IMEI:</label><span>${device.imeiNumber}</span></div>
-        <div class="detail-item"><label>تاريخ التسجيل:</label><span>${formatDate(device.registrationDate)}</span></div>
-        <div class="detail-item full-width"><label>وصف العطل:</label><span>${device.issueDescription}</span></div>
-    </div>
-    <div class="device-status">
-        <select class="status-select" data-id="${device.id}">
-            <option value="registered" ${device.status === 'registered' ? 'selected' : ''}>تم التسجيل</option>
-            <option value="reached" ${device.status === 'reached' ? 'selected' : ''}>تم الوصول</option>
-            <option value="delivered" ${device.status === 'delivered' ? 'selected' : ''}>تم الاستلام</option>
-        </select>
-    </div>
-`;
+        removeItem: (index) => {
+            const itemName = cart[index].name;
+            cart.splice(index, 1);
+            Cart.update();
+            UI.showToast(`${itemName} removed from cart`);
+        },
 
+        increaseQuantity: (index) => {
+            cart[index].quantity++;
+            Cart.update();
+        },
 
-            elements.devicesList.appendChild(deviceCard);
-        });
+        decreaseQuantity: (index) => {
+            if (cart[index].quantity > 1) {
+                cart[index].quantity--;
+                Cart.update();
+            } else {
+                Cart.removeItem(index);
+            }
+        },
 
-    document.querySelectorAll('.status-select').forEach(select => {
-        select.addEventListener('change', (e) => {
-            updateDeviceStatus(e.target.dataset.id, e.target.value);
-        });
+        updateQuantity: (index, newQuantity) => {
+            newQuantity = Math.max(1, parseInt(newQuantity) || 1);
+            cart[index].quantity = newQuantity;
+            Cart.update();
+        },
+
+        update: () => {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            elements.cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            elements.cartItems.innerHTML = '';
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                elements.cartItems.appendChild(UI.createCartItemElement(item, index));
+                total += item.price * item.quantity;
+            });
+            
+            elements.cartTotal.textContent = total.toFixed(2);
+            UI.updateAddToCartButtons();
+        }
+    };
+
+    // وظائف المنتجات
+    const Products = {
+        loadCategories: () => {
+            elements.categoriesContainer.innerHTML = '';
+            categories.forEach(category => {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category-card';
+                categoryElement.innerHTML = `
+                    <img src="${category.image}" alt="${category.name}">
+                    <h3>${category.name}</h3>
+                `;
+                categoryElement.addEventListener('click', () => Products.filterByCategory(category.name));
+                elements.categoriesContainer.appendChild(categoryElement);
+            });
+        },
+
+        filterByCategory: (categoryName) => {
+            currentCategory = categoryName;
+            Products.loadProducts();
+            
+            setTimeout(() => {
+                const firstProduct = document.querySelector('.product-card:first-child');
+                if (firstProduct) {
+                    const yOffset = 270;
+                    const y = firstProduct.getBoundingClientRect().top + window.pageYOffset - yOffset;
+                    
+                    window.scrollTo({
+                        top: y,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 100);
+        },
+
+        loadProducts: () => {
+            elements.productsContainer.innerHTML = '';
+            const filteredProducts = currentCategory
+                ? products.filter(p => p.category === currentCategory)
+                : products;
+
+            filteredProducts.forEach(product => {
+                const salePrice = product.price;
+                const originalPrice = product.discountedPrice ?? salePrice;
+                const hasDiscount = originalPrice > salePrice;
+                const isAvailable = salePrice > 0;
+                const buttonText = isAvailable ? '' : 'غير متوفر';
+                const buttonClass = isAvailable ? 'add-to-cart' : 'add-to-cart unavailable';
+
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+
+                productCard.innerHTML = `
+                    ${hasDiscount ? `<div class="discount-label">SALE</div>` : ''}
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p class="price ${hasDiscount ? 'on-sale' : (isAvailable ? '' : 'unavailable')}"
+                       ${isAvailable ? '' : 'data-unavailable="true"'}>
+                        ${
+                            hasDiscount
+                                ? `<span class="original-price">₪${originalPrice.toFixed(2)}</span>
+                                   <span class="selling-price">₪${salePrice.toFixed(2)}</span>`
+                                : (isAvailable
+                                    ? `₪${salePrice.toFixed(2)}`
+                                    : 'غير متوفر حالياً'
+                                  )
+                        }
+                    </p>
+                    <button class="${buttonClass}"
+                            data-id="${product.name}"
+                            ${isAvailable ? '' : 'disabled'}>
+                        ${buttonText}
+                    </button>
+                `;
+
+                if (isAvailable) {
+                    productCard
+                        .querySelector('.add-to-cart')
+                        .addEventListener('click', () => Cart.addItem({
+                            name: product.name,
+                            image: product.image,
+                            price: salePrice
+                        }));
+                }
+
+                elements.productsContainer.appendChild(productCard);
+            });
+
+            UI.updateAddToCartButtons();
+        }
+    };
+
+    // وظائف السلايدر
+    const Slider = {
+        init: () => {
+            if (elements.slides.length > 0) {
+                Slider.showSlide(slideIndex);
+                Slider.startAutoSlide();
+            }
+        },
+
+        startAutoSlide: () => {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(() => {
+                if (!isSliding) {
+                    Slider.nextSlide();
+                }
+            }, 3000);
+        },
+
+        nextSlide: () => {
+            isSliding = true;
+            slideIndex = (slideIndex + 1) % elements.slides.length;
+            Slider.showSlide(slideIndex);
+            setTimeout(() => {
+                isSliding = false;
+            }, 700); // يتطابق مع مدة الانتقال في CSS
+        },
+
+        prevSlide: () => {
+            isSliding = true;
+            slideIndex = (slideIndex - 1 + elements.slides.length) % elements.slides.length;
+            Slider.showSlide(slideIndex);
+            setTimeout(() => {
+                isSliding = false;
+            }, 700);
+        },
+
+        showSlide: (index) => {
+            for (let i = 0; i < elements.slides.length; i++) {
+                elements.slides[i].style.display = "none";
+                elements.dots[i].classList.remove("active");
+            }
+            
+            elements.slides[index].style.display = "block";
+            elements.dots[index].classList.add("active");
+        },
+
+        handleTouch: (startX, endX) => {
+            const diffX = startX - endX;
+            if (Math.abs(diffX) > 50) {
+                clearInterval(slideInterval);
+                if (diffX > 0) {
+                    Slider.nextSlide();
+                } else {
+                    Slider.prevSlide();
+                }
+                Slider.startAutoSlide();
+            }
+        }
+    };
+
+    // أحداث السلة
+    elements.cartButton.addEventListener('click', () => {
+        elements.cartModal.style.display = 'block';
+        clearInterval(slideInterval);
     });
-}
 
-async function updateDeviceStatus(deviceId, newStatus) {
-    showLoading();
-    try {
-        app.devices = app.devices.map(device =>
-            device.id === deviceId ? { ...device, status: newStatus } : device
+    elements.closeCartBtn.addEventListener('click', () => {
+        elements.cartModal.style.display = 'none';
+        Slider.startAutoSlide();
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === elements.cartModal) {
+            elements.cartModal.style.display = 'none';
+            Slider.startAutoSlide();
+        }
+    });
+
+    // إرسال الطلب عبر واتساب
+    elements.sendOrderBtn.addEventListener('click', () => {
+        const now = new Date();
+        const date = now.toLocaleDateString('ar-EG');
+        const time = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+        const itemsList = cart.map((item, index) => 
+            `🔹 *${index + 1}. ${item.name}*\n` +
+            `   - الكمية: ${item.quantity}\n` +
+            `   - السعر: ₪${item.price.toFixed(2)}\n` +
+            `   - الإجمالي: ₪${(item.price * item.quantity).toFixed(2)}`
+        ).join('\n\n');
+
+        const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        const message = encodeURIComponent(
+            `*⭐ معرض أبو عالية ⭐*\n` +
+            `────────────────────────────\n` +
+            `🗓️ *التاريخ:* ${date}\n` +
+            `⏰ *الوقت:* ${time}\n` +
+            `────────────────────────────\n` +
+            `*تفاصيل الطلب:*\n\n` +
+            `${itemsList}\n\n` +
+            `💰 *المجموع الكلي:* ₪${totalAmount.toFixed(2)}\n` +
+            `────────────────────────────\n` +
+            `*الاسم:* ____________________\n` +
+            `*العنوان:* __________________\n` +
+            `*طريقة الدفع:* ______________\n` +
+            `*ملاحظات:* _________________`
         );
-        await saveDataToGitHub();
-        updateStats();
-    } catch (error) {
-        console.error('Error:', error);
-        alert('حدث خطأ أثناء تحديث حالة الجهاز');
-    } finally {
-        hideLoading();
-    }
-}
 
-function updateStats() {
-    elements.statsElements.total.textContent = app.devices.length;
-    elements.statsElements.registered.textContent = app.devices.filter(d => d.status === 'registered').length;
-    elements.statsElements.reached.textContent = app.devices.filter(d => d.status === 'reached').length;
-    elements.statsElements.delivered.textContent = app.devices.filter(d => d.status === 'delivered').length;
-}
+        window.open(`https://wa.me/972569813333?text=${message}`, '_blank');
+    });  
 
-// وظائف مساعدة
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
-}
+    // أحداث السلايدر
+    const slider = document.querySelector('.slideshow-container');
+    let touchStartX = 0;
 
-function formatDate(dateString) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleDateString('ar-EG', options);
-}
+    slider.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        clearInterval(slideInterval);
+    });
 
-function showLoading() {
-    elements.loadingOverlay.style.display = 'flex';
-}
+    slider.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        Slider.handleTouch(touchStartX, touchEndX);
+    });
 
-function hideLoading() {
-    elements.loadingOverlay.style.display = 'none';
-}
-
-// تهيئة التطبيق
-document.addEventListener('DOMContentLoaded', () => {
-    app.devices = [];
-    loadData();
+    // التهيئة الأولية
+    Products.loadCategories();
+    Cart.update();
+    Slider.init();
 });
 
-
-
+window.addEventListener('load', () => {
+    window.scrollTo(0, 0);
+});
