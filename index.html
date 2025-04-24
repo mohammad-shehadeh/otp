@@ -1,1064 +1,200 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechPortal - بوابتك التقنية الشاملة</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* أساسيات التصميم */
-        :root {
-            --primary-color: #0F3460;
-            --secondary-color: #00A8CC;
-            --accent-color: #E94560;
-            --light-color: #F5F5F5;
-            --dark-color: #1A1A2E;
-            --gray-color: #8B8B8B;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Tajawal', 'Poppins', sans-serif;
-        }
-        
-        body {
-            background-color: var(--light-color);
-            color: var(--dark-color);
-            overflow-x: hidden;
-        }
-        
-        /* شريط التنقل */
-        .glass-navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 5%;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-        }
-        
-        .logo img {
-            height: 40px;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark-color);
-            font-weight: 500;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-links a:hover {
-            color: var(--secondary-color);
-        }
-        
-        .nav-links a.active {
-            color: var(--secondary-color);
-        }
-        
-        .nav-links a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--secondary-color);
-        }
-        
-        .nav-actions {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .search-btn, .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: var(--dark-color);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .search-btn:hover, .theme-toggle:hover {
-            color: var(--secondary-color);
-            transform: scale(1.1);
-        }
-        
-        /* قسم البطل */
-        .hero {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8rem 5% 5rem;
-            margin-top: 80px;
-            background: linear-gradient(135deg, rgba(15, 52, 96, 0.1) 0%, rgba(0, 168, 204, 0.1) 100%);
-        }
-        
-        .hero-content {
-            flex: 1;
-            max-width: 600px;
-        }
-        
-        .hero-content h1 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-            line-height: 1.2;
-        }
-        
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            color: var(--gray-color);
-            line-height: 1.6;
-        }
-        
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .primary-btn, .secondary-btn {
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-        }
-        
-        .primary-btn {
-            background-color: var(--secondary-color);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 168, 204, 0.3);
-        }
-        
-        .primary-btn:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 168, 204, 0.4);
-        }
-        
-        .secondary-btn {
-            background-color: transparent;
-            color: var(--secondary-color);
-            border: 2px solid var(--secondary-color);
-        }
-        
-        .secondary-btn:hover {
-            background-color: var(--secondary-color);
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        .hero-image {
-            position: relative;
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .hero-image img {
-            max-width: 100%;
-            height: auto;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .floating-tag {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-weight: 600;
-            animation: pulse 2s infinite;
-        }
-        
-        /* بطاقات الخدمات */
-        .services {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            padding: 5rem 5%;
-        }
-        
-        .service-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-        }
-        
-        .icon-circle {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 1.5rem;
-            color: white;
-            font-size: 1.8rem;
-        }
-        
-        .service-card h3 {
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-        
-        .service-card p {
-            color: var(--gray-color);
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-        
-        .live-badge {
-            display: inline-block;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        /* قسم العروض */
-        .deals-section {
-            padding: 3rem 5%;
-            background-color: white;
-        }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        
-        .section-header h2 {
-            font-size: 2rem;
-            color: var(--primary-color);
-        }
-        
-        .view-all {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            color: var(--secondary-color);
-            font-weight: 600;
-        }
-        
-        .deals-carousel {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            padding-bottom: 1rem;
-            scrollbar-width: thin;
-            scrollbar-color: var(--secondary-color) var(--light-color);
-        }
-        
-        .deals-carousel::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .deals-carousel::-webkit-scrollbar-track {
-            background: var(--light-color);
-            border-radius: 10px;
-        }
-        
-        .deals-carousel::-webkit-scrollbar-thumb {
-            background-color: var(--secondary-color);
-            border-radius: 10px;
-        }
-        
-        .deal-card {
-            min-width: 280px;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .deal-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .deal-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            z-index: 1;
-        }
-        
-        .deal-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: contain;
-            padding: 1rem;
-            background-color: var(--light-color);
-        }
-        
-        .deal-info {
-            padding: 1.5rem;
-        }
-        
-        .deal-info h3 {
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-        
-        .price {
-            margin-bottom: 1rem;
-        }
-        
-        .old-price {
-            text-decoration: line-through;
-            color: var(--gray-color);
-            font-size: 0.9rem;
-            margin-left: 0.5rem;
-        }
-        
-        .new-price {
-            color: var(--accent-color);
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-        
-        .deal-btn {
-            width: 100%;
-            padding: 0.6rem;
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .deal-btn:hover {
-            background-color: var(--primary-color);
-        }
-        
-        /* قسم الضمان */
-        .warranty-section {
-            padding: 5rem 5%;
-            background: linear-gradient(135deg, rgba(15, 52, 96, 0.1) 0%, rgba(0, 168, 204, 0.1) 100%);
-        }
-        
-        .warranty-card {
-            background: white;
-            border-radius: 15px;
-            padding: 3rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .warranty-card h2 {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-        
-        .warranty-card p {
-            color: var(--gray-color);
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .warranty-actions {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .warranty-btn, .complaint-btn {
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .warranty-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            box-shadow: 0 4px 15px rgba(15, 52, 96, 0.3);
-        }
-        
-        .warranty-btn:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(15, 52, 96, 0.4);
-        }
-        
-        .complaint-btn {
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-        }
-        
-        .complaint-btn:hover {
-            background-color: var(--primary-color);
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 2rem;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--secondary-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--gray-color);
-        }
-        
-        /* تذييل الصفحة */
-        footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 4rem 5% 2rem;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .footer-column h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-        
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--secondary-color);
-        }
-        
-        .footer-column ul {
-            list-style: none;
-        }
-        
-        .footer-column ul li {
-            margin-bottom: 0.8rem;
-        }
-        
-        .footer-column ul li a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .footer-column ul li a:hover {
-            color: var(--secondary-color);
-            padding-right: 5px;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            transition: all 0.3s ease;
-        }
-        
-        .social-links a:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-3px);
-        }
-        
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
-        
-        /* نافذة اختيار طريقة العرض */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-        }
-        
-        .modal-content {
-            background-color: white;
-            margin: 10% auto;
-            padding: 2rem;
-            border-radius: 15px;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--gray-color);
-        }
-        
-        .close-modal:hover {
-            color: var(--accent-color);
-        }
-        
-        .display-options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .display-btn {
-            padding: 1.2rem;
-            border-radius: 10px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            font-size: 1.1rem;
-        }
-        
-        .store-view {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .list-view {
-            background-color: var(--light-color);
-            color: var(--dark-color);
-            border: 2px solid var(--primary-color);
-        }
-        
-        .store-view:hover, .list-view:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* زر تحميل التطبيق الثابت */
-        .download-app-fixed {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 1000;
-        }
-        
-        .download-app-fixed button {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.3);
-        }
-        
-        .download-app-fixed button:hover {
-            background-color: #d13354;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.4);
-        }
-        
-        /* تأثيرات الحركة */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        /* التكيف مع الأجهزة المحمولة */
-        @media (max-width: 992px) {
-            .hero {
-                flex-direction: column;
-                text-align: center;
-                padding-top: 6rem;
-            }
-            
-            .hero-buttons {
-                justify-content: center;
-            }
-            
-            .hero-image {
-                margin-top: 3rem;
-            }
-            
-            .warranty-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .warranty-btn, .complaint-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .modal-content {
-                margin: 20% auto;
-                width: 90%;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .glass-navbar {
-                padding: 1rem 5%;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .hero-content h1 {
-                font-size: 2.2rem;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-            
-            .display-options {
-                flex-direction: column;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- معلومات مهمة لتحسين الظهور في البحث -->
+  <title>معرض ابو عالية للإنارة | أحدث تصاميم الإنارة الداخلية والخارجية</title>
+  <meta name="description" content="معرض ابو عالية للإنارة - نوفر أفضل أنواع الإنارة الحديثة للبيوت والمكاتب. زيِّن منزلك بأجمل وأحدث تصاميم الإضاءة. زورونا الآن!" />
+  <meta name="keywords" content="معرض ابو عالية, إنارة, إضاءة, مصابيح, ديكور, إنارة داخلية, إنارة خارجية, محل إنارة, ابو عالية للإنارة" />
+  <meta name="author" content="معرض ابو عالية للإنارة" />
+
+  <!-- معلومات المشاركة على السوشيال ميديا -->
+  <meta property="og:title" content="معرض ابو عالية للإنارة | أجمل تصاميم الإنارة" />
+  <meta property="og:description" content="اكتشف تشكيلتنا الواسعة من وحدات الإضاءة الحديثة والكلاسيكية في معرض ابو عالية." />
+  <meta property="og:image" content="https://i.postimg.cc/6pT5CH5H/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mohammad-shehadeh.github.io/soh/" /> <!-- غيّر هذا للرابط الحقيقي لموقعك -->
+
+  <!-- أيقونة الموقع -->
+  <link rel="icon" type="image/jpeg" href="https://i.postimg.cc/6pT5CH5H/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- شريط التنقل العلوي -->
-    <nav class="glass-navbar">
-        <div class="logo">
-            <img src="https://via.placeholder.com/40x40" alt="TechPortal Logo">
-            <span>TechPortal</span>
-        </div>
-        
-        <div class="nav-links">
-            <a href="#" class="active">الرئيسية</a>
-            <a href="#">عروض اليوم</a>
-            <a href="#">الشكاوى</a>
-            <a href="#">الدعم</a>
-        </div>
-        
-        <div class="nav-actions">
-            <button class="search-btn">
-                <i class="fas fa-search"></i>
-            </button>
-            <button class="theme-toggle">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
-    </nav>
-    
-    <!-- قسم البطل -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>بوابتك الشاملة لعالم التقنية</h1>
-            <p>أحدث الأسعار، العروض الحصرية، وخدمات الضمان والفحص الموثوقة</p>
-            
-            <div class="hero-buttons">
-                <button class="primary-btn" onclick="showDisplayOptions('prices')">استعراض الأسعار</button>
-                <button class="secondary-btn" onclick="location.href='imei.html'">فحص IMEI الآن</button>
-            </div>
-        </div>
-        
-        <div class="hero-image">
-            <img src="https://via.placeholder.com/600x400" alt="أجهزة تقنية">
-            <div class="floating-tag">عروض حصرية!</div>
-        </div>
-    </section>
-    
-    <!-- بطاقات الخدمات الرئيسية -->
-    <section class="services">
-        <div class="service-card" onclick="showDisplayOptions('prices')">
-            <div class="icon-circle">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <h3>متحرّك أسعار الأجهزة</h3>
-            <p>تتبع أحدث التغيرات في أسعار الأجهزة لحظة بلحظة</p>
-            <div class="live-badge">مباشر</div>
-        </div>
-        
-        <div class="service-card" onclick="showDisplayOptions('screens')">
-            <div class="icon-circle">
-                <i class="fas fa-tv"></i>
-            </div>
-            <h3>أسعار الشاشات</h3>
-            <p>قارن بين أفضل الشاشات وأحدث العروض</p>
-        </div>
-        
-        <div class="service-card" onclick="location.href='accessories.html'">
-            <div class="icon-circle">
-                <i class="fas fa-headphones"></i>
-            </div>
-            <h3>أسعار الإكسسوارات</h3>
-            <p>اكتشف أفضل الإكسسوارات بأسعار تنافسية</p>
-        </div>
-        
-        <div class="service-card" onclick="location.href='imei.html'">
-            <div class="icon-circle">
-                <i class="fas fa-mobile-alt"></i>
-            </div>
-            <h3>فحص رقم IMEI</h3>
-            <p>تحقق من صلاحية جهازك ومعلومات الضمان</p>
-        </div>
-    </section>
-    
-    <!-- قسم العروض والتخفيضات -->
-    <section class="deals-section">
-        <div class="section-header">
-            <h2>عروض وتخفيضات اليوم</h2>
-            <a href="#" class="view-all">عرض الكل <i class="fas fa-chevron-left"></i></a>
-        </div>
-        
-        <div class="deals-carousel">
-            <div class="deal-card" onclick="location.href='deal1.html'">
-                <div class="deal-badge">خصم 35%</div>
-                <img src="https://via.placeholder.com/280x180" alt="جهاز">
-                <div class="deal-info">
-                    <h3>هاتف XYZ Pro</h3>
-                    <div class="price">
-                        <span class="old-price">2,499 ر.س</span>
-                        <span class="new-price">1,624 ر.س</span>
-                    </div>
-                    <button class="deal-btn">استفد الآن</button>
-                </div>
-            </div>
-            
-            <div class="deal-card" onclick="location.href='deal2.html'">
-                <div class="deal-badge">خصم 25%</div>
-                <img src="https://via.placeholder.com/280x180" alt="شاشة">
-                <div class="deal-info">
-                    <h3>شاشة Ultra HD 32 بوصة</h3>
-                    <div class="price">
-                        <span class="old-price">1,799 ر.س</span>
-                        <span class="new-price">1,349 ر.س</span>
-                    </div>
-                    <button class="deal-btn">استفد الآن</button>
-                </div>
-            </div>
-            
-            <div class="deal-card" onclick="location.href='deal3.html'">
-                <div class="deal-badge">خصم 40%</div>
-                <img src="https://via.placeholder.com/280x180" alt="سماعات">
-                <div class="deal-info">
-                    <h3>سماعات لاسلكية</h3>
-                    <div class="price">
-                        <span class="old-price">599 ر.س</span>
-                        <span class="new-price">359 ر.س</span>
-                    </div>
-                    <button class="deal-btn">استفد الآن</button>
-                </div>
-            </div>
-            
-            <div class="deal-card" onclick="location.href='deal4.html'">
-                <div class="deal-badge">عرض حصري</div>
-                <img src="https://via.placeholder.com/280x180" alt="حاسوب">
-                <div class="deal-info">
-                    <h3>لابتوب فائق السرعة</h3>
-                    <div class="price">
-                        <span class="old-price">4,299 ر.س</span>
-                        <span class="new-price">3,599 ر.س</span>
-                    </div>
-                    <button class="deal-btn">استفد الآن</button>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- قسم فحص الضمان والشكاوى -->
-    <section class="warranty-section">
-        <div class="warranty-card">
-            <h2>خدمات الضمان والشكاوى</h2>
-            <p>تحقق من حالة الضمان أو قدم شكوى بخصوص جهازك</p>
-            
-            <div class="warranty-actions">
-                <button class="warranty-btn" onclick="location.href='warranty.html'">
-                    <i class="fas fa-shield-alt"></i>
-                    تحقق من الضمان
-                </button>
-                <button class="complaint-btn" onclick="location.href='complaint.html'">
-                    <i class="fas fa-comment-alt"></i>
-                    تقديم شكوى
-                </button>
-            </div>
-            
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number">15,872</div>
-                    <div class="stat-label">فحص ضمان</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">رضا العملاء</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">2,453</div>
-                    <div class="stat-label">شكوى معالجة</div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- تذييل الصفحة -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>عن TechPortal</h3>
-                <p>بوابتك الشاملة لجميع خدمات التقنية، الأسعار، الضمان والشكاوى. نقدم أحدث المعلومات وأدق التفاصيل لمساعدتك في اتخاذ أفضل القرارات.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            
-            <div class="footer-column">
-                <h3>الخدمات</h3>
-                <ul>
-                    <li><a href="#" onclick="showDisplayOptions('prices')">أسعار الأجهزة</a></li>
-                    <li><a href="#" onclick="showDisplayOptions('screens')">أسعار الشاشات</a></li>
-                    <li><a href="accessories.html">أسعار الإكسسوارات</a></li>
-                    <li><a href="imei.html">فحص IMEI</a></li>
-                    <li><a href="warranty.html">فحص الضمان</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h3>الدعم</h3>
-                <ul>
-                    <li><a href="complaint.html">تقديم شكوى</a></li>
-                    <li><a href="#">الأسئلة الشائعة</a></li>
-                    <li><a href="#">سياسة الخصوصية</a></li>
-                    <li><a href="#">شروط الاستخدام</a></li>
-                    <li><a href="#">اتصل بنا</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>© 2023 TechPortal. جميع الحقوق محفوظة.</p>
-        </div>
-    </footer>
-    
-    <!-- نافذة اختيار طريقة العرض -->
-    <div id="displayOptionsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h3>اختر طريقة العرض المفضلة</h3>
-            <div class="display-options">
-                <button class="display-btn store-view" onclick="redirectToView('store')">
-                    <i class="fas fa-store"></i>
-                    <span>العرض كمتجر</span>
-                </button>
-                <button class="display-btn list-view" onclick="redirectToView('list')">
-                    <i class="fas fa-list-ul"></i>
-                    <span>العرض كقائمة</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- زر تحميل التطبيق الثابت -->
-    <div class="download-app-fixed">
-        <button onclick="downloadApp()">
-            <i class="fas fa-download"></i>
-            <span>حمل التطبيق الآن</span>
+  <header>
+    <div class="top-bar">
+      <div class="logo-container">
+        <img src="https://i.postimg.cc/hvBmDqsf/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" alt="شعار متجر ابو عالية" class="logo" />
+        <a href="">
+  <h1 class="fancy-title">Abu Alia</h1>
+</a>
+      </div>
+
+      <div class="cart-container">
+        <button id="cart-button" aria-label="عربة التسوق">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cart-count">0</span>
         </button>
+      </div>
     </div>
-    
-    <script>
-        // متغير لتخزين الصفحة الحالية
-        let currentPage = '';
-        
-        // عرض نافذة اختيار طريقة العرض
-        function showDisplayOptions(page) {
-            currentPage = page;
-            const modal = document.getElementById('displayOptionsModal');
-            modal.style.display = 'block';
-        }
-        
-        // إغلاق النافذة
-        document.querySelector('.close-modal').addEventListener('click', function() {
-            document.getElementById('displayOptionsModal').style.display = 'none';
-        });
-        
-        // إغلاق النافذة عند النقر خارجها
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('displayOptionsModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-        
-        // توجيه المستخدم حسب طريقة العرض المختارة
-        function redirectToView(viewType) {
-            let url = '';
-            
-            if (currentPage === 'prices') {
-                url = viewType === 'store' ? 'prices-store.html' : 'prices-list.html';
-            } else if (currentPage === 'screens') {
-                url = viewType === 'store' ? 'screens-store.html' : 'screens-list.html';
-            }
-            
-            window.location.href = url;
-        }
-        
-        // تحميل التطبيق
-        function downloadApp() {
-            // يمكنك تغيير الرابط حسب احتياجاتك
-            window.open('https://play.google.com/store/apps/details?id=com.techportal.app', '_blank');
-        }
-        
-        // تبديل الوضع الليلي
-        const themeToggle = document.querySelector('.theme-toggle');
-        const body = document.body;
-        
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-theme');
-            const icon = themeToggle.querySelector('i');
-            
-            if (body.classList.contains('dark-theme')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                // يمكنك هنا إضافة متغيرات الألوان للوضع الليلي
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            }
-        });
-        
-        // تأثيرات عند التمرير
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.glass-navbar');
-            if (window.scrollY > 50) {
-                navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.2)';
-            } else {
-                navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.1)';
-            }
-        });
-    </script>
+
+    <nav class="categories-scroll" aria-label="فئات المنتجات">
+      <div class="categories-container" id="categories-container">
+        <!-- يتم تحميل الفئات هنا باستخدام JavaScript -->
+      </div>
+    </nav>
+  </header>
+
+  <br><br><br><br><br>
+  <main>
+    <section class="hero" aria-label="منتجاتنا">
+      <div class="slideshow-container">
+        <div class="mySlides fade">
+          <img src="https://i.postimg.cc/6pT5CH5H/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" alt="حلول إضاءة متميزة" style="width:100%" />
+        </div>
+        <div class="mySlides fade">
+          <img src="https://i.postimg.cc/cHR4TGcM/IMG-7219.jpg" alt="تصاميم إضاءة عصرية" style="width:100%" />
+        </div>
+        <div class="mySlides fade">
+          <img src="https://i.postimg.cc/zfDjqqy3/IMG-7218.jpg" alt="منتجات موفرة للطاقة" style="width:100%" />
+        </div>
+      </div>
+
+      <div class="dots-container">
+        <span class="dot" onclick="currentSlide(1)" aria-label="الشريحة 1"></span>
+        <span class="dot" onclick="currentSlide(2)" aria-label="الشريحة 2"></span>
+        <span class="dot" onclick="currentSlide(3)" aria-label="الشريحة 3"></span>
+      </div>
+    </section>
+
+    <section class="products-section" aria-labelledby="products-title">
+      <h2 id="products-title">منتجاتنا</h2>
+      <div class="products-container" id="products-container" role="list">
+        <!-- سيتم تحميل المنتجات هنا باستخدام JavaScript -->
+      </div>
+    </section>
+
+    <!-- زر المزيد من التفاصيل وقسم من نحن تم نقلهم إلى هنا -->
+    <button class="details-btn"> اختار من القائمة أعلاه لعرض المنتجات  </button>
+
+    <section class="about-section" aria-labelledby="about-heading">
+      <h2 id="about-heading">من نحن</h2>
+      <p>
+  معرض أبو عالية للإنارة هو وجهتكم المثالية لحلول الإضاءة عالية الجودة ، نقدم مجموعة واسعة من المنتجات تشمل الثريات، والمصابيح، وأنواعًا مختلفة من وحدات الإضاءة التي تناسب المنازل، والمكاتب، والمساحات التجارية. نحن نلتزم بتوفير أعلى مستويات الجودة، مع لمسة من الأناقة والابتكار، لإضاءة مساحاتكم بكفاءة وجمال. تجدوننا في بيت لحم، بالقرب من وسط المدينة.
+</p>
+    </section>
+  </main>
+
+  <div class="cart-modal" id="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+    <div class="modal-content">
+      <button class="close" aria-label="إغلاق العربة">&times;</button>
+      <br><br>
+      <h2 id="cart-title">عربة التسوق</h2>
+      <div class="cart-items" id="cart-items" role="list">
+        <!-- سيتم تحميل عناصر العربة هنا -->
+      </div>
+      <div class="cart-total">
+        <strong>المجموع: $<span id="cart-total-price">0.00</span></strong>
+      </div>
+      <button class="send-order-btn" id="send-order-btn">
+        <i class="fab fa-whatsapp"></i> إرسال الطلب 
+      </button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>تواصل معنا</h3>
+        <p><i class="fas fa-phone"></i> +972 597258885</p>
+        <p><i class="fas fa-phone"></i> +972 597258885</p>
+        <p><i class="fas fa-envelope"></i> Sohaib-Sharief@gmail.com</p>
+        <p><i class="fas fa-map-marker-alt"></i> 123 شارع بيت لحم،  بيت لحم، فلسطين</p>
+      </div>
+      <div class="footer-section">
+        <h3>روابط سريعة</h3>
+        <ul>
+  <ul>
+  <li>
+    <a href="javascript:window.scrollTo(0,0); setTimeout(function(){ location.reload(true); }, 300);">
+      <i class="fas fa-home"></i> الرئيسية
+    </a>
+  </li>
+
+  <li>
+    <a href="https://maps.google.com/?q=31.695541,35.177929" target="_blank" rel="noopener noreferrer">
+      <i class="fas fa-map-marker-alt"></i> موقعنا
+    </a>
+  </li>
+
+  <li>
+    <a href="https://" target="_blank" rel="noopener noreferrer">
+      <i class="fas fa-globe"></i> موقع إلكتروني آخر
+    </a>
+  </li>
+
+  <li>
+    <a href="https://i.postimg.cc/q70PCZSK/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" target="_blank" rel="noopener noreferrer">
+      <i class="fas fa-image"></i> شعار معرضنا
+    </a>
+  </li>
+</ul>
+</ul>
+      </div>
+      <div class="footer-section">
+        <h3>ساعات العمل</h3>
+        <p>الأحد - الخميس: 9:00 - 19:00</p>
+        <p>السبت: 9:00 - 14:00</p>
+        <p>الجمعة: مغلق</p>
+      </div>
+      <div class="footer-section">
+        <h3>تابعنا</h3>
+        <div class="social-icons">
+  <a href="https://www.facebook.com/share/18o7iVmJAz/?mibextid=wwXIfr" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+  <a href="https://www.instagram.com/sohaib_sharief?igsh=a25pOWg4Y3FhcTdk" aria-label="إنستغرام"><i class="fab fa-instagram"></i></a>
+  <a href="https://www.tiktok.com/@sohaib_sharief?_t=ZM-8vfWK6kCpZn&_r=1" aria-label="تيك توك" target="_blank">
+  <i class="fab fa-tiktok"></i>
+</a>
+  <a href="https://wa.me/+972597258885" aria-label="واتساب" target="_blank">
+  <i class="fab fa-whatsapp"></i>
+</a>
+</div>
+        <div class="newsletter">
+          <h4> ارسال شكوى  </h4>
+          <form>
+            <input type="email" placeholder=" تفاصيل الشكوى " />
+            <button type="submit">أرسال</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 متجر معرض ابو عالية. جميع الحقوق محفوظة.</p>
+       <p>&copy;برمجة وتطوير المبرمج محمد شحادة</p>
+      <p class="payment-methods">
+    <i class="fab fa-cc-visa"></i>
+    <i class="fab fa-cc-mastercard"></i>
+    <i class="fab fa-cc-paypal"></i>
+    <i class="fab fa-cc-apple-pay"></i>
+    <img src="https://i.postimg.cc/28mzBZSb/IMG-7253.png" alt="Arab Bank">
+    <img src="https://reflectapp.com/wp-content/uploads/2022/02/reflectlogo1.png" alt="Reflect">
+  </p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
