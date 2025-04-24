@@ -1,389 +1,306 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- معلومات الموقع -->
-  <title>متجر موبايلك | أحدث الهواتف الذكية بأسعار تنافسية</title>
-  <meta name="description" content="متجر موبايلك - نوفر أحدث الهواتف الذكية من جميع الماركات العالمية بأسعار تنافسية وضمان حقيقي. تسوق الآن واحصل على أفضل العروض!" />
-  <meta name="keywords" content="هواتف ذكية, جوالات, ايفون, سامسونج, شاومي, اوبو, متجر جوالات, موبايلك, عروض هواتف" />
-  <meta name="author" content="متجر موبايلك" />
-
-  <!-- مشاركات السوشيال ميديا -->
-  <meta property="og:title" content="متجر موبايلك | أحدث الهواتف الذكية بأسعار تنافسية" />
-  <meta property="og:description" content="اكتشف تشكيلتنا الواسعة من الهواتف الذكية بأفضل الأسعار في متجر موبايلك." />
-  <meta property="og:image" content="https://i.postimg.cc/6pT5CH5H/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://example.com" />
-
-  <!-- أيقونة الموقع -->
-  <link rel="icon" type="image/jpeg" href="https://i.postimg.cc/6pT5CH5H/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" />
-
-  <!-- روابط CSS -->
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قصي الشريف - رجل أعمال فلسطيني ناشئ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .profile-img:hover {
+            transform: scale(1.05);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: #2a5298;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #2a5298;
+            border-radius: 3px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .info-item i {
+            margin-left: 15px;
+            color: #2a5298;
+            font-size: 1.2rem;
+            margin-top: 3px;
+        }
+        
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .skill {
+            background: #eef2ff;
+            color: #2a5298;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #2a5298;
+            color: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: 50px;
+        }
+        
+        .contact-btn {
+            display: inline-block;
+            background: white;
+            color: #2a5298;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <!-- شريط التنقل العلوي -->
-  <header class="glass-header">
-    <div class="top-nav">
-      <button class="menu-toggle" aria-label="فتح القائمة">
-        <i class="fas fa-bars"></i>
-      </button>
-      
-      <div class="logo-container">
-        <img src="https://i.postimg.cc/6pT5CH5H/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" alt="شعار متجر موبايلك" class="logo" />
-        <h1 class="store-name">موبايلك</h1>
-      </div>
-      
-      <div class="nav-icons">
-        <button class="search-btn" aria-label="بحث">
-          <i class="fas fa-search"></i>
-        </button>
-        <button id="cart-button" aria-label="عربة التسوق">
-          <i class="fas fa-shopping-cart"></i>
-          <span id="cart-count">0</span>
-        </button>
-      </div>
-    </div>
-    
-    <!-- شريط البحث -->
-    <div class="search-bar">
-      <input type="text" placeholder="ابحث عن هاتفك المفضل..." />
-      <button class="search-submit">
-        <i class="fas fa-search"></i>
-      </button>
-    </div>
-  </header>
-
-  <!-- القائمة الجانبية -->
-  <nav class="side-menu" id="sideMenu">
-    <div class="menu-header">
-      <h3>قائمة المتجر</h3>
-      <button class="close-menu" aria-label="إغلاق القائمة">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    
-    <ul class="menu-categories">
-      <li><a href="#"><i class="fas fa-home"></i> الرئيسية</a></li>
-      <li><a href="#"><i class="fas fa-mobile-alt"></i> جميع الهواتف</a></li>
-      <li><a href="#"><i class="fas fa-apple-alt"></i> أيفون</a></li>
-      <li><a href="#"><i class="fab fa-android"></i> أندرويد</a></li>
-      <li><a href="#"><i class="fas fa-headphones"></i> اكسسوارات</a></li>
-      <li><a href="#"><i class="fas fa-percentage"></i> العروض</a></li>
-      <li><a href="#"><i class="fas fa-info-circle"></i> من نحن</a></li>
-      <li><a href="#"><i class="fas fa-phone-alt"></i> اتصل بنا</a></li>
-    </ul>
-    
-    <div class="menu-footer">
-      <div class="social-links">
-        <a href="#"><i class="fab fa-whatsapp"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-facebook"></i></a>
-        <a href="#"><i class="fab fa-tiktok"></i></a>
-      </div>
-      <p>متجر موبايلك © 2023</p>
-    </div>
-  </nav>
-
-  <!-- المحتوى الرئيسي -->
-  <main>
-    <!-- قسم الشرائح -->
-    <section class="hero-slider">
-      <div class="slider-container">
-        <div class="slide active">
-          <img src="https://via.placeholder.com/800x400?text=عروض+خاصة+على+أحدث+الهواتف" alt="عروض خاصة" />
-          <div class="slide-content">
-            <h2>عروض خيالية!</h2>
-            <p>خصومات تصل إلى 30% على أحدث الموديلات</p>
-            <button class="btn-shop-now">تسوق الآن</button>
-          </div>
-        </div>
-        <div class="slide">
-          <img src="https://via.placeholder.com/800x400?text=هواتف+أبل+بأسعار+تنافسية" alt="هواتف أبل" />
-          <div class="slide-content">
-            <h2>أحدث إصدارات آيفون</h2>
-            <p>احصل على iPhone 14 Pro بأسعار مميزة</p>
-            <button class="btn-shop-now">عرض التفاصيل</button>
-          </div>
-        </div>
-        <div class="slide">
-          <img src="https://via.placeholder.com/800x400?text=أقوى+هواتف+الأندرويد" alt="هواتف أندرويد" />
-          <div class="slide-content">
-            <h2>أقوى هواتف الأندرويد</h2>
-            <p>سامسونج، شاومي، أوبو وغيرها</p>
-            <button class="btn-shop-now">اكتشف المزيد</button>
-          </div>
-        </div>
-      </div>
-      
-      <div class="slider-dots">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
-    </section>
-    
-    <!-- فئات المنتجات -->
-    <section class="categories-section">
-      <h2 class="section-title">تصفح حسب الفئة</h2>
-      <div class="categories-grid">
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-mobile-alt"></i>
-          </div>
-          <h3>جميع الهواتف</h3>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-apple-alt"></i>
-          </div>
-          <h3>أيفون</h3>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fab fa-android"></i>
-          </div>
-          <h3>أندرويد</h3>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-percentage"></i>
-          </div>
-          <h3>العروض</h3>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-headphones"></i>
-          </div>
-          <h3>اكسسوارات</h3>
-        </div>
-      </div>
-    </section>
-    
-    <!-- أحدث المنتجات -->
-    <section class="products-section">
-      <div class="section-header">
-        <h2 class="section-title">أحدث الهواتف</h2>
-        <a href="#" class="view-all">عرض الكل</a>
-      </div>
-      
-      <div class="products-grid" id="products-container">
-        <!-- سيتم تحميل المنتجات هنا -->
-      </div>
-    </section>
-    
-    <!-- قسم العروض الخاصة -->
-    <section class="deals-section">
-      <div class="deals-header">
-        <h2 class="section-title">العروض الخاصة</h2>
-        <div class="deals-timer">
-          <i class="fas fa-clock"></i>
-          <span id="countdown">23:59:59</span>
-        </div>
-      </div>
-      
-      <div class="deals-slider">
-        <div class="deal-card">
-          <div class="deal-badge">خصم 25%</div>
-          <img src="https://via.placeholder.com/300x300?text=iPhone+13" alt="iPhone 13" />
-          <div class="deal-info">
-            <h3>iPhone 13</h3>
-            <div class="price">
-              <span class="original-price">3,499 ر.س</span>
-              <span class="sale-price">2,799 ر.س</span>
+    <header>
+        <div class="container">
+            <img src="https://i.postimg.cc/4y3Phhb5/IMG-7367.jpg" alt="قصي الشريف" class="profile-img">
+            <h1>قصي الشريف</h1>
+            <p class="title">رجل أعمال ناشئ | طالب ثانوية عامة | فلسطيني طموح</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
             </div>
-            <button class="btn-add-to-cart">أضف للسلة</button>
-          </div>
         </div>
-        
-        <div class="deal-card">
-          <div class="deal-badge">خصم 20%</div>
-          <img src="https://via.placeholder.com/300x300?text=Samsung+S22" alt="Samsung S22" />
-          <div class="deal-info">
-            <h3>Samsung S22 Ultra</h3>
-            <div class="price">
-              <span class="original-price">4,199 ر.س</span>
-              <span class="sale-price">3,399 ر.س</span>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="card">
+                <h2>نبذة عني</h2>
+                <p>مرحباً بكم، أنا قصي الشريف، شاب فلسطيني طموح من مدينة الخليل، أبلغ من العمر 18 عاماً وأدرس حالياً في الصف الثاني عشر (التوجيهي) بمدرسة الخليل الثانوية.</p>
+                <p>أنا شخص مجتهد ومتفوق دراسياً، معروف بين زملائي ومعلميني بالذكاء وحسن الخلق والالتزام. أحب التعلم واكتساب المهارات الجديدة وأطمح لأن أصبح رجل أعمال ناجحاً في المستقبل.</p>
+                <p>أؤمن بأن النجاح هو ثمرة العمل الجاد والصبر، وأن الأحلام الكبيرة تبدأ بخطوات صغيرة ولكن ثابتة. أحب مساعدة الآخرين وأحرص دائماً على الالتزام بالأخلاق الحميدة والقيم الإنسانية.</p>
             </div>
-            <button class="btn-add-to-cart">أضف للسلة</button>
-          </div>
+            
+            <div class="card">
+                <h2>معلومات شخصية</h2>
+                <div class="info-item">
+                    <i class="fas fa-user"></i>
+                    <div>
+                        <strong>الاسم الكامل:</strong> قصي محمد الشريف
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <strong>العنوان:</strong> الخليل، فلسطين
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-birthday-cake"></i>
+                    <div>
+                        <strong>العمر:</strong> 18 عاماً
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div>
+                        <strong>المستوى التعليمي:</strong> ثانوية عامة (توجيهي)
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <strong>رقم الهاتف:</strong> 0566572007
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <strong>البريد الإلكتروني:</strong> qusay@example.com
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>المهارات والصفات</h2>
+                <p>أتمتع بالعديد من المهارات والصفات التي تميزني:</p>
+                <div class="skills">
+                    <span class="skill">القيادة</span>
+                    <span class="skill">التواصل الفعال</span>
+                    <span class="skill">حل المشكلات</span>
+                    <span class="skill">الإبداع</span>
+                    <span class="skill">العمل الجماعي</span>
+                    <span class="skill">الالتزام</span>
+                    <span class="skill">حسن الخلق</span>
+                    <span class="skill">التفوق الأكاديمي</span>
+                    <span class="skill">إدارة الوقت</span>
+                </div>
+                <p style="margin-top: 20px;">أنا شخص مؤدب يحترم الكبير ويحنو على الصغير، أحب التعاون مع الآخرين وأسعى دائماً لتحقيق التميز في كل ما أفعله. أعتبر نفسي شخصاً طموحاً لا يعرف المستحيل، وأؤمن بقدرتي على تحقيق أحلامي رغم كل التحديات.</p>
+            </div>
+            
+            <div class="card">
+                <h2>الطموحات المستقبلية</h2>
+                <p>أطمح بعد إنهاء مرحلة الثانوية العامة إلى دراسة تخصص إدارة الأعمال أو التسويق في جامعة مرموقة، لتطوير مهاراتي في عالم الأعمال.</p>
+                <p>هدفي أن أصبح رجل أعمال ناجحاً أسس مشاريع تجارية تخلق فرص عمل لأبناء مجتمعي في فلسطين، وتساهم في تنمية الاقتصاد المحلي.</p>
+                <p>أحلم بإطلاق مشاريع ريادية تواكب العصر الرقمي وتستثمر في الطاقات الشابة، مع الحفاظ على القيم والأخلاق التي تربيت عليها.</p>
+                <p>أؤمن بأن الشباب الفلسطيني قادر على صنع التغيير والإبداع رغم كل الظروف، وأريد أن أكون نموذجاً إيجابياً للشاب الطموح الذي يحول أحلامه إلى واقع ملموس.</p>
+            </div>
         </div>
-      </div>
-    </section>
-    
-    <!-- قسم المميزات -->
-    <section class="features-section">
-      <div class="feature-card">
-        <i class="fas fa-shipping-fast"></i>
-        <h3>شحن سريع</h3>
-        <p>توصيل خلال 24-48 ساعة</p>
-      </div>
-      <div class="feature-card">
-        <i class="fas fa-shield-alt"></i>
-        <h3>ضمان حقيقي</h3>
-        <p>ضمان يصل إلى سنتين</p>
-      </div>
-      <div class="feature-card">
-        <i class="fas fa-exchange-alt"></i>
-        <h3>إرجاع سهل</h3>
-        <p>إرجاع خلال 14 يوم</p>
-      </div>
-      <div class="feature-card">
-        <i class="fas fa-headset"></i>
-        <h3>دعم فني</h3>
-        <p>خدمة عملاء 24/7</p>
-      </div>
-    </section>
-    
-    <!-- قسم من نحن -->
-    <section class="about-section">
-      <div class="about-content">
-        <h2 class="section-title">من نحن</h2>
-        <p>
-          متجر موبايلك هو وجهتكم الأولى لشراء أحدث الهواتف الذكية والأجهزة اللوحية بأسعار تنافسية وضمان معتمد. نقدم تشكيلة واسعة من المنتجات تشمل هواتف آيفون، سامسونج، شاومي، أوبو وغيرها من الماركات العالمية، مع توفير خدمة ما بعد البيع والدعم الفني المتميز.
-        </p>
-        <button class="btn-more">المزيد عنا</button>
-      </div>
-      <div class="about-image">
-        <img src="https://via.placeholder.com/400x300?text=متجر+موبايلك" alt="متجر موبايلك" />
-      </div>
-    </section>
-  </main>
-
-  <!-- عربة التسوق -->
-  <div class="cart-modal" id="cart-modal">
-    <div class="cart-container">
-      <div class="cart-header">
-        <h3>عربة التسوق</h3>
-        <button class="close-cart">&times;</button>
-      </div>
-      
-      <div class="cart-items" id="cart-items">
-        <!-- عناصر العربة تظهر هنا -->
-        <div class="empty-cart">
-          <i class="fas fa-shopping-cart"></i>
-          <p>عربة التسوق فارغة</p>
-          <button class="btn-continue-shopping">مواصلة التسوق</button>
-        </div>
-      </div>
-      
-      <div class="cart-summary">
-        <div class="cart-total">
-          <span>المجموع:</span>
-          <span id="cart-total-price">0.00 ر.س</span>
-        </div>
-        <button class="btn-checkout" id="send-order-btn">
-          <i class="fab fa-whatsapp"></i> إتمام الطلب
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- التذييل -->
-  <footer class="modern-footer">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>موبايلك</h3>
-        <p>وجهتكم الأولى لشراء أحدث الهواتف الذكية والأجهزة اللوحية بأسعار تنافسية وضمان معتمد.</p>
-        <div class="footer-social">
-          <a href="#"><i class="fab fa-whatsapp"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-snapchat"></i></a>
-          <a href="#"><i class="fab fa-tiktok"></i></a>
-        </div>
-      </div>
-      
-      <div class="footer-section">
-        <h3>روابط سريعة</h3>
-        <ul>
-          <li><a href="#">الرئيسية</a></li>
-          <li><a href="#">منتجاتنا</a></li>
-          <li><a href="#">العروض</a></li>
-          <li><a href="#">من نحن</a></li>
-          <li><a href="#">اتصل بنا</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
-        <h3>خدمة العملاء</h3>
-        <ul>
-          <li><a href="#">سياسة الإرجاع</a></li>
-          <li><a href="#">الأسئلة الشائعة</a></li>
-          <li><a href="#">طرق الدفع</a></li>
-          <li><a href="#">تتبع الطلب</a></li>
-          <li><a href="#">الشروط والأحكام</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
-        <h3>اتصل بنا</h3>
-        <ul class="contact-info">
-          <li><i class="fas fa-map-marker-alt"></i> الرياض، المملكة العربية السعودية</li>
-          <li><i class="fas fa-phone-alt"></i> +966 50 123 4567</li>
-          <li><i class="fas fa-envelope"></i> info@mobilek.com</li>
-        </ul>
-      </div>
     </div>
     
-    <div class="footer-bottom">
-      <p>&copy; 2023 متجر موبايلك. جميع الحقوق محفوظة.</p>
-      <div class="payment-methods">
-        <i class="fab fa-cc-visa"></i>
-        <i class="fab fa-cc-mastercard"></i>
-        <i class="fab fa-cc-mada"></i>
-        <i class="fab fa-cc-apple-pay"></i>
-      </div>
-    </div>
-  </footer>
-
-  <!-- الأزرار العائمة -->
-  <div class="floating-buttons">
-    <button class="floating-btn whatsapp-btn">
-      <i class="fab fa-whatsapp"></i>
-    </button>
-    <button class="floating-btn call-btn">
-      <i class="fas fa-phone-alt"></i>
-    </button>
-    <button class="floating-btn scroll-top-btn">
-      <i class="fas fa-arrow-up"></i>
-    </button>
-  </div>
-
-  <!-- نافذة البحث -->
-  <div class="search-overlay">
-    <div class="search-modal">
-      <button class="close-search">&times;</button>
-      <h3>ابحث عن هاتفك المفضل</h3>
-      <div class="search-input-container">
-        <input type="text" placeholder="مثال: iPhone 13 Pro, Samsung S22..." />
-        <button class="search-submit">
-          <i class="fas fa-search"></i> بحث
-        </button>
-      </div>
-      <div class="search-suggestions">
-        <h4>اقتراحات بحث شائعة:</h4>
-        <ul>
-          <li><a href="#">iPhone 14 Pro Max</a></li>
-          <li><a href="#">Samsung Galaxy S23</a></li>
-          <li><a href="#">Xiaomi Redmi Note 12</a></li>
-          <li><a href="#">Oppo Reno 8</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- الروابط البرمجية -->
-  <script src="data.js"></script>
-  <script src="script.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <footer>
+        <div class="container">
+            <h2>تواصل معي</h2>
+            <p>أنا دائماً متحمس للتعرف على أشخاص جدد وتبادل الأفكار والخبرات. لا تتردد في التواصل معي!</p>
+            <a href="tel:0566572007" class="contact-btn">اتصل بي الآن</a>
+            <p style="margin-top: 30px;">&copy; 2025 قصي الشريف - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
 </body>
 </html>
