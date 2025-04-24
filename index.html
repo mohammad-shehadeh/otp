@@ -4,197 +4,386 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <!-- معلومات مهمة لتحسين الظهور في البحث -->
-  <title>معرض ابو عالية للإنارة | أحدث تصاميم الإنارة الداخلية والخارجية</title>
-  <meta name="description" content="معرض ابو عالية للإنارة - نوفر أفضل أنواع الإنارة الحديثة للبيوت والمكاتب. زيِّن منزلك بأجمل وأحدث تصاميم الإضاءة. زورونا الآن!" />
-  <meta name="keywords" content="معرض ابو عالية, إنارة, إضاءة, مصابيح, ديكور, إنارة داخلية, إنارة خارجية, محل إنارة, ابو عالية للإنارة" />
-  <meta name="author" content="معرض ابو عالية للإنارة" />
+  <!-- معلومات الموقع -->
+  <title>متجر موبايلك | أحدث الهواتف الذكية بأسعار تنافسية</title>
+  <meta name="description" content="متجر موبايلك - نوفر أحدث الهواتف الذكية من جميع الماركات العالمية بأسعار تنافسية وضمان حقيقي. تسوق الآن واحصل على أفضل العروض!" />
+  <meta name="keywords" content="هواتف ذكية, جوالات, ايفون, سامسونج, شاومي, اوبو, متجر جوالات, موبايلك, عروض هواتف" />
+  <meta name="author" content="متجر موبايلك" />
 
-  <!-- معلومات المشاركة على السوشيال ميديا -->
-  <meta property="og:title" content="معرض ابو عالية للإنارة | أجمل تصاميم الإنارة" />
-  <meta property="og:description" content="اكتشف تشكيلتنا الواسعة من وحدات الإضاءة الحديثة والكلاسيكية في معرض ابو عالية." />
+  <!-- مشاركات السوشيال ميديا -->
+  <meta property="og:title" content="متجر موبايلك | أحدث الهواتف الذكية بأسعار تنافسية" />
+  <meta property="og:description" content="اكتشف تشكيلتنا الواسعة من الهواتف الذكية بأفضل الأسعار في متجر موبايلك." />
   <meta property="og:image" content="https://i.postimg.cc/6pT5CH5H/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://mohammad-shehadeh.github.io/soh/" /> <!-- غيّر هذا للرابط الحقيقي لموقعك -->
+  <meta property="og:url" content="https://example.com" />
 
   <!-- أيقونة الموقع -->
   <link rel="icon" type="image/jpeg" href="https://i.postimg.cc/6pT5CH5H/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" />
 
+  <!-- روابط CSS -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800&display=swap" rel="stylesheet">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <div class="top-bar">
+  <!-- شريط التنقل العلوي -->
+  <header class="glass-header">
+    <div class="top-nav">
+      <button class="menu-toggle" aria-label="فتح القائمة">
+        <i class="fas fa-bars"></i>
+      </button>
+      
       <div class="logo-container">
-        <img src="https://i.postimg.cc/hvBmDqsf/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" alt="شعار متجر ابو عالية" class="logo" />
-        <a href="">
-  <h1 class="fancy-title">Abu Alia</h1>
-</a>
+        <img src="https://i.postimg.cc/6pT5CH5H/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" alt="شعار متجر موبايلك" class="logo" />
+        <h1 class="store-name">موبايلك</h1>
       </div>
-
-      <div class="cart-container">
+      
+      <div class="nav-icons">
+        <button class="search-btn" aria-label="بحث">
+          <i class="fas fa-search"></i>
+        </button>
         <button id="cart-button" aria-label="عربة التسوق">
           <i class="fas fa-shopping-cart"></i>
           <span id="cart-count">0</span>
         </button>
       </div>
     </div>
-
-    <nav class="categories-scroll" aria-label="فئات المنتجات">
-      <div class="categories-container" id="categories-container">
-        <!-- يتم تحميل الفئات هنا باستخدام JavaScript -->
-      </div>
-    </nav>
+    
+    <!-- شريط البحث -->
+    <div class="search-bar">
+      <input type="text" placeholder="ابحث عن هاتفك المفضل..." />
+      <button class="search-submit">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
   </header>
 
-  <br><br><br><br><br>
+  <!-- القائمة الجانبية -->
+  <nav class="side-menu" id="sideMenu">
+    <div class="menu-header">
+      <h3>قائمة المتجر</h3>
+      <button class="close-menu" aria-label="إغلاق القائمة">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <ul class="menu-categories">
+      <li><a href="#"><i class="fas fa-home"></i> الرئيسية</a></li>
+      <li><a href="#"><i class="fas fa-mobile-alt"></i> جميع الهواتف</a></li>
+      <li><a href="#"><i class="fas fa-apple-alt"></i> أيفون</a></li>
+      <li><a href="#"><i class="fab fa-android"></i> أندرويد</a></li>
+      <li><a href="#"><i class="fas fa-headphones"></i> اكسسوارات</a></li>
+      <li><a href="#"><i class="fas fa-percentage"></i> العروض</a></li>
+      <li><a href="#"><i class="fas fa-info-circle"></i> من نحن</a></li>
+      <li><a href="#"><i class="fas fa-phone-alt"></i> اتصل بنا</a></li>
+    </ul>
+    
+    <div class="menu-footer">
+      <div class="social-links">
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+      </div>
+      <p>متجر موبايلك © 2023</p>
+    </div>
+  </nav>
+
+  <!-- المحتوى الرئيسي -->
   <main>
-    <section class="hero" aria-label="منتجاتنا">
-      <div class="slideshow-container">
-        <div class="mySlides fade">
-          <img src="https://i.postimg.cc/6pT5CH5H/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" alt="حلول إضاءة متميزة" style="width:100%" />
+    <!-- قسم الشرائح -->
+    <section class="hero-slider">
+      <div class="slider-container">
+        <div class="slide active">
+          <img src="https://via.placeholder.com/800x400?text=عروض+خاصة+على+أحدث+الهواتف" alt="عروض خاصة" />
+          <div class="slide-content">
+            <h2>عروض خيالية!</h2>
+            <p>خصومات تصل إلى 30% على أحدث الموديلات</p>
+            <button class="btn-shop-now">تسوق الآن</button>
+          </div>
         </div>
-        <div class="mySlides fade">
-          <img src="https://i.postimg.cc/cHR4TGcM/IMG-7219.jpg" alt="تصاميم إضاءة عصرية" style="width:100%" />
+        <div class="slide">
+          <img src="https://via.placeholder.com/800x400?text=هواتف+أبل+بأسعار+تنافسية" alt="هواتف أبل" />
+          <div class="slide-content">
+            <h2>أحدث إصدارات آيفون</h2>
+            <p>احصل على iPhone 14 Pro بأسعار مميزة</p>
+            <button class="btn-shop-now">عرض التفاصيل</button>
+          </div>
         </div>
-        <div class="mySlides fade">
-          <img src="https://i.postimg.cc/zfDjqqy3/IMG-7218.jpg" alt="منتجات موفرة للطاقة" style="width:100%" />
+        <div class="slide">
+          <img src="https://via.placeholder.com/800x400?text=أقوى+هواتف+الأندرويد" alt="هواتف أندرويد" />
+          <div class="slide-content">
+            <h2>أقوى هواتف الأندرويد</h2>
+            <p>سامسونج، شاومي، أوبو وغيرها</p>
+            <button class="btn-shop-now">اكتشف المزيد</button>
+          </div>
         </div>
       </div>
-
-      <div class="dots-container">
-        <span class="dot" onclick="currentSlide(1)" aria-label="الشريحة 1"></span>
-        <span class="dot" onclick="currentSlide(2)" aria-label="الشريحة 2"></span>
-        <span class="dot" onclick="currentSlide(3)" aria-label="الشريحة 3"></span>
+      
+      <div class="slider-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
       </div>
     </section>
-
-    <section class="products-section" aria-labelledby="products-title">
-      <h2 id="products-title">منتجاتنا</h2>
-      <div class="products-container" id="products-container" role="list">
-        <!-- سيتم تحميل المنتجات هنا باستخدام JavaScript -->
+    
+    <!-- فئات المنتجات -->
+    <section class="categories-section">
+      <h2 class="section-title">تصفح حسب الفئة</h2>
+      <div class="categories-grid">
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h3>جميع الهواتف</h3>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-apple-alt"></i>
+          </div>
+          <h3>أيفون</h3>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fab fa-android"></i>
+          </div>
+          <h3>أندرويد</h3>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-percentage"></i>
+          </div>
+          <h3>العروض</h3>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-headphones"></i>
+          </div>
+          <h3>اكسسوارات</h3>
+        </div>
       </div>
     </section>
-
-    <!-- زر المزيد من التفاصيل وقسم من نحن تم نقلهم إلى هنا -->
-    <button class="details-btn"> اختار من القائمة أعلاه لعرض المنتجات  </button>
-
-    <section class="about-section" aria-labelledby="about-heading">
-      <h2 id="about-heading">من نحن</h2>
-      <p>
-  معرض أبو عالية للإنارة هو وجهتكم المثالية لحلول الإضاءة عالية الجودة ، نقدم مجموعة واسعة من المنتجات تشمل الثريات، والمصابيح، وأنواعًا مختلفة من وحدات الإضاءة التي تناسب المنازل، والمكاتب، والمساحات التجارية. نحن نلتزم بتوفير أعلى مستويات الجودة، مع لمسة من الأناقة والابتكار، لإضاءة مساحاتكم بكفاءة وجمال. تجدوننا في بيت لحم، بالقرب من وسط المدينة.
-</p>
+    
+    <!-- أحدث المنتجات -->
+    <section class="products-section">
+      <div class="section-header">
+        <h2 class="section-title">أحدث الهواتف</h2>
+        <a href="#" class="view-all">عرض الكل</a>
+      </div>
+      
+      <div class="products-grid" id="products-container">
+        <!-- سيتم تحميل المنتجات هنا -->
+      </div>
+    </section>
+    
+    <!-- قسم العروض الخاصة -->
+    <section class="deals-section">
+      <div class="deals-header">
+        <h2 class="section-title">العروض الخاصة</h2>
+        <div class="deals-timer">
+          <i class="fas fa-clock"></i>
+          <span id="countdown">23:59:59</span>
+        </div>
+      </div>
+      
+      <div class="deals-slider">
+        <div class="deal-card">
+          <div class="deal-badge">خصم 25%</div>
+          <img src="https://via.placeholder.com/300x300?text=iPhone+13" alt="iPhone 13" />
+          <div class="deal-info">
+            <h3>iPhone 13</h3>
+            <div class="price">
+              <span class="original-price">3,499 ر.س</span>
+              <span class="sale-price">2,799 ر.س</span>
+            </div>
+            <button class="btn-add-to-cart">أضف للسلة</button>
+          </div>
+        </div>
+        
+        <div class="deal-card">
+          <div class="deal-badge">خصم 20%</div>
+          <img src="https://via.placeholder.com/300x300?text=Samsung+S22" alt="Samsung S22" />
+          <div class="deal-info">
+            <h3>Samsung S22 Ultra</h3>
+            <div class="price">
+              <span class="original-price">4,199 ر.س</span>
+              <span class="sale-price">3,399 ر.س</span>
+            </div>
+            <button class="btn-add-to-cart">أضف للسلة</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- قسم المميزات -->
+    <section class="features-section">
+      <div class="feature-card">
+        <i class="fas fa-shipping-fast"></i>
+        <h3>شحن سريع</h3>
+        <p>توصيل خلال 24-48 ساعة</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-shield-alt"></i>
+        <h3>ضمان حقيقي</h3>
+        <p>ضمان يصل إلى سنتين</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-exchange-alt"></i>
+        <h3>إرجاع سهل</h3>
+        <p>إرجاع خلال 14 يوم</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-headset"></i>
+        <h3>دعم فني</h3>
+        <p>خدمة عملاء 24/7</p>
+      </div>
+    </section>
+    
+    <!-- قسم من نحن -->
+    <section class="about-section">
+      <div class="about-content">
+        <h2 class="section-title">من نحن</h2>
+        <p>
+          متجر موبايلك هو وجهتكم الأولى لشراء أحدث الهواتف الذكية والأجهزة اللوحية بأسعار تنافسية وضمان معتمد. نقدم تشكيلة واسعة من المنتجات تشمل هواتف آيفون، سامسونج، شاومي، أوبو وغيرها من الماركات العالمية، مع توفير خدمة ما بعد البيع والدعم الفني المتميز.
+        </p>
+        <button class="btn-more">المزيد عنا</button>
+      </div>
+      <div class="about-image">
+        <img src="https://via.placeholder.com/400x300?text=متجر+موبايلك" alt="متجر موبايلك" />
+      </div>
     </section>
   </main>
 
-  <div class="cart-modal" id="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-title">
-    <div class="modal-content">
-      <button class="close" aria-label="إغلاق العربة">&times;</button>
-      <br><br>
-      <h2 id="cart-title">عربة التسوق</h2>
-      <div class="cart-items" id="cart-items" role="list">
-        <!-- سيتم تحميل عناصر العربة هنا -->
+  <!-- عربة التسوق -->
+  <div class="cart-modal" id="cart-modal">
+    <div class="cart-container">
+      <div class="cart-header">
+        <h3>عربة التسوق</h3>
+        <button class="close-cart">&times;</button>
       </div>
-      <div class="cart-total">
-        <strong>المجموع: $<span id="cart-total-price">0.00</span></strong>
+      
+      <div class="cart-items" id="cart-items">
+        <!-- عناصر العربة تظهر هنا -->
+        <div class="empty-cart">
+          <i class="fas fa-shopping-cart"></i>
+          <p>عربة التسوق فارغة</p>
+          <button class="btn-continue-shopping">مواصلة التسوق</button>
+        </div>
       </div>
-      <button class="send-order-btn" id="send-order-btn">
-        <i class="fab fa-whatsapp"></i> إرسال الطلب 
-      </button>
+      
+      <div class="cart-summary">
+        <div class="cart-total">
+          <span>المجموع:</span>
+          <span id="cart-total-price">0.00 ر.س</span>
+        </div>
+        <button class="btn-checkout" id="send-order-btn">
+          <i class="fab fa-whatsapp"></i> إتمام الطلب
+        </button>
+      </div>
     </div>
   </div>
 
-  <footer>
+  <!-- التذييل -->
+  <footer class="modern-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>تواصل معنا</h3>
-        <p><i class="fas fa-phone"></i> +972 597258885</p>
-        <p><i class="fas fa-phone"></i> +972 597258885</p>
-        <p><i class="fas fa-envelope"></i> Sohaib-Sharief@gmail.com</p>
-        <p><i class="fas fa-map-marker-alt"></i> 123 شارع بيت لحم،  بيت لحم، فلسطين</p>
+        <h3>موبايلك</h3>
+        <p>وجهتكم الأولى لشراء أحدث الهواتف الذكية والأجهزة اللوحية بأسعار تنافسية وضمان معتمد.</p>
+        <div class="footer-social">
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-snapchat"></i></a>
+          <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
       </div>
+      
       <div class="footer-section">
         <h3>روابط سريعة</h3>
         <ul>
-  <ul>
-  <li>
-    <a href="javascript:window.scrollTo(0,0); setTimeout(function(){ location.reload(true); }, 300);">
-      <i class="fas fa-home"></i> الرئيسية
-    </a>
-  </li>
-
-  <li>
-    <a href="https://maps.google.com/?q=31.695541,35.177929" target="_blank" rel="noopener noreferrer">
-      <i class="fas fa-map-marker-alt"></i> موقعنا
-    </a>
-  </li>
-
-  <li>
-    <a href="https://" target="_blank" rel="noopener noreferrer">
-      <i class="fas fa-globe"></i> موقع إلكتروني آخر
-    </a>
-  </li>
-
-  <li>
-    <a href="https://i.postimg.cc/q70PCZSK/bbf83cae-9e99-469c-bfe5-9ccc76d13ff1.jpg" target="_blank" rel="noopener noreferrer">
-      <i class="fas fa-image"></i> شعار معرضنا
-    </a>
-  </li>
-</ul>
-</ul>
+          <li><a href="#">الرئيسية</a></li>
+          <li><a href="#">منتجاتنا</a></li>
+          <li><a href="#">العروض</a></li>
+          <li><a href="#">من نحن</a></li>
+          <li><a href="#">اتصل بنا</a></li>
+        </ul>
       </div>
+      
       <div class="footer-section">
-        <h3>ساعات العمل</h3>
-        <p>الأحد - الخميس: 9:00 - 19:00</p>
-        <p>السبت: 9:00 - 14:00</p>
-        <p>الجمعة: مغلق</p>
+        <h3>خدمة العملاء</h3>
+        <ul>
+          <li><a href="#">سياسة الإرجاع</a></li>
+          <li><a href="#">الأسئلة الشائعة</a></li>
+          <li><a href="#">طرق الدفع</a></li>
+          <li><a href="#">تتبع الطلب</a></li>
+          <li><a href="#">الشروط والأحكام</a></li>
+        </ul>
       </div>
+      
       <div class="footer-section">
-        <h3>تابعنا</h3>
-        <div class="social-icons">
-  <a href="https://www.facebook.com/share/18o7iVmJAz/?mibextid=wwXIfr" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
-  <a href="https://www.instagram.com/sohaib_sharief?igsh=a25pOWg4Y3FhcTdk" aria-label="إنستغرام"><i class="fab fa-instagram"></i></a>
-  <a href="https://www.tiktok.com/@sohaib_sharief?_t=ZM-8vfWK6kCpZn&_r=1" aria-label="تيك توك" target="_blank">
-  <i class="fab fa-tiktok"></i>
-</a>
-  <a href="https://wa.me/+972597258885" aria-label="واتساب" target="_blank">
-  <i class="fab fa-whatsapp"></i>
-</a>
-</div>
-        <div class="newsletter">
-          <h4> ارسال شكوى  </h4>
-          <form>
-            <input type="email" placeholder=" تفاصيل الشكوى " />
-            <button type="submit">أرسال</button>
-          </form>
-        </div>
+        <h3>اتصل بنا</h3>
+        <ul class="contact-info">
+          <li><i class="fas fa-map-marker-alt"></i> الرياض، المملكة العربية السعودية</li>
+          <li><i class="fas fa-phone-alt"></i> +966 50 123 4567</li>
+          <li><i class="fas fa-envelope"></i> info@mobilek.com</li>
+        </ul>
       </div>
     </div>
+    
     <div class="footer-bottom">
-      <p>&copy; 2025 متجر معرض ابو عالية. جميع الحقوق محفوظة.</p>
-       <p>&copy;برمجة وتطوير المبرمج محمد شحادة</p>
-      <p class="payment-methods">
-    <i class="fab fa-cc-visa"></i>
-    <i class="fab fa-cc-mastercard"></i>
-    <i class="fab fa-cc-paypal"></i>
-    <i class="fab fa-cc-apple-pay"></i>
-    <img src="https://i.postimg.cc/28mzBZSb/IMG-7253.png" alt="Arab Bank">
-    <img src="https://reflectapp.com/wp-content/uploads/2022/02/reflectlogo1.png" alt="Reflect">
-  </p>
+      <p>&copy; 2023 متجر موبايلك. جميع الحقوق محفوظة.</p>
+      <div class="payment-methods">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fab fa-cc-mada"></i>
+        <i class="fab fa-cc-apple-pay"></i>
+      </div>
     </div>
   </footer>
 
+  <!-- الأزرار العائمة -->
+  <div class="floating-buttons">
+    <button class="floating-btn whatsapp-btn">
+      <i class="fab fa-whatsapp"></i>
+    </button>
+    <button class="floating-btn call-btn">
+      <i class="fas fa-phone-alt"></i>
+    </button>
+    <button class="floating-btn scroll-top-btn">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+  </div>
+
+  <!-- نافذة البحث -->
+  <div class="search-overlay">
+    <div class="search-modal">
+      <button class="close-search">&times;</button>
+      <h3>ابحث عن هاتفك المفضل</h3>
+      <div class="search-input-container">
+        <input type="text" placeholder="مثال: iPhone 13 Pro, Samsung S22..." />
+        <button class="search-submit">
+          <i class="fas fa-search"></i> بحث
+        </button>
+      </div>
+      <div class="search-suggestions">
+        <h4>اقتراحات بحث شائعة:</h4>
+        <ul>
+          <li><a href="#">iPhone 14 Pro Max</a></li>
+          <li><a href="#">Samsung Galaxy S23</a></li>
+          <li><a href="#">Xiaomi Redmi Note 12</a></li>
+          <li><a href="#">Oppo Reno 8</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- الروابط البرمجية -->
   <script src="data.js"></script>
   <script src="script.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
