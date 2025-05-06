@@ -6,6 +6,51 @@
     <title>نظام نقاط البيع المتطور</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            @page {
+                size: 80mm auto;
+                margin: 0;
+            }
+            body * {
+                visibility: hidden;
+            }
+            .print-area, .print-area * {
+                visibility: visible;
+            }
+            .print-area {
+                width: 80mm;
+                position: absolute;
+                left: 0;
+                top: 0;
+                padding: 5px;
+                font-size: 12px;
+            }
+            .print-header {
+                text-align: center;
+                margin-bottom: 10px;
+                border-bottom: 1px dashed #000;
+                padding-bottom: 5px;
+            }
+            .print-items {
+                margin: 5px 0;
+            }
+            .print-item {
+                display: flex;
+                justify-content: space-between;
+                margin: 3px 0;
+            }
+            .print-footer {
+                border-top: 1px dashed #000;
+                margin-top: 5px;
+                padding-top: 5px;
+                text-align: center;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -20,9 +65,9 @@
                     <label>الفرع:</label>
                     <select id="branch">
                         <option value="الفرع الرئيسي">الفرع الرئيسي</option>
-                        <option value="فرع الرياض">فرع الرياض</option>
-                        <option value="فرع جدة">فرع جدة</option>
-                        <option value="فرع الدمام">فرع الدمام</option>
+                        <option value="فرع القدس">فرع القدس</option>
+                        <option value="فرع تل أبيب">فرع تل أبيب</option>
+                        <option value="فرع حيفا">فرع حيفا</option>
                     </select>
                 </div>
             </div>
@@ -68,7 +113,7 @@
                         <tfoot>
                             <tr>
                                 <td colspan="4" class="total-label">الإجمالي:</td>
-                                <td colspan="2" class="total-amount">0.00 ر.س</td>
+                                <td colspan="2" class="total-amount">0.00 ₪</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -80,6 +125,24 @@
                     <button id="load-invoice"><i class="fas fa-folder-open"></i> فتح فاتورة</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- منطقة الطباعة المخفية -->
+    <div id="print-template" class="print-area" style="display:none;">
+        <div class="print-header">
+            <h2>فاتورة بيع</h2>
+            <p id="print-branch">الفرع: الفرع الرئيسي</p>
+            <p id="print-date">التاريخ: 01/01/2023</p>
+            <p id="print-invoice-num">رقم الفاتورة: #1</p>
+        </div>
+        <div class="print-items" id="print-items-list">
+            <!-- سيتم ملؤها ديناميكيًا -->
+        </div>
+        <div class="print-footer">
+            <p id="print-total">الإجمالي: 0.00 ₪</p>
+            <p>شكرًا لزيارتكم</p>
+            <p id="print-time"></p>
         </div>
     </div>
 
