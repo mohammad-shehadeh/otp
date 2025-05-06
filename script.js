@@ -30,6 +30,15 @@ const savedInvoicesTable = document.querySelector('#saved-invoices tbody');
 const searchInvoiceInput = document.getElementById('search-invoice');
 const searchBtn = document.getElementById('search-btn');
 
+// عناصر الطباعة
+const printTemplate = document.getElementById('print-template');
+const printBranch = document.getElementById('print-branch');
+const printDate = document.getElementById('print-date');
+const printInvoiceNum = document.getElementById('print-invoice-num');
+const printItemsList = document.getElementById('print-items-list');
+const printTotal = document.getElementById('print-total');
+const printTime = document.getElementById('print-time');
+
 // تهيئة التطبيق عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', function() {
     // تعيين التاريخ الحالي
@@ -46,12 +55,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // تعيين معالج الأحداث
     setupEventListeners();
+    
+    // إنشاء فاتورة جديدة إذا كانت هناك فاتورة حالية فارغة
+    if (currentInvoice.items.length === 0) {
+        createNewInvoice();
+    }
 });
 
 // تحميل الأصناف من ملف test.txt
 function loadItemsFromFile() {
     fetch('test.txt')
-        .then(response => response.text())
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.text();
+        })
         .then(data => {
             const lines = data.split('\n');
             items = lines.map(line => {
@@ -72,9 +89,9 @@ function loadItemsFromFile() {
             console.error('حدث خطأ أثناء تحميل الأصناف:', error);
             // بيانات افتراضية في حالة فشل تحميل الملف
             items = [
-                { name: "صنف 1", price: 10.99, barcode: "123456" },
-                { name: "صنف 2", price: 15.50, barcode: "789012" },
-                { name: "صنف 3", price: 20.00, barcode: "345678" }
+                { name: "قهوة تركية", price: 15.00, barcode: "123456789" },
+                { name: "شاي بالنعناع", price: 10.00, barcode: "987654321" },
+                { name: "عصير برتقال", price: 12.50, barcode: "456123789" }
             ];
         });
 }
@@ -100,8 +117,12 @@ function setupEventListeners() {
     // حفظ الفاتورة
     saveInvoiceBtn.addEventListener('click', saveInvoice);
     
-    // طباعة الفاتورة
-    printInvoiceBtn.addEventListener('click', printInvoice);
+    // طباعة الفاتورة (مع الحفظ التلقائي)
+    printInvoiceBtn.addEventListener('click', function() {
+        saveInvoice();
+        preparePrintTemplate();
+        setTimeout(printInvoice, 100);
+    });
     
     // فتح الفواتير المحفوظة
     loadInvoiceBtn.addEventListener('click', openInvoicesModal);
@@ -125,6 +146,13 @@ function setupEventListeners() {
     window.addEventListener('click', function(event) {
         if (event.target === invoicesModal) {
             closeInvoicesModal();
+        }
+    });
+    
+    // التركيز على حقل الباركود عند أي نقرة على الصفحة
+    document.addEventListener('click', function() {
+        if (document.activeElement !== barcodeInput) {
+            barcodeInput.focus();
         }
     });
 }
@@ -192,19 +220,19 @@ function updateInvoiceDisplay() {
         row.innerHTML = `
             <td>${index + 1}</td>
             <td>${item.name}</td>
-            <td>${item.price.toFixed(2)} ر.س</td>
+            <td>${item.price.toFixed(2)} ₪</td>
             <td>
                 <input type="number" min="1" value="${item.quantity}" 
                        data-barcode="${item.barcode}" class="quantity-input">
             </td>
-            <td>${item.total.toFixed(2)} ر.س</td>
+            <td>${item.total.toFixed(2)} ₪</td>
             <td class="delete-item" data-barcode="${item.barcode}"><i class="fas fa-trash"></i></td>
         `;
         invoiceItems.appendChild(row);
     });
     
     // تحديث الإجمالي
-    totalAmount.textContent = `${currentInvoice.total.toFixed(2)} ر.س`;
+    totalAmount.textContent = `${currentInvoice.total.toFixed(2)} ₪`;
     
     // تحديث رقم الفاتورة
     invoiceNumber.textContent = `فاتورة #${currentInvoice.id}`;
@@ -244,6 +272,7 @@ function deleteItem(e) {
     currentInvoice.items = currentInvoice.items.filter(i => i.barcode !== barcode);
     calculateTotal();
     updateInvoiceDisplay();
+    barcodeInput.focus();
 }
 
 // إنشاء فاتورة جديدة
@@ -274,8 +303,11 @@ function createNewInvoice() {
 function saveInvoice() {
     if (currentInvoice.items.length === 0) {
         alert('لا يمكن حفظ فاتورة فارغة!');
-        return;
+        return false;
     }
+    
+    // تحديث تاريخ الفاتورة
+    currentInvoice.date = new Date();
     
     // التحقق مما إذا كانت الفاتورة موجودة بالفعل
     const existingIndex = savedInvoices.findIndex(i => i.id === currentInvoice.id);
@@ -291,7 +323,33 @@ function saveInvoice() {
     // حفظ في localStorage
     localStorage.setItem('invoices', JSON.stringify(savedInvoices));
     
-    alert(`تم حفظ الفاتورة #${currentInvoice.id} بنجاح!`);
+    console.log(`تم حفظ الفاتورة #${currentInvoice.id} بنجاح!`);
+    return true;
+}
+
+// إعداد قالب الطباعة
+function preparePrintTemplate() {
+    printBranch.textContent = `الفرع: ${currentInvoice.branch}`;
+    printDate.textContent = `التاريخ: ${new Date(currentInvoice.date).toLocaleDateString('ar-SA')}`;
+    printInvoiceNum.textContent = `رقم الفاتورة: #${currentInvoice.id}`;
+    printTime.textContent = `الوقت: ${new Date().toLocaleTimeString('ar-SA')}`;
+    
+    // تفريغ قائمة العناصر المطبوعة
+    printItemsList.innerHTML = '';
+    
+    // إضافة العناصر إلى قائمة الطباعة
+    currentInvoice.items.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'print-item';
+        itemDiv.innerHTML = `
+            <span>${item.name} (${item.quantity} x ${item.price.toFixed(2)} ₪)</span>
+            <span>${item.total.toFixed(2)} ₪</span>
+        `;
+        printItemsList.appendChild(itemDiv);
+    });
+    
+    // تحديث الإجمالي المطبوع
+    printTotal.textContent = `الإجمالي: ${currentInvoice.total.toFixed(2)} ₪`;
 }
 
 // طباعة الفاتورة
@@ -301,18 +359,32 @@ function printInvoice() {
         return;
     }
     
+    // عرض قالب الطباعة مؤقتًا
+    printTemplate.style.display = 'block';
+    
+    // الطباعة
     window.print();
+    
+    // إخفاء قالب الطباعة بعد الانتهاء
+    setTimeout(() => {
+        printTemplate.style.display = 'none';
+        
+        // إنشاء فاتورة جديدة بعد الطباعة
+        createNewInvoice();
+    }, 500);
 }
 
 // فتح نافذة الفواتير المحفوظة
 function openInvoicesModal() {
     displaySavedInvoices();
     invoicesModal.style.display = 'block';
+    searchInvoiceInput.focus();
 }
 
 // إغلاق نافذة الفواتير المحفوظة
 function closeInvoicesModal() {
     invoicesModal.style.display = 'none';
+    barcodeInput.focus();
 }
 
 // عرض الفواتير المحفوظة
@@ -323,7 +395,7 @@ function displaySavedInvoices(filter = '') {
         savedInvoices.filter(inv => 
             inv.id.toString().includes(filter) || 
             inv.branch.includes(filter) ||
-            inv.date.includes(filter)
+            new Date(inv.date).toLocaleDateString('ar-SA').includes(filter)
         ) : savedInvoices;
     
     if (filteredInvoices.length === 0) {
@@ -333,15 +405,19 @@ function displaySavedInvoices(filter = '') {
         return;
     }
     
+    // ترتيب الفواتير من الأحدث إلى الأقدم
+    filteredInvoices.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
     filteredInvoices.forEach(invoice => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${invoice.id}</td>
             <td>${new Date(invoice.date).toLocaleDateString('ar-SA')}</td>
             <td>${invoice.branch}</td>
-            <td>${invoice.total.toFixed(2)} ر.س</td>
+            <td>${invoice.total.toFixed(2)} ₪</td>
             <td>
                 <button class="load-btn" data-id="${invoice.id}">فتح</button>
+                <button class="print-btn" data-id="${invoice.id}">طباعة</button>
                 <button class="delete-btn" data-id="${invoice.id}">حذف</button>
             </td>
         `;
@@ -354,6 +430,20 @@ function displaySavedInvoices(filter = '') {
             const id = parseInt(this.getAttribute('data-id'));
             loadInvoiceById(id);
             closeInvoicesModal();
+        });
+    });
+    
+    // إضافة معالج الأحداث لأزرار الطباعة
+    document.querySelectorAll('.print-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = parseInt(this.getAttribute('data-id'));
+            loadInvoiceById(id);
+            closeInvoicesModal();
+            setTimeout(() => {
+                saveInvoice();
+                preparePrintTemplate();
+                setTimeout(printInvoice, 100);
+            }, 200);
         });
     });
     
@@ -375,6 +465,7 @@ function loadInvoiceById(id) {
         branchSelect.value = invoice.branch;
         updateInvoiceDisplay();
         currentInvoiceIndex = savedInvoices.findIndex(i => i.id === id);
+        barcodeInput.focus();
     }
 }
 
