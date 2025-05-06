@@ -1,398 +1,417 @@
-// script.js
+// البيانات والمتغيرات العامة
+let items = []; // لتخزين الأصناف من ملف test.txt
+let currentInvoice = {
+    id: 1,
+    date: new Date(),
+    branch: "الفرع الرئيسي",
+    items: [],
+    total: 0
+};
+let savedInvoices = JSON.parse(localStorage.getItem('invoices')) || [];
+let currentInvoiceIndex = 0;
 
-document.addEventListener('DOMContentLoaded', () => {
-    let currentCategory = null;
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let slideIndex = 0;
-    let slideInterval = null;
-    let isSliding = false; // متغير لتتبع حالة الانتقال بين الشرائح
+// عناصر DOM
+const barcodeInput = document.getElementById('barcode');
+const addItemBtn = document.getElementById('add-item');
+const invoiceItems = document.getElementById('invoice-items');
+const totalAmount = document.querySelector('.total-amount');
+const invoiceNumber = document.getElementById('invoice-number');
+const currentDate = document.getElementById('current-date');
+const branchSelect = document.getElementById('branch');
+const newInvoiceBtn = document.getElementById('new-invoice');
+const saveInvoiceBtn = document.getElementById('save-invoice');
+const printInvoiceBtn = document.getElementById('print-invoice');
+const loadInvoiceBtn = document.getElementById('load-invoice');
+const prevInvoiceBtn = document.getElementById('prev-invoice');
+const nextInvoiceBtn = document.getElementById('next-invoice');
+const invoicesModal = document.getElementById('invoices-modal');
+const closeModal = document.querySelector('.close');
+const savedInvoicesTable = document.querySelector('#saved-invoices tbody');
+const searchInvoiceInput = document.getElementById('search-invoice');
+const searchBtn = document.getElementById('search-btn');
 
-    // عناصر DOM
-    const elements = {
-        categoriesContainer: document.getElementById('categories-container'),
-        productsContainer: document.getElementById('products-container'),
-        cartCount: document.getElementById('cart-count'),
-        cartModal: document.getElementById('cart-modal'),
-        cartItems: document.getElementById('cart-items'),
-        cartTotal: document.getElementById('cart-total-price'),
-        sendOrderBtn: document.getElementById('send-order-btn'),
-        closeCartBtn: document.querySelector('.close'),
-        cartButton: document.getElementById('cart-button'),
-        slides: document.getElementsByClassName("mySlides"),
-        dots: document.getElementsByClassName("dot")
-    };
-
-    // وظائف إدارة الواجهة
-    const UI = {
-        updateAddToCartButtons: () => {
-            document.querySelectorAll('.add-to-cart').forEach(button => {
-                const productName = button.dataset.id;
-                const cartItem = cart.find(item => item.name === productName);
-                button.innerHTML = cartItem ? 
-                    `<span class="quantity-controls">
-                        <button class="decrement">-</button>
-                        <span class="quantity">${cartItem.quantity}</span>
-                        <button class="increment">+</button>
-                    </span>` : 
-                    'إضافة للسلة';
-                
-                if (cartItem) {
-                    button.querySelector('.decrement').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        Cart.decreaseQuantity(cart.indexOf(cartItem));
-                    });
-                    
-                    button.querySelector('.increment').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        Cart.increaseQuantity(cart.indexOf(cartItem));
-                    });
-                }
-            });
-        },
-
-        showToast: (message) => {
-            const arabicMessages = {
-                'added': 'تمت الإضافة إلى السلة',
-                'removed': 'تم الحذف من السلة',
-                'added to cart': 'تمت الإضافة إلى السلة',
-                'removed from cart': 'تم الحذف من السلة'
-            };
-
-            const toastMessage = arabicMessages[message.toLowerCase()] || message;
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = toastMessage;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.add('show');
-                setTimeout(() => {
-                    toast.remove();
-                }, 3000);
-            }, 100);
-        },
-
-        createCartItemElement: (item, index) => {
-            const li = document.createElement('li');
-            li.className = 'cart-item';
-            li.innerHTML = `
-                <div class="item-image">
-                    <img src="${item.image}" alt="${item.name}">
-                </div>
-                <div class="item-details">
-                    <h4>${item.name}</h4>
-                    <div class="price-controls">
-                        <div class="quantity-controls">
-                            <button class="decrement">-</button>
-                            <input type="number" value="${item.quantity}" min="1" class="quantity-input">
-                            <button class="increment">+</button>
-                        </div>
-                        <p class="item-total">₪${(item.price * item.quantity).toFixed(2)}</p>
-                    </div>
-                </div>
-                <button class="remove-item">&times;</button>
-            `;
-            
-            li.querySelector('.decrement').addEventListener('click', () => {
-                Cart.decreaseQuantity(index);
-            });
-            
-            li.querySelector('.increment').addEventListener('click', () => {
-                Cart.increaseQuantity(index);
-            });
-            
-            li.querySelector('.quantity-input').addEventListener('change', (e) => {
-                Cart.updateQuantity(index, parseInt(e.target.value));
-            });
-            
-            li.querySelector('.remove-item').addEventListener('click', () => {
-                Cart.removeItem(index);
-            });
-            
-            return li;
-        }
-    };
-
-    // وظائف عربة التسوق
-    const Cart = {
-        addItem: (product) => {
-            const existingItem = cart.find(item => item.name === product.name);
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
-            Cart.update();
-            UI.showToast(`${product.name} added to cart`);
-        },
-
-        removeItem: (index) => {
-            const itemName = cart[index].name;
-            cart.splice(index, 1);
-            Cart.update();
-            UI.showToast(`${itemName} removed from cart`);
-        },
-
-        increaseQuantity: (index) => {
-            cart[index].quantity++;
-            Cart.update();
-        },
-
-        decreaseQuantity: (index) => {
-            if (cart[index].quantity > 1) {
-                cart[index].quantity--;
-                Cart.update();
-            } else {
-                Cart.removeItem(index);
-            }
-        },
-
-        updateQuantity: (index, newQuantity) => {
-            newQuantity = Math.max(1, parseInt(newQuantity) || 1);
-            cart[index].quantity = newQuantity;
-            Cart.update();
-        },
-
-        update: () => {
-            localStorage.setItem('cart', JSON.stringify(cart));
-            elements.cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
-            
-            elements.cartItems.innerHTML = '';
-            let total = 0;
-            
-            cart.forEach((item, index) => {
-                elements.cartItems.appendChild(UI.createCartItemElement(item, index));
-                total += item.price * item.quantity;
-            });
-            
-            elements.cartTotal.textContent = total.toFixed(2);
-            UI.updateAddToCartButtons();
-        }
-    };
-
-    // وظائف المنتجات
-    const Products = {
-        loadCategories: () => {
-            elements.categoriesContainer.innerHTML = '';
-            categories.forEach(category => {
-                const categoryElement = document.createElement('div');
-                categoryElement.className = 'category-card';
-                categoryElement.innerHTML = `
-                    <img src="${category.image}" alt="${category.name}">
-                    <h3>${category.name}</h3>
-                `;
-                categoryElement.addEventListener('click', () => Products.filterByCategory(category.name));
-                elements.categoriesContainer.appendChild(categoryElement);
-            });
-        },
-
-        filterByCategory: (categoryName) => {
-            currentCategory = categoryName;
-            Products.loadProducts();
-            
-            setTimeout(() => {
-                const firstProduct = document.querySelector('.product-card:first-child');
-                if (firstProduct) {
-                    const yOffset = 270;
-                    const y = firstProduct.getBoundingClientRect().top + window.pageYOffset - yOffset;
-                    
-                    window.scrollTo({
-                        top: y,
-                        behavior: 'smooth'
-                    });
-                }
-            }, 100);
-        },
-
-        loadProducts: () => {
-            elements.productsContainer.innerHTML = '';
-            const filteredProducts = currentCategory
-                ? products.filter(p => p.category === currentCategory)
-                : products;
-
-            filteredProducts.forEach(product => {
-                const salePrice = product.price;
-                const originalPrice = product.discountedPrice ?? salePrice;
-                const hasDiscount = originalPrice > salePrice;
-                const isAvailable = salePrice > 0;
-                const buttonText = isAvailable ? '' : 'غير متوفر';
-                const buttonClass = isAvailable ? 'add-to-cart' : 'add-to-cart unavailable';
-
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-
-                productCard.innerHTML = `
-                    ${hasDiscount ? `<div class="discount-label">SALE</div>` : ''}
-                    <img src="${product.image}" alt="${product.name}">
-                    <h3>${product.name}</h3>
-                    <p class="price ${hasDiscount ? 'on-sale' : (isAvailable ? '' : 'unavailable')}"
-                       ${isAvailable ? '' : 'data-unavailable="true"'}>
-                        ${
-                            hasDiscount
-                                ? `<span class="original-price">₪${originalPrice.toFixed(2)}</span>
-                                   <span class="selling-price">₪${salePrice.toFixed(2)}</span>`
-                                : (isAvailable
-                                    ? `₪${salePrice.toFixed(2)}`
-                                    : 'غير متوفر حالياً'
-                                  )
-                        }
-                    </p>
-                    <button class="${buttonClass}"
-                            data-id="${product.name}"
-                            ${isAvailable ? '' : 'disabled'}>
-                        ${buttonText}
-                    </button>
-                `;
-
-                if (isAvailable) {
-                    productCard
-                        .querySelector('.add-to-cart')
-                        .addEventListener('click', () => Cart.addItem({
-                            name: product.name,
-                            image: product.image,
-                            price: salePrice
-                        }));
-                }
-
-                elements.productsContainer.appendChild(productCard);
-            });
-
-            UI.updateAddToCartButtons();
-        }
-    };
-
-    // وظائف السلايدر
-    const Slider = {
-        init: () => {
-            if (elements.slides.length > 0) {
-                Slider.showSlide(slideIndex);
-                Slider.startAutoSlide();
-            }
-        },
-
-        startAutoSlide: () => {
-            clearInterval(slideInterval);
-            slideInterval = setInterval(() => {
-                if (!isSliding) {
-                    Slider.nextSlide();
-                }
-            }, 3000);
-        },
-
-        nextSlide: () => {
-            isSliding = true;
-            slideIndex = (slideIndex + 1) % elements.slides.length;
-            Slider.showSlide(slideIndex);
-            setTimeout(() => {
-                isSliding = false;
-            }, 700); // يتطابق مع مدة الانتقال في CSS
-        },
-
-        prevSlide: () => {
-            isSliding = true;
-            slideIndex = (slideIndex - 1 + elements.slides.length) % elements.slides.length;
-            Slider.showSlide(slideIndex);
-            setTimeout(() => {
-                isSliding = false;
-            }, 700);
-        },
-
-        showSlide: (index) => {
-            for (let i = 0; i < elements.slides.length; i++) {
-                elements.slides[i].style.display = "none";
-                elements.dots[i].classList.remove("active");
-            }
-            
-            elements.slides[index].style.display = "block";
-            elements.dots[index].classList.add("active");
-        },
-
-        handleTouch: (startX, endX) => {
-            const diffX = startX - endX;
-            if (Math.abs(diffX) > 50) {
-                clearInterval(slideInterval);
-                if (diffX > 0) {
-                    Slider.nextSlide();
-                } else {
-                    Slider.prevSlide();
-                }
-                Slider.startAutoSlide();
-            }
-        }
-    };
-
-    // أحداث السلة
-    elements.cartButton.addEventListener('click', () => {
-        elements.cartModal.style.display = 'block';
-        clearInterval(slideInterval);
-    });
-
-    elements.closeCartBtn.addEventListener('click', () => {
-        elements.cartModal.style.display = 'none';
-        Slider.startAutoSlide();
-    });
-
-    window.addEventListener('click', (e) => {
-        if (e.target === elements.cartModal) {
-            elements.cartModal.style.display = 'none';
-            Slider.startAutoSlide();
-        }
-    });
-
-    // إرسال الطلب عبر واتساب
-    elements.sendOrderBtn.addEventListener('click', () => {
-        const now = new Date();
-        const date = now.toLocaleDateString('ar-EG');
-        const time = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-
-        const itemsList = cart.map((item, index) => 
-            `🔹 *${index + 1}. ${item.name}*\n` +
-            `   - الكمية: ${item.quantity}\n` +
-            `   - السعر: ₪${item.price.toFixed(2)}\n` +
-            `   - الإجمالي: ₪${(item.price * item.quantity).toFixed(2)}`
-        ).join('\n\n');
-
-        const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-        const message = encodeURIComponent(
-            `*⭐ معرض أبو عالية ⭐*\n` +
-            `────────────────────────────\n` +
-            `🗓️ *التاريخ:* ${date}\n` +
-            `⏰ *الوقت:* ${time}\n` +
-            `────────────────────────────\n` +
-            `*تفاصيل الطلب:*\n\n` +
-            `${itemsList}\n\n` +
-            `💰 *المجموع الكلي:* ₪${totalAmount.toFixed(2)}\n` +
-            `────────────────────────────\n` +
-            `*الاسم:* ____________________\n` +
-            `*العنوان:* __________________\n` +
-            `*طريقة الدفع:* ______________\n` +
-            `*ملاحظات:* _________________`
-        );
-
-        window.open(`https://wa.me/972569813333?text=${message}`, '_blank');
-    });  
-
-    // أحداث السلايدر
-    const slider = document.querySelector('.slideshow-container');
-    let touchStartX = 0;
-
-    slider.addEventListener('touchstart', (e) => {
-        touchStartX = e.touches[0].clientX;
-        clearInterval(slideInterval);
-    });
-
-    slider.addEventListener('touchend', (e) => {
-        const touchEndX = e.changedTouches[0].clientX;
-        Slider.handleTouch(touchStartX, touchEndX);
-    });
-
-    // التهيئة الأولية
-    Products.loadCategories();
-    Cart.update();
-    Slider.init();
+// تهيئة التطبيق عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    // تعيين التاريخ الحالي
+    updateCurrentDate();
+    
+    // تحميل الأصناف من ملف test.txt
+    loadItemsFromFile();
+    
+    // التركيز على حقل الباركود تلقائيًا
+    barcodeInput.focus();
+    
+    // تحديث عرض الفاتورة
+    updateInvoiceDisplay();
+    
+    // تعيين معالج الأحداث
+    setupEventListeners();
 });
 
-window.addEventListener('load', () => {
-    window.scrollTo(0, 0);
-});
+// تحميل الأصناف من ملف test.txt
+function loadItemsFromFile() {
+    fetch('test.txt')
+        .then(response => response.text())
+        .then(data => {
+            const lines = data.split('\n');
+            items = lines.map(line => {
+                const parts = line.split('/');
+                if (parts.length === 3) {
+                    return {
+                        name: parts[0].trim(),
+                        price: parseFloat(parts[1].trim()),
+                        barcode: parts[2].trim()
+                    };
+                }
+                return null;
+            }).filter(item => item !== null);
+            
+            console.log('تم تحميل الأصناف:', items);
+        })
+        .catch(error => {
+            console.error('حدث خطأ أثناء تحميل الأصناف:', error);
+            // بيانات افتراضية في حالة فشل تحميل الملف
+            items = [
+                { name: "صنف 1", price: 10.99, barcode: "123456" },
+                { name: "صنف 2", price: 15.50, barcode: "789012" },
+                { name: "صنف 3", price: 20.00, barcode: "345678" }
+            ];
+        });
+}
+
+// تعيين معالج الأحداث
+function setupEventListeners() {
+    // إضافة صنف عند الضغط على زر الإضافة أو Enter
+    addItemBtn.addEventListener('click', addItemByBarcode);
+    barcodeInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            addItemByBarcode();
+        }
+    });
+    
+    // تغيير الفرع
+    branchSelect.addEventListener('change', function() {
+        currentInvoice.branch = this.value;
+    });
+    
+    // فاتورة جديدة
+    newInvoiceBtn.addEventListener('click', createNewInvoice);
+    
+    // حفظ الفاتورة
+    saveInvoiceBtn.addEventListener('click', saveInvoice);
+    
+    // طباعة الفاتورة
+    printInvoiceBtn.addEventListener('click', printInvoice);
+    
+    // فتح الفواتير المحفوظة
+    loadInvoiceBtn.addEventListener('click', openInvoicesModal);
+    
+    // التنقل بين الفواتير
+    prevInvoiceBtn.addEventListener('click', loadPrevInvoice);
+    nextInvoiceBtn.addEventListener('click', loadNextInvoice);
+    
+    // إغلاق النافذة المنبثقة
+    closeModal.addEventListener('click', closeInvoicesModal);
+    
+    // البحث عن الفواتير
+    searchBtn.addEventListener('click', searchInvoices);
+    searchInvoiceInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchInvoices();
+        }
+    });
+    
+    // النقر خارج النافذة المنبثقة يغلقها
+    window.addEventListener('click', function(event) {
+        if (event.target === invoicesModal) {
+            closeInvoicesModal();
+        }
+    });
+}
+
+// تحديث التاريخ الحالي
+function updateCurrentDate() {
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    currentDate.textContent = now.toLocaleDateString('ar-SA', options);
+    currentInvoice.date = now;
+}
+
+// إضافة صنف بواسطة الباركود
+function addItemByBarcode() {
+    const barcode = barcodeInput.value.trim();
+    if (!barcode) return;
+    
+    const item = items.find(i => i.barcode === barcode);
+    if (item) {
+        addItemToInvoice(item);
+        barcodeInput.value = '';
+        barcodeInput.focus();
+    } else {
+        alert('الصنف غير موجود!');
+        barcodeInput.select();
+    }
+}
+
+// إضافة صنف إلى الفاتورة
+function addItemToInvoice(item) {
+    // التحقق مما إذا كان الصنف موجودًا بالفعل في الفاتورة
+    const existingItem = currentInvoice.items.find(i => i.barcode === item.barcode);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+        existingItem.total = existingItem.quantity * existingItem.price;
+    } else {
+        currentInvoice.items.push({
+            ...item,
+            quantity: 1,
+            total: item.price
+        });
+    }
+    
+    // حساب الإجمالي
+    calculateTotal();
+    
+    // تحديث عرض الفاتورة
+    updateInvoiceDisplay();
+}
+
+// حساب الإجمالي
+function calculateTotal() {
+    currentInvoice.total = currentInvoice.items.reduce((sum, item) => sum + item.total, 0);
+}
+
+// تحديث عرض الفاتورة
+function updateInvoiceDisplay() {
+    // تفريغ جدول العناصر
+    invoiceItems.innerHTML = '';
+    
+    // إضافة العناصر إلى الجدول
+    currentInvoice.items.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${item.name}</td>
+            <td>${item.price.toFixed(2)} ر.س</td>
+            <td>
+                <input type="number" min="1" value="${item.quantity}" 
+                       data-barcode="${item.barcode}" class="quantity-input">
+            </td>
+            <td>${item.total.toFixed(2)} ر.س</td>
+            <td class="delete-item" data-barcode="${item.barcode}"><i class="fas fa-trash"></i></td>
+        `;
+        invoiceItems.appendChild(row);
+    });
+    
+    // تحديث الإجمالي
+    totalAmount.textContent = `${currentInvoice.total.toFixed(2)} ر.س`;
+    
+    // تحديث رقم الفاتورة
+    invoiceNumber.textContent = `فاتورة #${currentInvoice.id}`;
+    
+    // إضافة معالج الأحداث لحقول الكمية
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', updateItemQuantity);
+    });
+    
+    // إضافة معالج الأحداث لأزرار الحذف
+    document.querySelectorAll('.delete-item').forEach(btn => {
+        btn.addEventListener('click', deleteItem);
+    });
+}
+
+// تحديث كمية الصنف
+function updateItemQuantity(e) {
+    const barcode = e.target.getAttribute('data-barcode');
+    const newQuantity = parseInt(e.target.value);
+    
+    if (newQuantity > 0) {
+        const item = currentInvoice.items.find(i => i.barcode === barcode);
+        if (item) {
+            item.quantity = newQuantity;
+            item.total = item.quantity * item.price;
+            calculateTotal();
+            updateInvoiceDisplay();
+        }
+    } else {
+        e.target.value = 1;
+    }
+}
+
+// حذف صنف من الفاتورة
+function deleteItem(e) {
+    const barcode = e.currentTarget.getAttribute('data-barcode');
+    currentInvoice.items = currentInvoice.items.filter(i => i.barcode !== barcode);
+    calculateTotal();
+    updateInvoiceDisplay();
+}
+
+// إنشاء فاتورة جديدة
+function createNewInvoice() {
+    if (currentInvoice.items.length > 0 && 
+        !confirm('هل تريد إنشاء فاتورة جديدة؟ سيتم فقدان التغييرات غير المحفوظة.')) {
+        return;
+    }
+    
+    // إنشاء فاتورة جديدة
+    const newId = savedInvoices.length > 0 ? 
+                 Math.max(...savedInvoices.map(i => i.id)) + 1 : 1;
+    
+    currentInvoice = {
+        id: newId,
+        date: new Date(),
+        branch: branchSelect.value,
+        items: [],
+        total: 0
+    };
+    
+    updateCurrentDate();
+    updateInvoiceDisplay();
+    barcodeInput.focus();
+}
+
+// حفظ الفاتورة
+function saveInvoice() {
+    if (currentInvoice.items.length === 0) {
+        alert('لا يمكن حفظ فاتورة فارغة!');
+        return;
+    }
+    
+    // التحقق مما إذا كانت الفاتورة موجودة بالفعل
+    const existingIndex = savedInvoices.findIndex(i => i.id === currentInvoice.id);
+    
+    if (existingIndex !== -1) {
+        // تحديث الفاتورة الموجودة
+        savedInvoices[existingIndex] = {...currentInvoice};
+    } else {
+        // إضافة فاتورة جديدة
+        savedInvoices.push({...currentInvoice});
+    }
+    
+    // حفظ في localStorage
+    localStorage.setItem('invoices', JSON.stringify(savedInvoices));
+    
+    alert(`تم حفظ الفاتورة #${currentInvoice.id} بنجاح!`);
+}
+
+// طباعة الفاتورة
+function printInvoice() {
+    if (currentInvoice.items.length === 0) {
+        alert('لا يمكن طباعة فاتورة فارغة!');
+        return;
+    }
+    
+    window.print();
+}
+
+// فتح نافذة الفواتير المحفوظة
+function openInvoicesModal() {
+    displaySavedInvoices();
+    invoicesModal.style.display = 'block';
+}
+
+// إغلاق نافذة الفواتير المحفوظة
+function closeInvoicesModal() {
+    invoicesModal.style.display = 'none';
+}
+
+// عرض الفواتير المحفوظة
+function displaySavedInvoices(filter = '') {
+    savedInvoicesTable.innerHTML = '';
+    
+    const filteredInvoices = filter ? 
+        savedInvoices.filter(inv => 
+            inv.id.toString().includes(filter) || 
+            inv.branch.includes(filter) ||
+            inv.date.includes(filter)
+        ) : savedInvoices;
+    
+    if (filteredInvoices.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="5" style="text-align:center;">لا توجد فواتير</td>`;
+        savedInvoicesTable.appendChild(row);
+        return;
+    }
+    
+    filteredInvoices.forEach(invoice => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${invoice.id}</td>
+            <td>${new Date(invoice.date).toLocaleDateString('ar-SA')}</td>
+            <td>${invoice.branch}</td>
+            <td>${invoice.total.toFixed(2)} ر.س</td>
+            <td>
+                <button class="load-btn" data-id="${invoice.id}">فتح</button>
+                <button class="delete-btn" data-id="${invoice.id}">حذف</button>
+            </td>
+        `;
+        savedInvoicesTable.appendChild(row);
+    });
+    
+    // إضافة معالج الأحداث لأزرار الفتح
+    document.querySelectorAll('.load-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = parseInt(this.getAttribute('data-id'));
+            loadInvoiceById(id);
+            closeInvoicesModal();
+        });
+    });
+    
+    // إضافة معالج الأحداث لأزرار الحذف
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = parseInt(this.getAttribute('data-id'));
+            deleteInvoiceById(id);
+        });
+    });
+}
+
+// تحميل فاتورة بواسطة المعرف
+function loadInvoiceById(id) {
+    const invoice = savedInvoices.find(i => i.id === id);
+    if (invoice) {
+        currentInvoice = {...invoice};
+        currentInvoice.date = new Date(invoice.date);
+        branchSelect.value = invoice.branch;
+        updateInvoiceDisplay();
+        currentInvoiceIndex = savedInvoices.findIndex(i => i.id === id);
+    }
+}
+
+// حذف فاتورة بواسطة المعرف
+function deleteInvoiceById(id) {
+    if (confirm('هل أنت متأكد من حذف هذه الفاتورة؟')) {
+        savedInvoices = savedInvoices.filter(i => i.id !== id);
+        localStorage.setItem('invoices', JSON.stringify(savedInvoices));
+        
+        if (currentInvoice.id === id) {
+            createNewInvoice();
+        }
+        
+        displaySavedInvoices(searchInvoiceInput.value);
+    }
+}
+
+// البحث عن الفواتير
+function searchInvoices() {
+    const searchTerm = searchInvoiceInput.value.trim();
+    displaySavedInvoices(searchTerm);
+}
+
+// تحميل الفاتورة السابقة
+function loadPrevInvoice() {
+    if (savedInvoices.length === 0) return;
+    
+    currentInvoiceIndex = (currentInvoiceIndex - 1 + savedInvoices.length) % savedInvoices.length;
+    const invoice = savedInvoices[currentInvoiceIndex];
+    loadInvoiceById(invoice.id);
+}
+
+// تحميل الفاتورة التالية
+function loadNextInvoice() {
+    if (savedInvoices.length === 0) return;
+    
+    currentInvoiceIndex = (currentInvoiceIndex + 1) % savedInvoices.length;
+    const invoice = savedInvoices[currentInvoiceIndex];
+    loadInvoiceById(invoice.id);
+}
