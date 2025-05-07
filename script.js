@@ -1,4 +1,3 @@
-// البيانات والمتغيرات العامة
 let items = []; // لتخزين الأصناف من ملف test.txt
 let currentInvoice = {
     id: 1,
@@ -77,7 +76,7 @@ function loadItemsFromFile() {
                     return {
                         name: parts[0].trim(),
                         price: parseFloat(parts[1].trim()),
-                        barcode: parts[2].trim()
+                        barcode: parts[2].trim().toLowerCase() // تحويل الباركود لحروف صغيرة للتجنب مشكلة الحروف الكبيرة/الصغيرة
                     };
                 }
                 return null;
@@ -92,7 +91,7 @@ function loadItemsFromFile() {
                 { name: "قهوة تركية", price: 15.00, barcode: "123456789" },
                 { name: "شاي بالنعناع", price: 10.00, barcode: "987654321" },
                 { name: "عصير برتقال", price: 12.50, barcode: "456123789" }
-            ];
+            ].map(item => ({...item, barcode: item.barcode.toLowerCase()}));
         });
 }
 
@@ -167,7 +166,7 @@ function updateCurrentDate() {
 
 // إضافة صنف بواسطة الباركود
 function addItemByBarcode() {
-    const barcode = barcodeInput.value.trim();
+    const barcode = barcodeInput.value.trim().toLowerCase(); // تحويل الباركود المدخل لحروف صغيرة
     if (!barcode) return;
     
     const item = items.find(i => i.barcode === barcode);
@@ -329,10 +328,13 @@ function saveInvoice() {
 
 // إعداد قالب الطباعة
 function preparePrintTemplate() {
+    // إضافة كلاس خاص للطباعة الحرارية
+    printTemplate.className = 'thermal-print';
+    
     printBranch.textContent = `الفرع: ${currentInvoice.branch}`;
     printDate.textContent = `التاريخ: ${new Date(currentInvoice.date).toLocaleDateString('ar-SA')}`;
-    printInvoiceNum.textContent = `رقم الفاتورة: #${currentInvoice.id}`;
-    printTime.textContent = `الوقت: ${new Date().toLocaleTimeString('ar-SA')}`;
+    printInvoiceNum.textContent = `#${currentInvoice.id}`;
+    printTime.textContent = `الوقت: ${new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'})}`;
     
     // تفريغ قائمة العناصر المطبوعة
     printItemsList.innerHTML = '';
@@ -342,14 +344,18 @@ function preparePrintTemplate() {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'print-item';
         itemDiv.innerHTML = `
-            <span>${item.name} (${item.quantity} x ${item.price.toFixed(2)} ₪)</span>
-            <span>${item.total.toFixed(2)} ₪</span>
+            <span class="item-name">${item.name}</span>
+            <span class="item-quantity">${item.quantity} x ${item.price.toFixed(2)}</span>
+            <span class="item-total">${item.total.toFixed(2)} ₪</span>
         `;
         printItemsList.appendChild(itemDiv);
     });
     
     // تحديث الإجمالي المطبوع
-    printTotal.textContent = `الإجمالي: ${currentInvoice.total.toFixed(2)} ₪`;
+    printTotal.innerHTML = `
+        <span>الإجمالي:</span>
+        <span>${currentInvoice.total.toFixed(2)} ₪</span>
+    `;
 }
 
 // طباعة الفاتورة
@@ -359,19 +365,95 @@ function printInvoice() {
         return;
     }
     
-    // عرض قالب الطباعة مؤقتًا
-    printTemplate.style.display = 'block';
+    // إنشاء نافذة طباعة جديدة
+    const printWindow = window.open('', '_blank');
     
-    // الطباعة
-    window.print();
+    // إعداد محتوى الطباعة
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html dir="rtl" lang="ar">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>طباعة الفاتورة #${currentInvoice.id}</title>
+            <style>
+                @page { size: 80mm auto; margin: 0; }
+                body { 
+                    font-family: Arial, sans-serif; 
+                    width: 80mm; 
+                    margin: 0; 
+                    padding: 5px; 
+                    font-size: 14px;
+                }
+                .header { text-align: center; margin-bottom: 10px; }
+                .info { display: flex; justify-content: space-between; margin-bottom: 5px; }
+                .print-item { 
+                    display: flex; 
+                    justify-content: space-between; 
+                    margin: 5px 0;
+                    border-bottom: 1px dashed #ccc;
+                    padding-bottom: 3px;
+                }
+                .item-name { flex: 2; }
+                .item-quantity { flex: 1; text-align: center; }
+                .item-total { flex: 1; text-align: left; }
+                .total { 
+                    display: flex; 
+                    justify-content: space-between; 
+                    margin-top: 10px;
+                    font-weight: bold;
+                    border-top: 1px solid #000;
+                    padding-top: 5px;
+                }
+                .footer { text-align: center; margin-top: 15px; font-size: 12px; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h2>فاتورة بيع</h2>
+            </div>
+            <div class="info">
+                <span>${currentInvoice.branch}</span>
+                <span>${new Date(currentInvoice.date).toLocaleDateString('ar-SA')}</span>
+            </div>
+            <div class="info">
+                <span>رقم: #${currentInvoice.id}</span>
+                <span>${new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'})}</span>
+            </div>
+            <hr>
+            <div id="print-items-list">
+                ${currentInvoice.items.map(item => `
+                    <div class="print-item">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-quantity">${item.quantity} x ${item.price.toFixed(2)}</span>
+                        <span class="item-total">${item.total.toFixed(2)} ₪</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="total">
+                <span>الإجمالي:</span>
+                <span>${currentInvoice.total.toFixed(2)} ₪</span>
+            </div>
+            <div class="footer">
+                <p>شكراً لزيارتكم</p>
+                <p>نتمنى لكم يومًا سعيداً</p>
+            </div>
+            <script>
+                window.onload = function() {
+                    setTimeout(function() {
+                        window.print();
+                        window.close();
+                    }, 100);
+                };
+            </script>
+        </body>
+        </html>
+    `);
     
-    // إخفاء قالب الطباعة بعد الانتهاء
-    setTimeout(() => {
-        printTemplate.style.display = 'none';
-        
-        // إنشاء فاتورة جديدة بعد الطباعة
-        createNewInvoice();
-    }, 500);
+    printWindow.document.close();
+    
+    // إنشاء فاتورة جديدة بعد الطباعة
+    setTimeout(createNewInvoice, 500);
 }
 
 // فتح نافذة الفواتير المحفوظة
@@ -394,7 +476,7 @@ function displaySavedInvoices(filter = '') {
     const filteredInvoices = filter ? 
         savedInvoices.filter(inv => 
             inv.id.toString().includes(filter) || 
-            inv.branch.includes(filter) ||
+            inv.branch.toLowerCase().includes(filter.toLowerCase()) || // عدم التحسس لحالة الأحرف
             new Date(inv.date).toLocaleDateString('ar-SA').includes(filter)
         ) : savedInvoices;
     
@@ -441,8 +523,7 @@ function displaySavedInvoices(filter = '') {
             closeInvoicesModal();
             setTimeout(() => {
                 saveInvoice();
-                preparePrintTemplate();
-                setTimeout(printInvoice, 100);
+                setTimeout(printInvoice, 200);
             }, 200);
         });
     });
