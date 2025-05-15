@@ -1,59 +1,616 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>تطبيق طباعة ليبل</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="manifest.json" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
-  </script>
-  <style>
-    body { font-family: Arial; text-align: center; direction: rtl; padding: 20px; }
-    h2 { margin-top: 30px; }
-    button { padding: 10px 20px; font-size: 16px; margin-top: 20px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طباعة الفواتير بالبلوتوث</title>
+    <meta name="theme-color" content="#4CAF50">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --danger-color: #f44336;
+            --dark-color: #333;
+            --light-color: #f9f9f9;
+            --border-color: #ddd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1, h2, h3 {
+            color: var(--dark-color);
+        }
+
+        .section {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #0b7dda;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: #da190b;
+        }
+
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .devices-list {
+            margin-top: 15px;
+        }
+
+        .device-item {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .device-item:hover {
+            background-color: var(--light-color);
+        }
+
+        .items-list {
+            margin: 15px 0;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .status {
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+
+        .info {
+            background-color: #d9edf7;
+            color: #31708f;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 5px;
+        }
+
+        .close {
+            color: #aaa;
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h2>إنشاء ملصق حراري 5×3 سم</h2>
-  <button onclick="generateAndShareLabel()">إنشاء ومشاركة الملصق</button>
+    <div class="container">
+        <header>
+            <h1>نظام الطباعة الحرارية</h1>
+            <p>ابحث عن طابعات البلوتوث واطبع الفواتير بسهولة</p>
+        </header>
 
-  <script>
-    async function generateAndShareLabel() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({
-        orientation: "landscape",
-        unit: "cm",
-        format: [5, 3]
-      });
+        <div class="section">
+            <button id="scanButton" class="btn">بحث عن الطابعات</button>
+            <div id="devicesList" class="devices-list"></div>
+        </div>
 
-      doc.setFontSize(10);
-      doc.text("شركة العين", 0.5, 0.8);
-      doc.setFontSize(9);
-      doc.text("المنتج: كابل شحن سريع", 0.5, 1.6);
-      doc.text("السعر: 25 ₪", 0.5, 2.2);
-      doc.text("الكود: 123456", 0.5, 2.8);
+        <div class="section" id="connectedSection" style="display: none;">
+            <h2>طابعة متصلة: <span id="connectedPrinter"></span></h2>
+            <button id="disconnectButton" class="btn btn-danger">قطع الاتصال</button>
+        </div>
 
-      const pdfBlob = doc.output("blob");
-      const file = new File([pdfBlob], "label.pdf", { type: "application/pdf" });
+        <div class="section">
+            <h2>بيانات الفاتورة</h2>
+            <div class="form-group">
+                <label for="customerName">اسم العميل:</label>
+                <input type="text" id="customerName" placeholder="ادخل اسم العميل">
+            </div>
+            <div class="form-group">
+                <label for="invoiceNumber">رقم الفاتورة:</label>
+                <input type="text" id="invoiceNumber" placeholder="ادخل رقم الفاتورة">
+            </div>
+            <div class="form-group">
+                <label for="invoiceDate">تاريخ الفاتورة:</label>
+                <input type="date" id="invoiceDate">
+            </div>
 
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: "مشاركة الملصق",
-            text: "تم إنشاء ملصق للمنتج"
-          });
-        } catch (err) {
-          alert("تم إلغاء المشاركة أو لم يتم دعمها");
+            <div class="items-section">
+                <h3>عناصر الفاتورة</h3>
+                <div id="itemsList" class="items-list">
+                    <!-- العناصر ستضاف هنا ديناميكياً -->
+                </div>
+                <button id="addItemButton" class="btn btn-secondary">إضافة عنصر</button>
+            </div>
+
+            <button id="printButton" class="btn btn-primary" disabled>طباعة الفاتورة</button>
+        </div>
+
+        <div class="status" id="statusMessage"></div>
+    </div>
+
+    <!-- نموذج إضافة عنصر -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>إضافة عنصر جديد</h2>
+            <div class="form-group">
+                <label for="itemName">اسم العنصر:</label>
+                <input type="text" id="itemName" placeholder="اسم العنصر">
+            </div>
+            <div class="form-group">
+                <label for="itemPrice">السعر:</label>
+                <input type="number" id="itemPrice" placeholder="السعر">
+            </div>
+            <div class="form-group">
+                <label for="itemQuantity">الكمية:</label>
+                <input type="number" id="itemQuantity" value="1">
+            </div>
+            <button id="saveItemButton" class="btn">حفظ العنصر</button>
+        </div>
+    </div>
+
+    <script>
+        // متغيرات التطبيق
+        let selectedDevice = null;
+        let items = [];
+        let isConnected = false;
+        let characteristic = null;
+
+        // عناصر DOM
+        const scanButton = document.getElementById('scanButton');
+        const devicesList = document.getElementById('devicesList');
+        const connectedSection = document.getElementById('connectedSection');
+        const connectedPrinter = document.getElementById('connectedPrinter');
+        const disconnectButton = document.getElementById('disconnectButton');
+        const printButton = document.getElementById('printButton');
+        const addItemButton = document.getElementById('addItemButton');
+        const itemsList = document.getElementById('itemsList');
+        const statusMessage = document.getElementById('statusMessage');
+        const itemModal = document.getElementById('itemModal');
+        const closeModal = document.querySelector('.close');
+        const saveItemButton = document.getElementById('saveItemButton');
+
+        // بيانات الفاتورة
+        const customerName = document.getElementById('customerName');
+        const invoiceNumber = document.getElementById('invoiceNumber');
+        const invoiceDate = document.getElementById('invoiceDate');
+
+        // بيانات العنصر
+        const itemName = document.getElementById('itemName');
+        const itemPrice = document.getElementById('itemPrice');
+        const itemQuantity = document.getElementById('itemQuantity');
+
+        // تعيين تاريخ اليوم كتاريخ افتراضي
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('invoiceDate').value = today;
+        };
+
+        // أحداث التطبيق
+        scanButton.addEventListener('click', scanDevices);
+        disconnectButton.addEventListener('click', disconnectDevice);
+        printButton.addEventListener('click', printInvoice);
+        addItemButton.addEventListener('click', () => itemModal.style.display = 'block');
+        closeModal.addEventListener('click', () => itemModal.style.display = 'none');
+        saveItemButton.addEventListener('click', saveItem);
+
+        // إغلاق النافذة المنبثقة عند النقر خارجها
+        window.addEventListener('click', (event) => {
+            if (event.target === itemModal) {
+                itemModal.style.display = 'none';
+            }
+        });
+
+        // البحث عن أجهزة البلوتوث
+        async function scanDevices() {
+            showStatus('جاري البحث عن الطابعات...', 'info');
+
+            try {
+                // طلب إذن الوصول إلى البلوتوث
+                const device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['generic_access']
+                });
+
+                selectedDevice = device;
+                showDeviceInfo(device);
+                connectToDevice(device);
+            } catch (error) {
+                showStatus(`خطأ: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
         }
-      } else {
-        alert("جهازك لا يدعم ميزة المشاركة التلقائية للملفات");
-      }
-    }
-  </script>
+
+        // عرض معلومات الجهاز
+        function showDeviceInfo(device) {
+            devicesList.innerHTML = `
+                <div class="device-item">
+                    <strong>${device.name || 'جهاز غير معروف'}</strong>
+                    <p>معرف: ${device.id}</p>
+                </div>
+            `;
+        }
+
+        // الاتصال بالجهاز
+        async function connectToDevice(device) {
+            showStatus('جاري الاتصال بالطابعة...', 'info');
+
+            try {
+                const server = await device.gatt.connect();
+                showStatus('تم الاتصال بالطابعة بنجاح', 'success');
+                
+                isConnected = true;
+                connectedPrinter.textContent = device.name || 'طابعة غير معروفة';
+                connectedSection.style.display = 'block';
+                printButton.disabled = false;
+                
+                // يمكنك هنا البحث عن الخدمات والخصائص المحددة للطابعة
+                // وهذا يعتمد على نموذج الطابعة الخاصة بك
+            } catch (error) {
+                showStatus(`خطأ في الاتصال: ${error.message}`, 'error');
+                console.error('Connection error:', error);
+            }
+        }
+
+        // قطع الاتصال بالجهاز
+        function disconnectDevice() {
+            if (selectedDevice && selectedDevice.gatt.connected) {
+                selectedDevice.gatt.disconnect();
+                showStatus('تم قطع الاتصال بالطابعة', 'info');
+            }
+            
+            isConnected = false;
+            selectedDevice = null;
+            connectedSection.style.display = 'none';
+            printButton.disabled = true;
+            devicesList.innerHTML = '';
+        }
+
+        // حفظ العنصر الجديد
+        function saveItem() {
+            const name = itemName.value.trim();
+            const price = parseFloat(itemPrice.value);
+            const quantity = parseInt(itemQuantity.value);
+
+            if (!name || isNaN(price) || isNaN(quantity)) {
+                showStatus('الرجاء إدخال جميع بيانات العنصر', 'error');
+                return;
+            }
+
+            const newItem = {
+                id: Date.now(),
+                name,
+                price,
+                quantity,
+                total: price * quantity
+            };
+
+            items.push(newItem);
+            renderItems();
+            
+            // إعادة تعيين الحقول وإغلاق النافذة
+            itemName.value = '';
+            itemPrice.value = '';
+            itemQuantity.value = '1';
+            itemModal.style.display = 'none';
+        }
+
+        // عرض العناصر
+        function renderItems() {
+            itemsList.innerHTML = '';
+
+            if (items.length === 0) {
+                itemsList.innerHTML = '<p>لا توجد عناصر مضافة</p>';
+                return;
+            }
+
+            let total = 0;
+            
+            items.forEach(item => {
+                total += item.total;
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = 'item';
+                itemElement.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong>
+                        <p>${item.quantity} × ${item.price.toFixed(2)} = ${item.total.toFixed(2)}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button onclick="removeItem(${item.id})" class="btn btn-danger" style="padding: 5px 10px;">حذف</button>
+                    </div>
+                `;
+                
+                itemsList.appendChild(itemElement);
+            });
+
+            // إجمالي الفاتورة
+            const totalElement = document.createElement('div');
+            totalElement.className = 'item';
+            totalElement.style.fontWeight = 'bold';
+            totalElement.innerHTML = `
+                <div>الإجمالي</div>
+                <div>${total.toFixed(2)}</div>
+            `;
+            itemsList.appendChild(totalElement);
+        }
+
+        // حذف العنصر
+        function removeItem(id) {
+            items = items.filter(item => item.id !== id);
+            renderItems();
+        }
+
+        // طباعة الفاتورة
+        async function printInvoice() {
+            if (!isConnected) {
+                showStatus('الرجاء الاتصال بطابعة أولاً', 'error');
+                return;
+            }
+
+            if (items.length === 0) {
+                showStatus('الرجاء إضافة عناصر للفاتورة', 'error');
+                return;
+            }
+
+            const name = customerName.value.trim() || 'عميل غير معروف';
+            const number = invoiceNumber.value.trim() || '---';
+            const date = invoiceDate.value || new Date().toISOString().split('T')[0];
+            
+            // حساب الإجمالي
+            const total = items.reduce((sum, item) => sum + item.total, 0);
+
+            // إنشاء نص الفاتورة للطباعة
+            let receiptText = `
+                \x1B\x40\x1B\x21\x08
+                \x1B\x61\x01
+                ${'فاتورة بيع'.padStart(24)}\n
+                \x1B\x21\x00
+                \x1B\x61\x00
+                ========================\n
+                \x1B\x21\x08
+                العميل: ${name}\n
+                رقم الفاتورة: ${number}\n
+                التاريخ: ${date}\n
+                \x1B\x21\x00
+                ========================\n
+                العناصر:\n
+            `;
+
+            // إضافة العناصر
+            items.forEach(item => {
+                receiptText += `
+${item.name}
+${item.quantity} × ${item.price.toFixed(2)} = ${item.total.toFixed(2)}\n
+                `;
+            });
+
+            // إضافة الإجمالي
+            receiptText += `
+                ========================\n
+                \x1B\x21\x08
+                الإجمالي: ${total.toFixed(2)}\n
+                \x1B\x21\x00
+                ========================\n
+                \x1B\x61\x01
+                شكراً لزيارتكم\n
+                \x1B\x61\x00
+                \x1D\x56\x41\x05
+            `;
+
+            showStatus('جاري إرسال الفاتورة للطباعة...', 'info');
+
+            try {
+                // هنا يجب إرسال البيانات إلى الطابعة عبر البلوتوث
+                // هذا يعتمد على نموذج الطابعة وبروتوكول الاتصال
+                // المثال التالي هو توضيحي وقد لا يعمل مع جميع الطابعات
+                
+                if (selectedDevice && selectedDevice.gatt.connected) {
+                    const server = await selectedDevice.gatt.connect();
+                    const service = await server.getPrimaryService('generic_access');
+                    characteristic = await service.getCharacteristic('device_name');
+                    
+                    // تحويل النص إلى وحدة بايت
+                    const encoder = new TextEncoder();
+                    const data = encoder.encode(receiptText);
+                    
+                    // إرسال البيانات إلى الطابعة (هذا يعتمد على الطابعة)
+                    await characteristic.writeValue(data);
+                    
+                    showStatus('تم إرسال الفاتورة للطابعة بنجاح', 'success');
+                } else {
+                    showStatus('فقد الاتصال بالطابعة', 'error');
+                }
+            } catch (error) {
+                showStatus(`خطأ في الطباعة: ${error.message}`, 'error');
+                console.error('Print error:', error);
+            }
+        }
+
+        // عرض حالة العمليات
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'status ' + type;
+        }
+
+        // جعل التطبيق PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+
+        // جعل التطبيق يعمل دون اتصال
+        const CACHE_NAME = 'thermal-printer-v1';
+        const urlsToCache = [
+            '/',
+            '/index.html',
+            '/styles.css',
+            '/app.js',
+            '/icons/icon-192x192.png',
+            '/icons/icon-512x512.png'
+        ];
+
+        self.addEventListener('install', event => {
+            event.waitUntil(
+                caches.open(CACHE_NAME)
+                    .then(cache => {
+                        return cache.addAll(urlsToCache);
+                    })
+            );
+        });
+
+        self.addEventListener('fetch', event => {
+            event.respondWith(
+                caches.match(event.request)
+                    .then(response => {
+                        if (response) {
+                            return response;
+                        }
+                        return fetch(event.request);
+                    })
+            );
+        });
+    </script>
 </body>
 </html>
