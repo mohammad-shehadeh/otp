@@ -1,18 +1,36 @@
-let printerDevice;
 let printerCharacteristic;
 
 async function connectPrinter() {
   try {
-    printerDevice = await navigator.bluetooth.requestDevice({
-      filters: [{ namePrefix: "Printer" }],
-      optionalServices: [0xFFE0] // استبدل بمعرف الخدمة الفعلي للطابعة
+    const device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: [0xFFE0, 0xFFB0, 0x18F0] // جرب أكثر من خدمة إن لزم
     });
 
-    const server = await printerDevice.gatt.connect();
-    const service = await server.getPrimaryService(0xFFE0); // عدل حسب طابعتك
-    printerCharacteristic = await service.getCharacteristic(0xFFE1); // عدل حسب طابعتك
+    const server = await device.gatt.connect();
+    
+    // المحاولة مع أكثر من خدمة
+    const services = await server.getPrimaryServices();
+    let characteristicFound = false;
 
-    document.getElementById("status").textContent = "تم الاتصال بالطابعة";
+    for (const service of services) {
+      const characteristics = await service.getCharacteristics();
+      for (const char of characteristics) {
+        if (char.properties.write || char.properties.writeWithoutResponse) {
+          printerCharacteristic = char;
+          characteristicFound = true;
+          break;
+        }
+      }
+      if (characteristicFound) break;
+    }
+
+    if (printerCharacteristic) {
+      document.getElementById("status").textContent = `تم الاقتران بالجهاز: ${device.name || "غير معروف"}`;
+    } else {
+      document.getElementById("status").textContent = "تعذر العثور على خاصية للطباعة";
+    }
+
   } catch (error) {
     console.error(error);
     document.getElementById("status").textContent = "فشل الاتصال بالطابعة";
@@ -21,26 +39,27 @@ async function connectPrinter() {
 
 function printReceipt() {
   if (!printerCharacteristic) {
-    alert("يجب الاتصال بالطابعة أولاً");
+    alert("يرجى الاتصال بالطابعة أولاً");
     return;
   }
 
   const receiptText = `
-    متجر النجاح
-    ------------------------
-    منتج 1        10.00₪
-    منتج 2        15.00₪
-    ------------------------
-    المجموع:      25.00₪
-    شكراً لزيارتكم
-  `;
+متجر النجاح
+----------------------
+منتج 1      10.00₪
+منتج 2      15.00₪
+----------------------
+الإجمالي:   25.00₪
+شكراً لزيارتكم!
+`;
 
   const encoder = new TextEncoder("utf-8");
   const data = encoder.encode(receiptText);
 
-  // تقسيم البيانات إذا كانت طويلة
+  // إرسال البيانات على شكل أجزاء
   const chunkSize = 20;
   for (let i = 0; i < data.length; i += chunkSize) {
-    printerCharacteristic.writeValue(data.slice(i, i + chunkSize));
+    const chunk = data.slice(i, i + chunkSize);
+    printerCharacteristic.writeValue(chunk);
   }
 }
