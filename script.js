@@ -498,18 +498,18 @@ function displaySavedInvoices(filter = '') {
         });
     });
     
-    // إضافة معالج الأحداث لأزرار الطباعة
-    document.querySelectorAll('.print-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            loadInvoiceById(id);
-            closeInvoicesModal();
-            setTimeout(() => {
-                saveInvoice();
-                setTimeout(printInvoice, 200);
-            }, 200);
-        });
+    // إضافة معالج الأحداث لأزرار // في دالة displaySavedInvoices، عدل معالج حدث زر الطباعة ليصبح:
+document.querySelectorAll('.print-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const id = parseInt(this.getAttribute('data-id'));
+        loadInvoiceById(id);
+        closeInvoicesModal();
+        setTimeout(() => {
+            saveInvoice();
+            setTimeout(printInvoice, 200); // سيتم الآن إنشاء PDF بدلاً من الطباعة المباشرة
+        }, 200);
     });
+});
     
     // إضافة معالج الأحداث لأزرار الحذف
     document.querySelectorAll('.delete-btn').forEach(btn => {
