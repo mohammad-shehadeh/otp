@@ -453,8 +453,7 @@ function preparePrintTemplate() {
             printWindow.print();
             // إنشاء فاتورة جديدة بعد الطباعة
             setTimeout(createNewInvoice, 500);
-        }, 500);
-    };
+        
 }
 
 // فتح نافذة الفواتير المحفوظة
