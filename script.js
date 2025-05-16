@@ -358,7 +358,7 @@ function preparePrintTemplate() {
     `;
 }
 
-// طباعة الفاتورة
+// طباعة الفاتورة// طباعة الفاتورة
 function printInvoice() {
     if (currentInvoice.items.length === 0) {
         alert('لا يمكن طباعة فاتورة فارغة!');
@@ -368,7 +368,7 @@ function printInvoice() {
     // إنشاء نافذة طباعة جديدة
     const printWindow = window.open('', '_blank');
     
-    // إعداد محتوى الطباعة
+    // إعداد محتوى الطباعة مع CSS مخصص للطابعة الحرارية 80مم
     printWindow.document.write(`
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -377,35 +377,109 @@ function printInvoice() {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>طباعة الفاتورة #${currentInvoice.id}</title>
             <style>
-                @page { size: 80mm auto; margin: 0; }
-                body { 
-                    font-family: Arial, sans-serif; 
-                    width: 80mm; 
-                    margin: 0; 
-                    padding: 5px; 
+                /* تعيين حجم الورق للطابعة الحرارية 80مم */
+                @page {
+                    size: 80mm 200mm; /* العرض 80مم، والطول يتكيف مع المحتوى */
+                    margin: 0;
+                    padding: 0;
+                }
+                
+                body {
+                    font-family: Arial, sans-serif;
+                    width: 80mm; /* عرض ثابت للطابعة الحرارية */
+                    margin: 0 auto;
+                    padding: 5px;
                     font-size: 14px;
+                    direction: rtl;
                 }
-                .header { text-align: center; margin-bottom: 10px; }
-                .info { display: flex; justify-content: space-between; margin-bottom: 5px; }
-                .print-item { 
-                    display: flex; 
-                    justify-content: space-between; 
-                    margin: 5px 0;
+                
+                * {
+                    box-sizing: border-box;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+                
+                .header {
+                    text-align: center;
+                    margin-bottom: 5px;
+                    padding-bottom: 5px;
+                    border-bottom: 1px dashed #000;
+                }
+                
+                .header h2 {
+                    margin: 0;
+                    font-size: 18px;
+                }
+                
+                .info {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 3px;
+                    font-size: 12px;
+                }
+                
+                .print-item {
+                    display: flex;
+                    justify-content: space-between;
+                    margin: 3px 0;
+                    padding-bottom: 2px;
                     border-bottom: 1px dashed #ccc;
-                    padding-bottom: 3px;
+                    font-size: 13px;
                 }
-                .item-name { flex: 2; }
-                .item-quantity { flex: 1; text-align: center; }
-                .item-total { flex: 1; text-align: left; }
-                .total { 
-                    display: flex; 
-                    justify-content: space-between; 
-                    margin-top: 10px;
+                
+                .item-name {
+                    flex: 2;
+                    text-align: right;
+                    padding-right: 5px;
+                }
+                
+                .item-quantity {
+                    flex: 1;
+                    text-align: center;
+                }
+                
+                .item-total {
+                    flex: 1;
+                    text-align: left;
+                }
+                
+                .total {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 8px;
                     font-weight: bold;
-                    border-top: 1px solid #000;
+                    font-size: 15px;
+                    border-top: 2px solid #000;
                     padding-top: 5px;
                 }
-                .footer { text-align: center; margin-top: 15px; font-size: 12px; }
+                
+                .footer {
+                    text-align: center;
+                    margin-top: 10px;
+                    font-size: 11px;
+                    border-top: 1px dashed #000;
+                    padding-top: 5px;
+                }
+                
+                hr {
+                    border: none;
+                    border-top: 1px dashed #000;
+                    margin: 5px 0;
+                }
+                
+                /* تعديلات خاصة للطباعة على iOS */
+                @media print {
+                    body {
+                        width: 80mm !important;
+                        height: auto !important;
+                        margin: 0 !important;
+                        padding: 2mm !important;
+                    }
+                    
+                    .no-print {
+                        display: none !important;
+                    }
+                }
             </style>
         </head>
         <body>
@@ -439,12 +513,16 @@ function printInvoice() {
                 <p>نتمنى لكم يومًا سعيداً</p>
             </div>
             <script>
-                window.onload = function() {
+                // إضافة زر للطباعة يدويًا إذا لزم الأمر
+                document.write('<div class="no-print" style="text-align:center;margin-top:10px;"><button onclick="window.print()">طباعة</button></div>');
+                
+                // محاولة الطباعة التلقائية
+                setTimeout(function() {
+                    window.print();
                     setTimeout(function() {
-                        window.print();
                         window.close();
-                    }, 100);
-                };
+                    }, 1000);
+                }, 200);
             </script>
         </body>
         </html>
