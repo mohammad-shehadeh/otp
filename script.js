@@ -358,117 +358,86 @@ function preparePrintTemplate() {
     `;
 }
 
-// طباعة الفاتورةfunction printInvoice() {
+// طباعة الفاتورة// طباعة الفاتورة كـ PDF
+function printInvoice() {
     if (currentInvoice.items.length === 0) {
         alert('لا يمكن طباعة فاتورة فارغة!');
         return;
     }
 
-    const printWindow = window.open('', '_blank');
+    // إنشاء مستند PDF جديد بعرض 80mm (حوالي 226 وحدة في jsPDF)
+    const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: [226, 1000] // عرض 80mm (226pt) وطول متغير
+    });
 
-    printWindow.document.write(`
-        <!DOCTYPE html>
-        <html dir="rtl" lang="ar">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>طباعة الفاتورة #${currentInvoice.id}</title>
-            <style>
-                @page {
-                    size: 80mm auto;
-                    margin: 0;
-                }
-                body {
-                    font-family: "Tahoma", Arial, sans-serif;
-                    width: 80mm;
-                    margin: 0;
-                    padding: 5px;
-                    font-size: 13px;
-                    box-sizing: border-box;
-                }
-                .header {
-                    text-align: center;
-                    margin-bottom: 10px;
-                }
-                .info {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 4px;
-                    font-size: 12px;
-                }
-                .print-item {
-                    display: flex;
-                    justify-content: space-between;
-                    margin: 4px 0;
-                    border-bottom: 1px dashed #000;
-                    padding-bottom: 2px;
-                    font-size: 12px;
-                }
-                .item-name { flex: 2; }
-                .item-quantity { flex: 1; text-align: center; }
-                .item-total { flex: 1; text-align: left; }
-                .total {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 10px;
-                    font-weight: bold;
-                    border-top: 1px solid #000;
-                    padding-top: 5px;
-                    font-size: 13px;
-                }
-                .footer {
-                    text-align: center;
-                    margin-top: 10px;
-                    font-size: 11px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <h2 style="margin: 0; font-size: 16px;">فاتورة بيع</h2>
-            </div>
-            <div class="info">
-                <span>${currentInvoice.branch}</span>
-                <span>${new Date(currentInvoice.date).toLocaleDateString('ar-SA')}</span>
-            </div>
-            <div class="info">
-                <span>رقم: #${currentInvoice.id}</span>
-                <span>${new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'})}</span>
-            </div>
-            <hr style="margin: 5px 0;">
-            <div id="print-items-list">
-                ${currentInvoice.items.map(item => `
-                    <div class="print-item">
-                        <span class="item-name">${item.name}</span>
-                        <span class="item-quantity">${item.quantity} × ${item.price.toFixed(2)}</span>
-                        <span class="item-total">${item.total.toFixed(2)} ₪</span>
-                    </div>
-                `).join('')}
-            </div>
-            <div class="total">
-                <span>الإجمالي:</span>
-                <span>${currentInvoice.total.toFixed(2)} ₪</span>
-            </div>
-            <div class="footer">
-                <p>شكراً لزيارتكم</p>
-                <p>نتمنى لكم يوماً سعيداً</p>
-            </div>
-            <script>
-                window.onload = function() {
-                    setTimeout(() => {
-                        window.print();
-                        window.close();
-                    }, 200);
-                };
-            </script>
-        </body>
-        </html>
-    `);
+    // إعداد الخط - نستخدم خطًا عربيًا إذا كان متاحًا
+    doc.setFont('Arial'); // يمكن استبداله بخط عربي إذا كان مضافًا
 
-    printWindow.document.close();
+    // معلومات الفاتورة
+    const margin = 10;
+    let yPos = 20;
+
+    // عنوان الفاتورة
+    doc.setFontSize(14);
+    doc.text('فاتورة بيع', doc.internal.pageSize.width / 2, yPos, { align: 'center' });
+    yPos += 20;
+
+    // معلومات الفاتورة
+    doc.setFontSize(10);
+    doc.text(`الفرع: ${currentInvoice.branch}`, margin, yPos, { align: 'right' });
+    doc.text(`التاريخ: ${new Date(currentInvoice.date).toLocaleDateString('ar-SA')}`, doc.internal.pageSize.width - margin, yPos, { align: 'left' });
+    yPos += 15;
+
+    doc.text(`الوقت: ${new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'})}`, margin, yPos, { align: 'right' });
+    doc.text(`رقم: #${currentInvoice.id}`, doc.internal.pageSize.width - margin, yPos, { align: 'left' });
+    yPos += 20;
+
+    // خط فاصل
+    doc.line(margin, yPos, doc.internal.pageSize.width - margin, yPos);
+    yPos += 15;
+
+    // عناصر الفاتورة
+    doc.setFontSize(10);
+    currentInvoice.items.forEach(item => {
+        // اسم الصنف
+        doc.text(item.name, doc.internal.pageSize.width - margin, yPos, { align: 'right' });
+        
+        // الكمية والسعر
+        const quantityText = `${item.quantity} x ${item.price.toFixed(2)}`;
+        doc.text(quantityText, doc.internal.pageSize.width / 2, yPos, { align: 'center' });
+        
+        // الإجمالي
+        doc.text(`${item.total.toFixed(2)} ₪`, margin, yPos, { align: 'left' });
+        
+        yPos += 15;
+        
+        // خط فاصل خفيف بين العناصر
+        doc.line(margin, yPos, doc.internal.pageSize.width - margin, yPos);
+        yPos += 10;
+    });
+
+    // الإجمالي
+    yPos += 10;
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'bold');
+    doc.text('الإجمالي:', doc.internal.pageSize.width - margin - 100, yPos, { align: 'right' });
+    doc.text(`${currentInvoice.total.toFixed(2)} ₪`, doc.internal.pageSize.width - margin, yPos, { align: 'right' });
+    yPos += 20;
+
+    // تذييل الصفحة
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text('شكراً لزيارتكم', doc.internal.pageSize.width / 2, yPos, { align: 'center' });
+    yPos += 15;
+    doc.text('نتمنى لكم يومًا سعيداً', doc.internal.pageSize.width / 2, yPos, { align: 'center' });
+
+    // حفظ الملف باسم فاتورة ورقمها
+    doc.save(`فاتورة_${currentInvoice.id}.pdf`);
 
     // إنشاء فاتورة جديدة بعد الطباعة
-    setTimeout(createNewInvoice, 700);
+    setTimeout(createNewInvoice, 500);
 }
 // فتح نافذة الفواتير المحفوظة
 function openInvoicesModal() {
