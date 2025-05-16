@@ -365,79 +365,107 @@ function printInvoice() {
         return;
     }
 
-    // إنشاء مستند PDF جديد بعرض 80mm (حوالي 226 وحدة في jsPDF)
-    const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'pt',
-        format: [226, 1000] // عرض 80mm (226pt) وطول متغير
-    });
-
-    // إعداد الخط - نستخدم خطًا عربيًا إذا كان متاحًا
-    doc.setFont('Arial'); // يمكن استبداله بخط عربي إذا كان مضافًا
-
-    // معلومات الفاتورة
-    const margin = 10;
-    let yPos = 20;
-
-    // عنوان الفاتورة
-    doc.setFontSize(14);
-    doc.text('فاتورة بيع', doc.internal.pageSize.width / 2, yPos, { align: 'center' });
-    yPos += 20;
-
-    // معلومات الفاتورة
-    doc.setFontSize(10);
-    doc.text(`الفرع: ${currentInvoice.branch}`, margin, yPos, { align: 'right' });
-    doc.text(`التاريخ: ${new Date(currentInvoice.date).toLocaleDateString('ar-SA')}`, doc.internal.pageSize.width - margin, yPos, { align: 'left' });
-    yPos += 15;
-
-    doc.text(`الوقت: ${new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'})}`, margin, yPos, { align: 'right' });
-    doc.text(`رقم: #${currentInvoice.id}`, doc.internal.pageSize.width - margin, yPos, { align: 'left' });
-    yPos += 20;
-
-    // خط فاصل
-    doc.line(margin, yPos, doc.internal.pageSize.width - margin, yPos);
-    yPos += 15;
-
-    // عناصر الفاتورة
-    doc.setFontSize(10);
-    currentInvoice.items.forEach(item => {
-        // اسم الصنف
-        doc.text(item.name, doc.internal.pageSize.width - margin, yPos, { align: 'right' });
+    try {
+        // استخدام jsPDF من النافذة العامة إذا كانت المكتبة محملة كـ UMD
+        const { jsPDF } = window.jspdf;
         
-        // الكمية والسعر
-        const quantityText = `${item.quantity} x ${item.price.toFixed(2)}`;
-        doc.text(quantityText, doc.internal.pageSize.width / 2, yPos, { align: 'center' });
+        // إنشاء مستند PDF جديد بعرض 80mm (حوالي 226 وحدة في jsPDF)
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'pt',
+            format: [226, 1000] // عرض 80mm (226pt) وطول متغير
+        });
+
+        // إعداد الخطوط (تأكد من استخدام خط يدعم العربية)
+        doc.setFont('Arial'); // يمكن استبداله بخط عربي إذا كان متاحاً
         
-        // الإجمالي
-        doc.text(`${item.total.toFixed(2)} ₪`, margin, yPos, { align: 'left' });
-        
+        // إعداد الهوامش وموضع البدء
+        const margin = 10;
+        let yPos = 20;
+        const pageWidth = doc.internal.pageSize.width;
+
+        // عنوان الفاتورة
+        doc.setFontSize(14);
+        doc.text('فاتورة بيع', pageWidth / 2, yPos, { align: 'center' });
+        yPos += 20;
+
+        // معلومات الفاتورة (الفرع والتاريخ)
+        doc.setFontSize(10);
+        doc.text(`الفرع: ${currentInvoice.branch}`, margin, yPos, { align: 'right' });
+        doc.text(`التاريخ: ${formatDateForPDF(currentInvoice.date)}`, pageWidth - margin, yPos, { align: 'left' });
         yPos += 15;
-        
-        // خط فاصل خفيف بين العناصر
-        doc.line(margin, yPos, doc.internal.pageSize.width - margin, yPos);
+
+        // معلومات الفاتورة (الوقت ورقم الفاتورة)
+        doc.text(`الوقت: ${new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'})}`, margin, yPos, { align: 'right' });
+        doc.text(`رقم: #${currentInvoice.id}`, pageWidth - margin, yPos, { align: 'left' });
+        yPos += 20;
+
+        // خط فاصل
+        doc.line(margin, yPos, pageWidth - margin, yPos);
+        yPos += 15;
+
+        // عناصر الفاتورة
+        doc.setFontSize(10);
+        currentInvoice.items.forEach(item => {
+            // التحقق من المساحة المتاحة في الصفحة
+            if (yPos > doc.internal.pageSize.height - 50) {
+                doc.addPage();
+                yPos = 20;
+            }
+
+            // اسم الصنف (محاذاة لليمين)
+            const itemName = doc.splitTextToSize(item.name, pageWidth - 2*margin - 100);
+            doc.text(itemName, pageWidth - margin, yPos, { align: 'right' });
+            
+            // الكمية والسعر (في المنتصف)
+            const quantityText = `${item.quantity} x ${item.price.toFixed(2)}`;
+            doc.text(quantityText, pageWidth / 2, yPos, { align: 'center' });
+            
+            // الإجمالي (محاذاة لليسار)
+            doc.text(`${item.total.toFixed(2)} ₪`, margin + 100, yPos, { align: 'left' });
+            
+            yPos += 20;
+            
+            // خط فاصل خفيف بين العناصر
+            doc.line(margin, yPos, pageWidth - margin, yPos);
+            yPos += 10;
+        });
+
+        // الإجمالي
         yPos += 10;
-    });
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text('الإجمالي:', pageWidth - margin - 100, yPos, { align: 'right' });
+        doc.text(`${currentInvoice.total.toFixed(2)} ₪`, pageWidth - margin, yPos, { align: 'right' });
+        yPos += 20;
 
-    // الإجمالي
-    yPos += 10;
-    doc.setFontSize(12);
-    doc.setFont(undefined, 'bold');
-    doc.text('الإجمالي:', doc.internal.pageSize.width - margin - 100, yPos, { align: 'right' });
-    doc.text(`${currentInvoice.total.toFixed(2)} ₪`, doc.internal.pageSize.width - margin, yPos, { align: 'right' });
-    yPos += 20;
+        // تذييل الصفحة
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text('شكراً لزيارتكم', pageWidth / 2, yPos, { align: 'center' });
+        yPos += 15;
+        doc.text('نتمنى لكم يومًا سعيداً', pageWidth / 2, yPos, { align: 'center' });
 
-    // تذييل الصفحة
-    doc.setFontSize(10);
-    doc.setFont(undefined, 'normal');
-    doc.text('شكراً لزيارتكم', doc.internal.pageSize.width / 2, yPos, { align: 'center' });
-    yPos += 15;
-    doc.text('نتمنى لكم يومًا سعيداً', doc.internal.pageSize.width / 2, yPos, { align: 'center' });
+        // حفظ الملف باسم فاتورة ورقمها
+        doc.save(`فاتورة_${currentInvoice.id}.pdf`);
 
-    // حفظ الملف باسم فاتورة ورقمها
-    doc.save(`فاتورة_${currentInvoice.id}.pdf`);
+    } catch (error) {
+        console.error('حدث خطأ أثناء إنشاء PDF:', error);
+        alert('حدث خطأ أثناء إنشاء ملف PDF. الرجاء التحقق من وحدة التحكم للمزيد من التفاصيل.');
+    }
 
     // إنشاء فاتورة جديدة بعد الطباعة
     setTimeout(createNewInvoice, 500);
+}
+
+// دالة مساعدة لتنسيق التاريخ
+function formatDateForPDF(date) {
+    const d = new Date(date);
+    return d.toLocaleDateString('ar-SA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
 }
 // فتح نافذة الفواتير المحفوظة
 function openInvoicesModal() {
