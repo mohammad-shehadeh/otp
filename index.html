@@ -1,11 +1,36 @@
-<html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-</head>    
+  <meta charset="UTF-8">
+  <title>طباعة فاتورة</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+      background-color: #f7f7f7;
+    }
+    .btn {
+      display: inline-block;
+      padding: 15px 30px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 18px;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
 <body>
-  <!-- For local development -->
-  <a href="bprint://http://192.168.43.160/response.php">Print Local</a>
-  
-  <!-- For production website -->
-  <a href="bprint://https://www.yourdomain.com/print/response.php">Print</a>
+
+  <h1>فاتورة المبيعات</h1>
+  <p>اضغط على الزر لطباعة الفاتورة</p>
+
+  <!-- استبدل بالرابط الصحيح لموقعك -->
+  <a class="btn" href="bprint://https://yourdomain.com/response.php?id=123">🖨️ طباعة الفاتورة</a>
+
 </body>
 </html>
