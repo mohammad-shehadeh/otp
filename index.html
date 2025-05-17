@@ -1,36 +1,179 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>طباعة فاتورة</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 40px;
-      background-color: #f7f7f7;
-    }
-    .btn {
-      display: inline-block;
-      padding: 15px 30px;
-      background-color: #007bff;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 18px;
-    }
-    .btn:hover {
-      background-color: #0056b3;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام نقاط البيع المتطور</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            @page {
+                size: 80mm auto;
+                margin: 0;
+            }
+            body * {
+                visibility: hidden;
+            }
+            .print-area, .print-area * {
+                visibility: visible;
+            }
+            .print-area {
+                width: 80mm;
+                position: absolute;
+                left: 0;
+                top: 0;
+                padding: 5px;
+                font-size: 12px;
+            }
+            .print-header {
+                text-align: center;
+                margin-bottom: 10px;
+                border-bottom: 1px dashed #000;
+                padding-bottom: 5px;
+            }
+            .print-items {
+                margin: 5px 0;
+            }
+            .print-item {
+                display: flex;
+                justify-content: space-between;
+                margin: 3px 0;
+            }
+            .print-footer {
+                border-top: 1px dashed #000;
+                margin-top: 5px;
+                padding-top: 5px;
+                text-align: center;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>نظام نقاط البيع (POS)</h1>
+            <div class="store-info">
+                <div class="info-item">
+                    <label>التاريخ:</label>
+                    <span id="current-date"></span>
+                </div>
+                <div class="info-item">
+                    <label>الفرع:</label>
+                    <select id="branch">
+                        <option value="الفرع الرئيسي">الفرع الرئيسي</option>
+                        <option value="فرع القدس">فرع القدس</option>
+                        <option value="فرع تل أبيب">فرع تل أبيب</option>
+                        <option value="فرع حيفا">فرع حيفا</option>
+                    </select>
+                </div>
+            </div>
+        </header>
 
-  <h1>فاتورة المبيعات</h1>
-  <p>اضغط على الزر لطباعة الفاتورة</p>
+        <div class="main-content">
+            <div class="barcode-section">
+                <div class="input-group">
+                    <label for="barcode">مسح الباركود:</label>
+                    <input type="text" id="barcode" autofocus placeholder="استخدم ماسح الباركود أو اكتب الرمز يدويًا">
+                    <button id="add-item"><i class="fas fa-plus"></i> إضافة</button>
+                </div>
+            </div>
 
-  <!-- استبدل بالرابط الصحيح لموقعك -->
-  <a class="btn" href="bprint://https://abc8161.wuaze.com/response.php">🖨️ طباعة الفاتورة</a>
+            <div class="invoice-section">
+                <div class="invoice-header">
+                    <h2>فاتورة البيع</h2>
+                    <div class="invoice-actions">
+                        <button id="new-invoice"><i class="fas fa-file"></i> فاتورة جديدة</button>
+                        <div class="invoice-nav">
+                            <button id="prev-invoice" title="الفاتورة السابقة"><i class="fas fa-arrow-right"></i></button>
+                            <span id="invoice-number">فاتورة #1</span>
+                            <button id="next-invoice" title="الفاتورة التالية"><i class="fas fa-arrow-left"></i></button>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="invoice-details">
+                    <table id="invoice-table">
+                        <thead>
+                            <tr>
+                                <th width="5%">#</th>
+                                <th width="40%">اسم الصنف</th>
+                                <th width="15%">السعر</th>
+                                <th width="15%">الكمية</th>
+                                <th width="15%">المجموع</th>
+                                <th width="10%">حذف</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-items">
+                            <!-- سيتم إضافة العناصر هنا ديناميكيًا -->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" class="total-label">الإجمالي:</td>
+                                <td colspan="2" class="total-amount">0.00 ₪</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="invoice-footer">
+                    <button id="save-invoice"><i class="fas fa-save"></i> حفظ الفاتورة</button>
+                    <button id="print-invoice"><i class="fas fa-print"></i> طباعة الفاتورة</button>
+                    <button id="load-invoice"><i class="fas fa-folder-open"></i> فتح فاتورة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- منطقة الطباعة المخفية -->
+    <div id="print-template" class="print-area" style="display:none;">
+        <div class="print-header">
+            <h2>فاتورة بيع</h2>
+            <p id="print-branch">الفرع: الفرع الرئيسي</p>
+            <p id="print-date">التاريخ: 01/01/2023</p>
+            <p id="print-invoice-num">رقم الفاتورة: #1</p>
+        </div>
+        <div class="print-items" id="print-items-list">
+            <!-- سيتم ملؤها ديناميكيًا -->
+        </div>
+        <div class="print-footer">
+            <p id="print-total">الإجمالي: 0.00 ₪</p>
+            <p>شكرًا لزيارتكم</p>
+            <p id="print-time"></p>
+        </div>
+    </div>
+
+    <!-- نافذة فتح الفواتير المحفوظة -->
+    <div id="invoices-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>الفواتير المحفوظة</h2>
+            <div class="search-box">
+                <input type="text" id="search-invoice" placeholder="ابحث عن فاتورة...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <table id="saved-invoices">
+                <thead>
+                    <tr>
+                        <th>رقم الفاتورة</th>
+                        <th>التاريخ</th>
+                        <th>الفرع</th>
+                        <th>الإجمالي</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- سيتم ملؤها ديناميكيًا -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
