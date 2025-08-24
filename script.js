@@ -10,7 +10,7 @@ const app = {
     repoOwner: CONFIG.REPO.OWNER,
     repoName: CONFIG.REPO.NAME,
     filePath: CONFIG.FILE_PATH,
-    token: null
+    token: CONFIG.TOKEN
 };
 
 // عناصر DOM
@@ -32,12 +32,7 @@ const elements = {
 // تهيئة الأحداث
 function initEvents() {
     elements.newDeviceBtn.addEventListener('click', () => {
-        // التحقق من وجود token قبل فتح النموذج
-        if (!app.token) {
-            showTokenModal();
-        } else {
-            elements.deviceModal.style.display = 'block';
-        }
+        elements.deviceModal.style.display = 'block';
     });
 
     elements.closeModal.addEventListener('click', () => {
@@ -47,9 +42,6 @@ function initEvents() {
     window.addEventListener('click', (e) => {
         if (e.target === elements.deviceModal) {
             elements.deviceModal.style.display = 'none';
-        }
-        if (e.target === document.getElementById('tokenModal')) {
-            document.getElementById('tokenModal').style.display = 'none';
         }
     });
 
@@ -61,17 +53,6 @@ function initEvents() {
 
 // وظائف التطبيق
 async function loadData() {
-    // التحقق من وجود token
-    if (!app.token) {
-        const savedToken = localStorage.getItem('github_token');
-        if (savedToken) {
-            app.token = savedToken;
-        } else {
-            showTokenModal();
-            return;
-        }
-    }
-    
     showLoading();
     try {
         const response = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
@@ -88,15 +69,6 @@ async function loadData() {
         }
 
         if (!response.ok) {
-            if (response.status === 401) {
-                // Token غير صالح
-                showNotification('Token غير صالح، يرجى إدخال token جديد', 'error');
-                localStorage.removeItem('github_token');
-                app.token = null;
-                showTokenModal();
-                return;
-            }
-            
             const errorData = await response.json().catch(() => ({}));
             throw new Error(errorData.message || `فشل في جلب البيانات (${response.status})`);
         }
@@ -465,101 +437,10 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// وظائف إدارة Token
-function showTokenModal() {
-    // إنشاء نموذج إدخال Token إذا لم يكن موجودًا
-    let tokenModal = document.getElementById('tokenModal');
-    if (!tokenModal) {
-        tokenModal = document.createElement('div');
-        tokenModal.id = 'tokenModal';
-        tokenModal.className = 'modal';
-        tokenModal.innerHTML = `
-            <div class="modal-content glass-modal">
-                <span class="close" id="closeTokenModal">&times;</span>
-                <h2><i class="fas fa-key"></i> إدخال GitHub Token</h2>
-                <p>يجب إدخال GitHub Token للوصول إلى البيانات.</p>
-                <div class="form-group">
-                    <label for="githubToken">GitHub Token:</label>
-                    <input type="password" id="githubToken" class="modern-input" placeholder="أدخل token الخاص بك">
-                </div>
-                <div class="token-help">
-                    <p>كيفية الحصول على Token:</p>
-                    <ol>
-                        <li>اذهب إلى GitHub → Settings → Developer settings → Personal access tokens</li>
-                        <li>انقر على "Generate new token"</li>
-                        <li>أعطِه اسمًا واختر صلاحية <strong>repo</strong> (للمستودعات الخاصة) أو <strong>public_repo</strong> (للمستودعات العامة)</li>
-                        <li>انسخ Token وأدخله هنا</li>
-                    </ol>
-                </div>
-                <button id="saveTokenBtn" class="btn-primary glow-on-hover">
-                    <i class="fas fa-save"></i> حفظ Token
-                </button>
-            </div>
-        `;
-        document.body.appendChild(tokenModal);
-        
-        // إضافة أحداث للنموذج
-        document.getElementById('closeTokenModal').addEventListener('click', () => {
-            tokenModal.style.display = 'none';
-        });
-        
-        document.getElementById('saveTokenBtn').addEventListener('click', saveToken);
-    }
-    
-    tokenModal.style.display = 'block';
-}
-
-function saveToken() {
-    const tokenInput = document.getElementById('githubToken');
-    const token = tokenInput.value.trim();
-    
-    if (!token) {
-        showNotification('يرجى إدخال Token', 'error');
-        return;
-    }
-    
-    // اختبار صحة Token
-    testGitHubToken(token).then(isValid => {
-        if (isValid) {
-            app.token = token;
-            localStorage.setItem('github_token', token);
-            document.getElementById('tokenModal').style.display = 'none';
-            showNotification('تم حفظ Token بنجاح', 'success');
-            loadData();
-        } else {
-            showNotification('Token غير صالح، يرجى التأكد من صحته', 'error');
-        }
-    });
-}
-
-async function testGitHubToken(token) {
-    try {
-        const response = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        return response.ok;
-    } catch (error) {
-        console.error('Error testing token:', error);
-        return false;
-    }
-}
-
 // تهيئة التطبيق
 document.addEventListener('DOMContentLoaded', () => {
     initEvents();
-    
-    // محاولة تحميل Token المحفوظ
-    const savedToken = localStorage.getItem('github_token');
-    if (savedToken) {
-        app.token = savedToken;
-        loadData();
-    } else {
-        showTokenModal();
-    }
+    loadData();
     
     // إضافة أنماط الإشعار إذا لم تكن موجودة
     if (!document.getElementById('notification-styles')) {
@@ -583,22 +464,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .notification-error { background-color: #F44336; }
             .notification-warning { background-color: #FF9800; }
             .notification-info { background-color: #2196F3; }
-            
-            .token-help {
-                background: rgba(255, 255, 255, 0.1);
-                padding: 15px;
-                border-radius: 8px;
-                margin: 15px 0;
-                font-size: 14px;
-            }
-            
-            .token-help ol {
-                padding-right: 20px;
-            }
-            
-            .token-help li {
-                margin-bottom: 8px;
-            }
         `;
         document.head.appendChild(style);
     }
