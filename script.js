@@ -7,17 +7,9 @@ const app = {
     set devices(value) {
         this._devices = Array.isArray(value) ? value : [];
     },
-    _serverData: {},
-    get serverData() {
-        return this._serverData;
-    },
-    set serverData(value) {
-        this._serverData = value || {};
-    },
     repoOwner: CONFIG.REPO.OWNER,
     repoName: CONFIG.REPO.NAME,
-    devicesFilePath: CONFIG.FILE_PATH,
-    serverFilePath: 'Server.md',
+    filePath: CONFIG.FILE_PATH,
     get token() {
         return assembleGitHubToken();
     }
@@ -36,9 +28,7 @@ const elements = {
         registered: document.getElementById('registeredDevices'),
         reached: document.getElementById('reachedDevices'),
         delivered: document.getElementById('deliveredDevices')
-    },
-    serverInfoSection: document.getElementById('serverInfo'),
-    serverForm: document.getElementById('serverForm')
+    }
 };
 
 // أحداث
@@ -61,49 +51,35 @@ elements.deviceForm.addEventListener('submit', (e) => {
     addNewDevice();
 });
 
-elements.serverForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    updateServerInfo();
-});
-
 // وظائف التطبيق
 
 async function loadData() {
     showLoading();
     try {
-        // تحميل بيانات الأجهزة
-        const devicesResponse = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.devicesFilePath}`, {
+        const response = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
             headers: {
                 'Authorization': `token ${app.token}`,
                 'Accept': 'application/vnd.github.v3+json'
             }
         });
 
-        if (devicesResponse.ok) {
-            const devicesData = await devicesResponse.json();
-            const decodedDevicesData = atob(devicesData.content);
-            const devicesContent = decodeURIComponent(escape(decodedDevicesData));
-            app.devices = devicesContent.trim() ? JSON.parse(devicesContent) : [];
-        } else if (devicesResponse.status !== 404) {
-            throw new Error('فشل في جلب بيانات الأجهزة');
+        if (response.status === 404) {
+            app.devices = [];
+            renderDevices();
+            return;
         }
 
-        // تحميل بيانات السيرفر من Server.md
-        const serverResponse = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.serverFilePath}`, {
-            headers: {
-                'Authorization': `token ${app.token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
+        if (!response.ok) throw new Error('فشل في جلب البيانات');
 
-        if (serverResponse.ok) {
-            const serverData = await serverResponse.json();
-            const decodedServerData = atob(serverData.content);
-            const serverContent = decodeURIComponent(escape(decodedServerData));
-            app.serverData = parseServerMarkdown(serverContent);
-            renderServerInfo();
-        } else if (serverResponse.status !== 404) {
-            throw new Error('فشل في جلب بيانات السيرفر');
+        const data = await response.json();
+        const decodedData = atob(data.content);
+        const content = decodeURIComponent(escape(decodedData));
+
+        try {
+            app.devices = content.trim() ? JSON.parse(content) : [];
+        } catch (e) {
+            app.devices = [];
+            console.error('Error parsing data:', e);
         }
 
         renderDevices();
@@ -111,89 +87,46 @@ async function loadData() {
         console.error('Error:', error);
         alert('حدث خطأ أثناء جلب البيانات: ' + error.message);
         app.devices = [];
-        app.serverData = {};
     } finally {
         hideLoading();
         updateStats();
     }
 }
 
-function parseServerMarkdown(content) {
-    const data = {};
-    const lines = content.split('\n');
-    
-    lines.forEach(line => {
-        if (line.startsWith('###')) {
-            const key = line.replace('###', '').trim();
-            data[key] = '';
-        } else if (line.includes(':')) {
-            const [key, value] = line.split(':').map(item => item.trim());
-            if (key && value) {
-                data[key] = value;
-            }
-        }
-    });
-    
-    return data;
-}
-
-function generateServerMarkdown(data) {
-    let content = '';
-    
-    // إضافة العنوان الرئيسي
-    content += `# معلومات السيرفر\n\n`;
-    
-    // إضافة الأقسام والبيانات
-    for (const [key, value] of Object.entries(data)) {
-        if (value === '') {
-            content += `### ${key}\n`;
-        } else {
-            content += `${key}: ${value}\n`;
-        }
-    }
-    
-    return content;
-}
-
-function renderServerInfo() {
-    if (!app.serverData || Object.keys(app.serverData).length === 0) {
-        elements.serverInfoSection.innerHTML = '<p>لا توجد بيانات للسيرفر</p>';
-        return;
-    }
-    
-    let html = '<div class="server-info-card"><h3>معلومات السيرفر</h3><div class="server-details">';
-    
-    for (const [key, value] of Object.entries(app.serverData)) {
-        if (value === '') {
-            html += `</div><h4>${key}</h4><div class="server-details">`;
-        } else {
-            html += `<div class="server-detail-item">
-                        <label>${key}:</label>
-                        <input type="text" name="${key}" value="${value}" placeholder="أدخل ${key}">
-                    </div>`;
-        }
-    }
-    
-    html += '</div></div>';
-    elements.serverInfoSection.innerHTML = html;
-}
-
-async function updateServerInfo() {
+async function addNewDevice() {
     showLoading();
     try {
-        const formData = new FormData(elements.serverForm);
-        const updatedData = {};
-        
-        formData.forEach((value, key) => {
-            updatedData[key] = value;
-        });
-        
-        app.serverData = updatedData;
-        
-        // جلب SHA للملف الموجود إذا كان موجوداً
+        const newDevice = {
+            id: generateId(),
+            clientName: document.getElementById('clientName').value,
+            phoneType: document.getElementById('phoneType').value,
+            issueDescription: document.getElementById('issueDescription').value,
+            imeiNumber: document.getElementById('imeiNumber').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            manufacturer: document.getElementById('manufacturer').value,
+            registrationDate: new Date().toISOString(),
+            status: 'registered'
+        };
+
+        app.devices = [...app.devices, newDevice];
+        await saveDataToGitHub();
+
+        elements.deviceForm.reset();
+        elements.deviceModal.style.display = 'none';
+        renderDevices();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('حدث خطأ أثناء إضافة الجهاز: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+}
+
+async function saveDataToGitHub() {
+    try {
         let sha = '';
         try {
-            const getResponse = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.serverFilePath}`, {
+            const getResponse = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
                 headers: {
                     'Authorization': `token ${app.token}`,
                     'Accept': 'application/vnd.github.v3+json'
@@ -204,11 +137,11 @@ async function updateServerInfo() {
                 sha = data.sha;
             }
         } catch (e) {
-            console.log('ملف السيرفر غير موجود، سيتم إنشاؤه جديداً');
+            console.log('الملف غير موجود، سيتم إنشاؤه جديداً');
         }
-        
-        const content = generateServerMarkdown(app.serverData);
-        const response = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.serverFilePath}`, {
+
+        const content = JSON.stringify(app.devices, null, 2);
+        const response = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `token ${app.token}`,
@@ -216,29 +149,134 @@ async function updateServerInfo() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                message: 'تحديث بيانات السيرفر',
+                message: 'تحديث بيانات الأجهزة',
                 content: btoa(unescape(encodeURIComponent(content))),
                 sha: sha || undefined
             })
         });
-        
-        if (!response.ok) throw new Error('فشل في حفظ بيانات السيرفر');
-        
-        renderServerInfo();
-        alert('تم تحديث بيانات السيرفر بنجاح');
+
+        if (!response.ok) throw new Error('فشل في حفظ البيانات');
     } catch (error) {
         console.error('Error:', error);
-        alert('حدث خطأ أثناء تحديث بيانات السيرفر: ' + error.message);
+        throw error;
+    }
+}
+
+function renderDevices() {
+    elements.devicesList.innerHTML = '';
+
+    if (app.devices.length === 0) {
+        elements.devicesList.innerHTML = '<p class="no-devices">لا توجد أجهزة مسجلة بعد</p>';
+        return;
+    }
+
+    // ترتيب الأجهزة حسب التاريخ من الأحدث إلى الأقدم
+    app.devices.sort((a, b) => new Date(b.registrationDate) - new Date(a.registrationDate))
+        .forEach(device => {
+            const days = Math.floor((new Date() - new Date(device.registrationDate)) / (1000 * 60 * 60 * 24));
+
+            // تحديد كلاس الحالة حسب حالة الجهاز
+            let statusClass = '';
+            let statusIcon = '';
+            
+            switch(device.status) {
+                case 'registered':
+                    statusClass = 'status-registered';
+                    statusIcon = '📝'; // أيقونة التسجيل
+                    break;
+                case 'reached':
+                    statusClass = 'status-reached';
+                    statusIcon = '🛠️'; // أيقونة الإصلاح
+                    break;
+                case 'delivered':
+                    statusClass = 'status-delivered';
+                    statusIcon = '✅'; // أيقونة التسليم
+                    break;
+                default:
+                    statusClass = 'status-default';
+            }
+
+            const deviceCard = document.createElement('div');
+deviceCard.className = `device-card ${statusClass}`;
+deviceCard.innerHTML = `
+    <div class="device-header">
+        <div class="device-title">
+            <span class="status-icon">${statusIcon}</span>
+            ${device.clientName} - ${device.phoneType}
+        </div>
+        <div class="device-days" title="عدد الأيام منذ التسجيل">${days} يوم</div>
+    </div>
+    <div class="device-details">
+        <div class="detail-item"><label>نوع الهاتف:</label><span>${device.phoneType}</span></div>
+        <div class="detail-item"><label>رقم الهاتف:</label><span>${device.phoneNumber}</span></div>
+        <div class="detail-item"><label>الشركة المصنعة:</label><span>${device.manufacturer}</span></div>
+        <div class="detail-item"><label> IMEI:</label><span>${device.imeiNumber}</span></div>
+        <div class="detail-item"><label>تاريخ التسجيل:</label><span>${formatDate(device.registrationDate)}</span></div>
+        <div class="detail-item full-width"><label>وصف العطل:</label><span>${device.issueDescription}</span></div>
+    </div>
+    <div class="device-status">
+        <select class="status-select" data-id="${device.id}">
+            <option value="registered" ${device.status === 'registered' ? 'selected' : ''}>تم التسجيل</option>
+            <option value="reached" ${device.status === 'reached' ? 'selected' : ''}>تم الوصول</option>
+            <option value="delivered" ${device.status === 'delivered' ? 'selected' : ''}>تم الاستلام</option>
+        </select>
+    </div>
+`;
+
+
+            elements.devicesList.appendChild(deviceCard);
+        });
+
+    document.querySelectorAll('.status-select').forEach(select => {
+        select.addEventListener('change', (e) => {
+            updateDeviceStatus(e.target.dataset.id, e.target.value);
+        });
+    });
+}
+
+async function updateDeviceStatus(deviceId, newStatus) {
+    showLoading();
+    try {
+        app.devices = app.devices.map(device =>
+            device.id === deviceId ? { ...device, status: newStatus } : device
+        );
+        await saveDataToGitHub();
+        updateStats();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('حدث خطأ أثناء تحديث حالة الجهاز');
     } finally {
         hideLoading();
     }
 }
 
-// باقي الوظائف تبقى كما هي (addNewDevice, saveDataToGitHub, renderDevices, updateDeviceStatus, updateStats, ...)
+function updateStats() {
+    elements.statsElements.total.textContent = app.devices.length;
+    elements.statsElements.registered.textContent = app.devices.filter(d => d.status === 'registered').length;
+    elements.statsElements.reached.textContent = app.devices.filter(d => d.status === 'reached').length;
+    elements.statsElements.delivered.textContent = app.devices.filter(d => d.status === 'delivered').length;
+}
+
+// وظائف مساعدة
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+}
+
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString('ar-EG', options);
+}
+
+function showLoading() {
+    elements.loadingOverlay.style.display = 'flex';
+}
+
+function hideLoading() {
+    elements.loadingOverlay.style.display = 'none';
+}
 
 // تهيئة التطبيق
 document.addEventListener('DOMContentLoaded', () => {
     app.devices = [];
-    app.serverData = {};
     loadData();
 });
