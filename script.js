@@ -10,9 +10,7 @@ const app = {
     repoOwner: CONFIG.REPO.OWNER,
     repoName: CONFIG.REPO.NAME,
     filePath: CONFIG.FILE_PATH,
-    get token() {
-        return assembleGitHubToken();
-    }
+    token: CONFIG.TOKEN
 };
 
 // عناصر DOM
@@ -59,7 +57,7 @@ async function loadData() {
     try {
         const response = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
             headers: {
-                'Authorization': `token ${app.token}`,
+                'Authorization': `Bearer ${app.token}`,
                 'Accept': 'application/vnd.github.v3+json'
             }
         });
@@ -186,7 +184,7 @@ async function saveDataToGitHub() {
         try {
             const getResponse = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
                 headers: {
-                    'Authorization': `token ${app.token}`,
+                    'Authorization': `Bearer ${app.token}`,
                     'Accept': 'application/vnd.github.v3+json'
                 }
             });
@@ -204,7 +202,7 @@ async function saveDataToGitHub() {
         const response = await fetch(`https://api.github.com/repos/${app.repoOwner}/${app.repoName}/contents/${app.filePath}`, {
             method: 'PUT',
             headers: {
-                'Authorization': `token ${app.token}`,
+                'Authorization': `Bearer ${app.token}`,
                 'Accept': 'application/vnd.github.v3+json',
                 'Content-Type': 'application/json'
             },
