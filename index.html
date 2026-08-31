@@ -1,111 +1,250 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة صيانة الهواتف</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>VEN-DENS</title>
+  <meta name="description" content="VEN-DENS - متجر إلكترونيات بريطاني رائد في فلسطين. نوفر أحدث الأجهزة الإلكترونية والملحقات الذكية بأعلى معايير الجودة." />
+  <meta name="keywords" content="VEN-DENS, إلكترونيات , متجر إلكترونيات, فلسطين, الخليل" />
+  <meta name="author" content="VEN-DENS Palestine" />
+
+  <meta property="og:title" content="VEN-DENS" />
+  <meta property="og:description" content="VEN-DENS في فلسطين." />
+  <meta property="og:image" content="https://cdn.phototourl.com/free/2026-08-27-cdcfb8e2-5e3d-4a8e-a106-53f4820d4860.webp" />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" type="image/jpeg" href="https://cdn.phototourl.com/free/2026-08-27-cdcfb8e2-5e3d-4a8e-a106-53f4820d4860.webp" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <header class="glass-header">
-        <div class="header-content">
-            <h1><i class="fas fa-mobile-alt"></i> نظام إدارة صيانة الهواتف</h1>
-            <button id="newDeviceBtn" class="btn-primary glow-on-hover">
-                <i class="fas fa-plus"></i> تسجيل جهاز جديد
-            </button>
-        </div>
-    </header>
 
-    <div class="container">
-        <div id="statsBar">
-            <div class="stat-card gradient-1">
-                <div class="stat-icon"><i class="fas fa-mobile-screen"></i></div>
-                <h3>إجمالي الأجهزة</h3>
-                <p id="totalDevices">0</p>
+  <header id="main-header">
+    <div class="top-bar">
+      <div class="logo-container">
+        <a href="#">
+          <img src="https://cdn.phototourl.com/free/2026-08-27-cdcfb8e2-5e3d-4a8e-a106-53f4820d4860.webp" alt="شعار VEN-DENS" class="logo" />
+        </a>
+      </div>
+
+      <div class="header-actions">
+        <button id="cart-button" class="cart-button" aria-label="عربة التسوق">
+          <i class="fas fa-shopping-bag"></i>
+          <span>سلة الشراء</span>
+          <span id="cart-count" class="cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="categories-scroll" aria-label="فئات المنتجات">
+      <div class="categories-container" id="categories-container">
+        </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="منتجاتنا المميزة">
+      <div class="slideshow-container">
+        <div class="mySlides fade">
+          <img src="https://cdn.phototourl.com/free/2026-08-28-a2ee262f-1d6e-42d0-bde9-e19c750bde35.jpg" alt="أجهزة إلكترونية متطورة" />
+          <div class="slide-overlay">
+            <h2>إلكترونيات عصرية متطورة</h2>
+            <p>أحدث التقنيات العالمية بين يديك بأعلى معايير الجودة</p>
+          </div>
+        </div>
+        <div class="mySlides fade">
+          <img src="https://cdn.phototourl.com/free/2026-08-28-d93427d2-850f-4992-bf8e-21d3d148e5be.jpg" alt="أحدث الأجهزة الكهربائية" />
+          <div class="slide-overlay">
+            <h2>تشكيلة واسعة من الملحقات</h2>
+            <p>حلول ذكية متكاملة لتسهيل حياتك اليومية</p>
+          </div>
+        </div>
+        <div class="mySlides fade">
+          <img src="https://cdn.phototourl.com/free/2026-08-28-7f766570-2555-4c10-ab6b-1ba05aca00b9.jpg" alt="منتجات موفرة للطاقة" />
+          <div class="slide-overlay">
+            <h2>أداء فائق وكفاءة عالية</h2>
+            <p>استمتع بتجربة اقتناء منتجات أصيلة ومضمونة</p>
+          </div>
+        </div>
+
+        <div class="dots-container">
+          <span class="dot" onclick="currentSlide(1)" aria-label="الشريحة 1"></span>
+          <span class="dot" onclick="currentSlide(2)" aria-label="الشريحة 2"></span>
+          <span class="dot" onclick="currentSlide(3)" aria-label="الشريحة 3"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="products-section" aria-labelledby="products-title">
+      <div class="section-header">
+        <h2 id="products-title">معرض المنتجات</h2>
+        <p>استكشف التشكيلة المختارة من أفضل الأجهزة والملحقات الإلكترونية</p>
+      </div>
+
+      <div class="products-container" id="products-container" role="list">
+        </div>
+
+      <div class="filter-prompt">
+        <button class="details-btn"><i class="fas fa-hand-pointer"></i> اختر من التصنيفات أعلاه لعرض المنتجات المخصصة</button>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="about-heading">
+      <div class="about-container">
+        <div class="about-content">
+          <h2 id="about-heading">عن VEN-DENS</h2>
+          <div class="about-divider"></div>
+          <p>
+            <strong>VEN-DENS</strong> هي علامة تجارية بريطانية رائدة في عالم الإلكترونيات والتقنيات الذكية، تأسست في المملكة المتحدة وتوسعت لتضمن الوصول إلى الشرق الأوسط. نفتخر بوجودنا في فلسطين لنقدم لعملائنا الكرام أحدث التقنيات والأجهزة الذكية وفق أعلى معايير الجودة العالمية.
+          </p>
+          <p>
+            نحرص في <strong>VEN-DENS فلسطين</strong> على الموازنة المثالية بين الأداء الفائق والأسعار المنافسة. تتضمن مجموعتنا المتنوعة: إكسسوارات الهواتف المحمولة، التلفزيونات الذكية، أنظمة الصوت، والأجهزة المنزلية العصرية، مدعومة بخدمة ضمان ورعاية عملاء متميزة.
+          </p>
+          
+          <div class="about-features">
+            <div class="feature-item">
+              <i class="fas fa-shield-alt"></i>
+              <span>منتجات أصيلة 100%</span>
             </div>
-            <div class="stat-card gradient-2">
-                <div class="stat-icon"><i class="fas fa-tools"></i></div>
-                <h3>قيد الصيانة</h3>
-                <p id="registeredDevices">0</p>
-        
-</div>
-<div class="stat-card gradient-3">
-    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-    <h3>تم الوصول</h3>
-    <p id="reachedDevices">0</p>
-</div>
-<div class="stat-card gradient-4">
-    <div class="stat-icon"><i class="fas fa-box-open"></i></div>
-    <h3>تم الاستلام</h3>
-    <p id="deliveredDevices">0</p>
-</div>
+            <div class="feature-item">
+              <i class="fas fa-truck-fast"></i>
+              <span>توصيل سريع لكافة المناطق</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-headset"></i>
+              <span>دعم فني وخدمة زبائن ممتازة</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="cart-modal" id="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="cart-title"><i class="fas fa-shopping-basket"></i> عربة التسوق</h2>
+        <button class="close" aria-label="إغلاق العربة">×</button>
+      </div>
+
+      <div class="cart-items" id="cart-items" role="list">
         </div>
 
-        <div id="devicesList">
-            <!-- سيتم ملؤها بالبيانات من Server.md -->
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>الإجمالي الكلي:</span>
+          <strong>₪<span id="cart-total-price">0.00</span></strong>
         </div>
+        <button class="send-order-btn" id="send-order-btn">
+          <i class="fab fa-whatsapp"></i> تأكيد وإرسال الطلب عبر الواتساب
+        </button>
+      </div>
     </div>
+  </div>
 
-    <!-- نموذج إضافة جهاز جديد -->
-    <div id="deviceModal" class="modal">
-        <div class="modal-content glass-modal">
-            <span class="close">&times;</span>
-            <h2><i class="fas fa-mobile-alt"></i> تسجيل جهاز جديد</h2>
-            <form id="deviceForm">
-                <div class="form-group">
-                    <label for="clientName">اسم العميل:</label>
-                    <input type="text" id="clientName" required class="modern-input">
-                </div>
-                
-                <div class="form-group">
-                    <label for="phoneType">نوع الهاتف:</label>
-                    <input type="text" id="phoneType" required class="modern-input">
-                </div>
-                
-                <div class="form-group">
-                    <label for="issueDescription">وصف العطل:</label>
-                    <textarea id="issueDescription" rows="3" required class="modern-input"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="imeiNumber">رقم IMEI:</label>
-                    <input type="text" id="imeiNumber" required class="modern-input">
-                </div>
-                
-                <div class="form-group">
-                    <label for="phoneNumber">رقم الهاتف:</label>
-                    <input type="text" id="phoneNumber" required class="modern-input">
-                </div>
-                
-                <div class="form-group">
-                    <label for="manufacturer">الشركة المصنعة:</label>
-                    <select id="manufacturer" required class="modern-input">
-                        <option value="سامسونج">سامسونج</option>
-                        <option value="آيفون">آيفون</option>
-                        <option value="هواوي">هواوي</option>
-                        <option value="شاومي">شاومي</option>
-                        <option value="أوبو">أوبو</option>
-                        <option value="نوكيا">نوكيا</option>
-                        <option value="آخر">آخر</option>
-                    </select>
-                </div>
-                
-                <button type="submit" class="btn-primary glow-on-hover">
-                    <i class="fas fa-save"></i> حفظ البيانات
-                </button>
-            </form>
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section main-info">
+        <img src="https://cdn.phototourl.com/free/2026-08-27-cdcfb8e2-5e3d-4a8e-a106-53f4820d4860.webp" alt="VEN-DENS Logo" class="footer-logo-img" />
+        <p>الفرع الرسمي لعلامة VEN-DENS البريطانية في فلسطين. جودة عالية وتكنولوجيا تثق بها.</p>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/share/1DsWSx73pd/?mibextid=wwXIfr" aria-label="فيسبوك" target="_blank"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/ven_dens_india?igsi=MTYydng4OGo5YmYwMQ==" aria-label="إنستغرام" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.tiktok.com/@ven_dens?_r=1&_t=ZS-99FzFF7ETgL" aria-label="تيك توك" target="_blank"><i class="fab fa-tiktok"></i></a>
+          <a href="https://wa.me/+972566888825" aria-label="واتساب" target="_blank"><i class="fab fa-whatsapp"></i></a>
         </div>
+      </div>
+
+      <div class="footer-section">
+        <h3>تواصل معنا</h3>
+        <ul class="contact-info">
+          <li><i class="fas fa-phone-alt"></i> <span>+972 566888825</span></li>
+          <li><i class="fas fa-envelope"></i> <span>info@vendens.com</span></li>
+          <li><i class="fas fa-map-marker-alt"></i> <span>الخليل، فلسطين</span></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>روابط سريعة</h3>
+        <ul>
+          <li><a href="javascript:window.scrollTo({top: 0, behavior: 'smooth'});"><i class="fas fa-chevron-left"></i> الرئيسية</a></li>
+          <li><a href="https://maps.google.com/?q=31.695541,35.177929" target="_blank" rel="noopener noreferrer"><i class="fas fa-chevron-left"></i> موقع الفروع</a></li>
+          <li><a href="https://www.vendens.co.uk" target="_blank" rel="noopener noreferrer"><i class="fas fa-chevron-left"></i> الموقع الرسمي UK</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>ساعات العمل</h3>
+        <ul class="working-hours">
+          <li><span>الأحد - الخميس:</span> <span>10:00 ص - 7:00 م</span></li>
+          <li><span>السبت:</span> <span>9:30 ص - 7:00 م</span></li>
+          <li><span>الجمعة:</span> <span class="closed">مغلق</span></li>
+        </ul>
+        <div class="newsletter">
+          <h4> ارسل شكوة مجهولة  </h4>
+          <form onsubmit="event.preventDefault();">
+            <input type="email" placeholder=" ادخل الشكوى " required />
+            <button type="submit">أرسل</button>
+          </form>
+        </div>
+      </div>
     </div>
 
-    <div id="loadingOverlay">
-        <div class="spinner"></div>
-        <p>جاري معالجة البيانات...</p>
+    <div class="footer-bottom">
+      <p>© 2026 <strong>VEN-DENS فلسطين</strong>. جميع الحقوق محفوظة.</p>
+      <p class="developer">برمجة وتطوير: <span>محمد شحادة</span></p>
+      <div class="payment-methods">
+        <i class="fab fa-cc-visa" title="Visa"></i>
+        <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+        <i class="fab fa-cc-paypal" title="PayPal"></i>
+        <i class="fab fa-cc-apple-pay" title="Apple Pay"></i>
+        <img src="https://www.raya.ps/cached_uploads/resize/650/315/2019/09/04/pib-logo-01-2-1567576456.png" alt="Arab Bank" />
+        <img src="https://reflectapp.com/wp-content/uploads/2022/02/reflectlogo1.png" alt="Reflect" />
+      </div>
     </div>
+  </footer>
 
-    <script src="config.js"></script>
-    <script src="script.js"></script>
-    <script src="Server.md"></script>
+  <script src="data.js"></script>
+  <script src="script.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let lastScrollTop = 0;
+      const header = document.getElementById('main-header');
+      const scrollThreshold = 40;
+
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+        // إضافة ظل عند التمرير
+        if (currentScroll > 20) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+
+        // إهمال المسافات البسيطة لمنع الاهتزاز
+        if (Math.abs(lastScrollTop - currentScroll) <= 5) return;
+
+        // إخفاء عند التمرير للأسفل
+        if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
+          header.classList.add('hide-categories');
+        } 
+        // إظهار عند التمرير للأعلى
+        else if (currentScroll < lastScrollTop) {
+          header.classList.remove('hide-categories');
+        }
+
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+      });
+    });
+  </script>
 </body>
 </html>
